@@ -4,3 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+binrw = "0.14"
+thiserror = "1"
+anyhow = "1"
+derive_more = { version = "1", features = ["full"] }
+
+[dev-dependencies]
+rstest = "0.22"
