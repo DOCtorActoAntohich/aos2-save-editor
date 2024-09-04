@@ -72,7 +72,7 @@ mod tests {
 
     #[rstest::rstest]
     fn it_parses(#[from(manually_constructed_player_file)] player_file: Vec<u8>) {
-        let mut cursor = Cursor::new(dbg!(player_file));
+        let mut cursor = Cursor::new(player_file);
         PlayerFile::read(&mut cursor).expect("Must parse");
     }
 }
