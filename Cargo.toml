@@ -8,6 +8,8 @@ binrw = "0.14"
 thiserror = "1"
 anyhow = "1"
 derive_more = { version = "1", features = ["full"] }
+envy = "0.4"
+serde = { version = "1", features = ["derive"] }
 
 [dev-dependencies]
 rstest = "0.22"

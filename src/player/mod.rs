@@ -2,33 +2,48 @@ mod bin_bool;
 mod sized_section;
 mod version;
 
-use bin_bool::BinBool;
-use sized_section::{
-    LobbyNameSection, LobbyPasswordSection, NicknameSection, TitlesSection,
-    UnlockableAvatarsSection, UnlockableBackbroundsSection,
+use anyhow::Context;
+
+use self::{
+    bin_bool::BinBool,
+    sized_section::{
+        LobbyNameSection, LobbyPasswordSection, NicknameSection, TitlesSection,
+        UnlockableAvatarsSection, UnlockableBackbroundsSection,
+    },
+    version::Version,
 };
-use version::Version;
 
 #[binrw::binrw]
 #[derive(Debug)]
 #[brw(little)]
 pub struct PlayerFile {
-    version: Version,
-    show_country: BinBool,
-    nickname: NicknameSection,
-    lobby_name: LobbyNameSection,
-    lobby_password: LobbyPasswordSection,
-    avatar_character: u32,
-    avatar_background: u32,
-    unlockable_avatars: UnlockableAvatarsSection,
-    unlockable_backgrounds: UnlockableBackbroundsSection,
-    title_character_in_background: u32,
-    title_text_id: u32,
-    titles: TitlesSection,
-    show_ingame_title: BinBool,
-    show_hitstun_meter: BinBool,
-    show_spectators: BinBool,
-    title_color: u32,
+    pub version: Version,
+    pub show_country: BinBool,
+    pub nickname: NicknameSection,
+    pub lobby_name: LobbyNameSection,
+    pub lobby_password: LobbyPasswordSection,
+    pub avatar_character: u32,
+    pub avatar_background: u32,
+    pub unlockable_avatars: UnlockableAvatarsSection,
+    pub unlockable_backgrounds: UnlockableBackbroundsSection,
+    pub title_character_in_background: u32,
+    pub title_text_id: u32,
+    pub titles: TitlesSection,
+    pub show_ingame_title: BinBool,
+    pub show_hitstun_meter: BinBool,
+    pub show_spectators: BinBool,
+    pub title_color: u32,
+}
+
+impl PlayerFile {
+    pub fn from_file<P>(path: P) -> anyhow::Result<Self>
+    where
+        P: AsRef<std::path::Path>,
+    {
+        let mut reader = std::fs::File::open(path).context("Failed to open file")?;
+
+        <Self as binrw::BinRead>::read(&mut reader).context("Failed to parse file")
+    }
 }
 
 #[cfg(test)]

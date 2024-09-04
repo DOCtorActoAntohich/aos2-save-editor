@@ -17,7 +17,7 @@ pub struct SizedBinarySection<const MIN: usize, const MAX: usize> {
     #[bw(try_calc = bytes.len().try_into())]
     size: SectionSize<MIN, MAX>,
     #[br(count = usize::from(size))]
-    bytes: Vec<u8>,
+    pub bytes: Vec<u8>,
 }
 
 #[derive(Debug, thiserror::Error)]
