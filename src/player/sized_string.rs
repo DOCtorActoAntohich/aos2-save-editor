@@ -1,6 +1,9 @@
 pub type NicknameSection = SizedBinarySection<1, 16>;
 pub type LobbyNameSection = SizedBinarySection<1, 24>;
 pub type LobbyPasswordSection = SizedBinarySection<0, 24>;
+pub type UnlockableAvatarsSection = SizedBinarySection<33, 33>;
+pub type UnlockableBackbroundsSection = SizedBinarySection<19, 19>;
+pub type TitlesSection = SizedBinarySection<285, 285>;
 
 #[binrw::binrw]
 #[derive(Debug, Clone, Copy, derive_more::Into)]
