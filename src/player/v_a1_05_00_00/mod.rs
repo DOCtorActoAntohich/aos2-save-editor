@@ -4,7 +4,7 @@ use version::Version;
 
 use super::{
     bin_bool::BinBool,
-    sized_string::{
+    sized_section::{
         LobbyNameSection, LobbyPasswordSection, NicknameSection, TitlesSection,
         UnlockableAvatarsSection, UnlockableBackbroundsSection,
     },
