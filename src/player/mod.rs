@@ -18,17 +18,17 @@ pub struct PlayerFile {
     nickname: NicknameSection,
     lobby_name: LobbyNameSection,
     lobby_password: LobbyPasswordSection,
-    avatar_character: u32,                                // 0x29
-    avatar_background: u32,                               // 0x2d
-    unlockable_avatars: UnlockableAvatarsSection,         // start 0x31, 0x21 / 33 bytes
-    unlockable_backgrounds: UnlockableBackbroundsSection, // start 0x56, 0x13 / 19 bytes
-    title_character_in_background: u32,                   // start 0x6e
-    title_text_id: u32,                                   // start 0x71
-    titles: TitlesSection,                                // start 0x75, 0x011d / 285 bytes
-    show_ingame_title: BinBool,                           // start 0x196
-    show_hitstun_meter: BinBool,                          // start 0x197
-    show_spectators: BinBool,                             // start 0x198
-    title_color: u32,                                     // start 0x199
+    avatar_character: u32,
+    avatar_background: u32,
+    unlockable_avatars: UnlockableAvatarsSection,
+    unlockable_backgrounds: UnlockableBackbroundsSection,
+    title_character_in_background: u32,
+    title_text_id: u32,
+    titles: TitlesSection,
+    show_ingame_title: BinBool,
+    show_hitstun_meter: BinBool,
+    show_spectators: BinBool,
+    title_color: u32,
 }
 
 #[cfg(test)]
