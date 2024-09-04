@@ -11,7 +11,7 @@ mod tests {
 
     use binrw::{BinRead, BinWrite};
 
-    use crate::player::v_a1_05_00_00::version::Version;
+    use super::Version;
 
     #[rstest::rstest]
     fn version_encodes_properly() {
