@@ -44,6 +44,20 @@ impl PlayerFile {
 
         <Self as binrw::BinRead>::read(&mut reader).context("Failed to parse file")
     }
+
+    pub fn save<P>(&self, path: P) -> anyhow::Result<()>
+    where
+        P: AsRef<std::path::Path>,
+    {
+        let mut writer = std::fs::OpenOptions::new()
+            .create(true)
+            .write(true)
+            .open(path)
+            .context("Failed to create or open the file for writing")?;
+
+        <Self as binrw::BinWrite>::write(&self, &mut writer)
+            .context("Failed to overwrite file contents")
+    }
 }
 
 #[cfg(test)]
