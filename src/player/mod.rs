@@ -1,6 +1,9 @@
+mod avatar;
 mod bin_bool;
 mod sized_section;
 mod version;
+
+pub use self::avatar::{background::AvatarBackground, character::AvatarCharacter};
 
 use anyhow::Context;
 
@@ -22,8 +25,8 @@ pub struct PlayerFile {
     pub nickname: NicknameSection,
     pub lobby_name: LobbyNameSection,
     pub lobby_password: LobbyPasswordSection,
-    pub avatar_character: u32,
-    pub avatar_background: u32,
+    pub avatar_character: AvatarCharacter,
+    pub avatar_background: AvatarBackground,
     pub unlockable_avatars: UnlockableAvatarsSection,
     pub unlockable_backgrounds: UnlockableBackbroundsSection,
     pub title_character_in_background: u32,
