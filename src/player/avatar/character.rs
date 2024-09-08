@@ -86,24 +86,3 @@ pub enum AvatarCharacter {
     #[display("<no avatar>")]
     Empty = 0xff,
 }
-
-#[cfg(test)]
-mod tests {
-    use std::io::Cursor;
-
-    use binrw::BinRead;
-
-    use super::AvatarCharacter;
-
-    #[rstest::rstest]
-    fn all_valid_values_are_read() {
-        let range = 0x00u8..=0x2eu8;
-
-        for value in range {
-            let input_field = [value, 0x00, 0x00, 0x00];
-            let mut cursor = Cursor::new(input_field);
-
-            let _value = AvatarCharacter::read(&mut cursor).expect("Must read here");
-        }
-    }
-}

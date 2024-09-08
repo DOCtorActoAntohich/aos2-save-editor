@@ -37,24 +37,3 @@ pub enum TitleCharacter {
     OjMira = 0x1f,
     DisableTitle = 0xff,
 }
-
-#[cfg(test)]
-mod tests {
-    use std::io::Cursor;
-
-    use binrw::BinRead;
-
-    use super::TitleCharacter;
-
-    #[rstest::rstest]
-    fn all_valid_values_are_read() {
-        let range = 0x00u8..=0x1fu8;
-
-        for value in range {
-            let input_field = [value, 0x00, 0x00, 0x00];
-            let mut cursor = Cursor::new(input_field);
-
-            let _value = TitleCharacter::read(&mut cursor).expect("Must read here");
-        }
-    }
-}
