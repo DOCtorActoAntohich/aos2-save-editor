@@ -74,7 +74,7 @@ mod tests {
             vec![0x0e, 0x00, 0x00, 0x00], // 0x71-0x74: Character in title background.
             vec![0x03, 0x01, 0x00, 0x00], // 0x75-0x78: Title text ID.
             285u32.to_le_bytes().to_vec(), // 0x79-0x7c: Number of unlockable titles. Must be 285 (0x1d_01 little endian).
-            [0x00; 285].to_vec(),          // 0x7d-0x199: Ublockable titles.
+            [0x00; 285].to_vec(),          // 0x7d-0x199: Unlockable titles.
             vec![0x01],                    // 0x19a: Show in-game title
             vec![0x01],                    // 0x19b: Show hitstun meter
             vec![0x01],                    // 0x19c: Show spectators
