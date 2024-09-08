@@ -1,7 +1,7 @@
 mod player;
 mod settings;
 
-use player::{AvatarBackground, AvatarCharacter, PlayerFile};
+use player::{AvatarBackground, AvatarCharacter, PlayerFile, TitleCharacter};
 use settings::Settings;
 
 fn main() -> anyhow::Result<()> {
@@ -12,7 +12,8 @@ fn main() -> anyhow::Result<()> {
     println!("Lobby name: {}", lobby);
 
     file.avatar_character = AvatarCharacter::Empty;
-    file.avatar_background = AvatarBackground::Cyan;
+    file.avatar_background = AvatarBackground::LightGrayBackgroundWithSilhouette;
+    file.title_character_in_background = TitleCharacter::DisableTitle;
 
     file.save(&settings.player_file_path)?;
 

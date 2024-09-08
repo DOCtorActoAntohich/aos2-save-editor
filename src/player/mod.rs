@@ -1,9 +1,13 @@
 mod avatar;
 mod bin_bool;
 mod sized_section;
+mod title;
 mod version;
 
-pub use self::avatar::{background::AvatarBackground, character::AvatarCharacter};
+pub use self::{
+    avatar::{background::AvatarBackground, character::AvatarCharacter},
+    title::character::TitleCharacter,
+};
 
 use anyhow::Context;
 
@@ -29,7 +33,7 @@ pub struct PlayerFile {
     pub avatar_background: AvatarBackground,
     pub unlockable_avatars: UnlockableAvatarsSection,
     pub unlockable_backgrounds: UnlockableBackbroundsSection,
-    pub title_character_in_background: u32,
+    pub title_character_in_background: TitleCharacter,
     pub title_text_id: u32,
     pub titles: TitlesSection,
     pub show_ingame_title: BinBool,
