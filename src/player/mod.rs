@@ -66,7 +66,7 @@ mod tests {
             4u32.to_le_bytes().to_vec(),       // 0x25-0x28: Password length
             b"hehe".to_vec(),                  // 0x29-0x2c: Password
             vec![0x0e, 0x00, 0x00, 0x00],      // 0x2d-0x30: Avatar Character
-            vec![0x13, 0x00, 0x00, 0x00],      // 0x31-0x34: Avatar Backbround
+            vec![0x13, 0x00, 0x00, 0x00],      // 0x31-0x34: Avatar Background
             33u32.to_le_bytes().to_vec(), // 0x35-0x38: Number of unlockable avatars. Must be 0x21/33u
             [0x00; 33].to_vec(),          // 0x39-0x59: Unlockable avatars.
             19u32.to_le_bytes().to_vec(), // 0x5a-0x5d: Number of unlockable backgrounds. Must be 0x13/19u.
