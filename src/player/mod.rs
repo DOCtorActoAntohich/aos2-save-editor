@@ -6,7 +6,7 @@ mod version;
 
 pub use self::{
     avatar::{background::AvatarBackground, character::AvatarCharacter},
-    title::character::TitleCharacter,
+    title::{character::TitleCharacter, color::TitleColor},
 };
 
 use anyhow::Context;
@@ -39,7 +39,7 @@ pub struct PlayerFile {
     pub show_ingame_title: BinBool,
     pub show_hitstun_meter: BinBool,
     pub show_spectators: BinBool,
-    pub title_color: u32,
+    pub title_color: TitleColor,
 }
 
 impl PlayerFile {
