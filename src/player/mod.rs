@@ -1,12 +1,13 @@
+pub mod sized_section;
+
 mod avatar;
 mod bin_bool;
-mod sized_section;
 mod title;
 mod version;
 
 pub use self::{
     avatar::{background::AvatarBackground, character::AvatarCharacter},
-    title::{character::TitleCharacter, color::TitleColor},
+    title::{character::TitleCharacter, color::TitleColor, text::TitleText},
 };
 
 use anyhow::Context;
@@ -34,7 +35,7 @@ pub struct PlayerFile {
     pub unlockable_avatars: UnlockableAvatarsSection,
     pub unlockable_backgrounds: UnlockableBackbroundsSection,
     pub title_character_in_background: TitleCharacter,
-    pub title_text_id: u32,
+    pub title_text_id: TitleText,
     pub titles: TitlesSection,
     pub show_ingame_title: BinBool,
     pub show_hitstun_meter: BinBool,

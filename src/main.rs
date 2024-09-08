@@ -1,7 +1,10 @@
 mod player;
 mod settings;
 
-use player::{AvatarBackground, AvatarCharacter, PlayerFile, TitleCharacter, TitleColor};
+use player::{
+    sized_section::SizedBinarySection, AvatarBackground, AvatarCharacter, PlayerFile,
+    TitleCharacter, TitleColor, TitleText,
+};
 use settings::Settings;
 
 fn main() -> anyhow::Result<()> {
@@ -11,8 +14,12 @@ fn main() -> anyhow::Result<()> {
 
     file.avatar_character = AvatarCharacter::Empty;
     file.avatar_background = AvatarBackground::LightGrayBackgroundWithSilhouette;
-    file.title_character_in_background = TitleCharacter::None;
+    file.title_character_in_background = TitleCharacter::OjHimeWinter;
     file.title_color = TitleColor::Blue;
+    file.title_text_id = TitleText::LookingForFriends;
+    file.nickname = SizedBinarySection {
+        bytes: b"DOC".into(),
+    };
 
     file.save(&settings.player_file_path)?;
 
