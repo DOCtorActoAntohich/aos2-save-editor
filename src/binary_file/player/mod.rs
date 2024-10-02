@@ -7,11 +7,9 @@ pub use self::{
     title::{character::TitleCharacter, color::TitleColor, text::TitleText},
 };
 
-use anyhow::Context;
-
 use self::version::Version;
 
-use super::{bin_bool::BinBool, sized_section::SizedBinarySection};
+use super::{bin_bool::BinBool, savefile::GameSaveFile, sized_section::SizedBinarySection};
 
 pub type NicknameSection = SizedBinarySection<1, 16>;
 pub type LobbyNameSection = SizedBinarySection<1, 24>;
@@ -42,30 +40,7 @@ pub struct PlayerFile {
     pub title_color: TitleColor,
 }
 
-impl PlayerFile {
-    pub fn from_file<P>(path: P) -> anyhow::Result<Self>
-    where
-        P: AsRef<std::path::Path>,
-    {
-        let mut reader = std::fs::File::open(path).context("Failed to open file")?;
-
-        <Self as binrw::BinRead>::read(&mut reader).context("Failed to parse file")
-    }
-
-    pub fn save<P>(&self, path: P) -> anyhow::Result<()>
-    where
-        P: AsRef<std::path::Path>,
-    {
-        let mut writer = std::fs::OpenOptions::new()
-            .create(true)
-            .write(true)
-            .open(path)
-            .context("Failed to create or open the file for writing")?;
-
-        <Self as binrw::BinWrite>::write(&self, &mut writer)
-            .context("Failed to overwrite file contents")
-    }
-}
+impl GameSaveFile for PlayerFile {}
 
 #[cfg(test)]
 mod tests {

@@ -2,7 +2,7 @@ mod binary_file;
 
 mod settings;
 
-use self::binary_file::player::PlayerFile;
+use self::binary_file::{player::PlayerFile, savefile::GameSaveFile};
 use settings::Settings;
 
 fn main() -> anyhow::Result<()> {
