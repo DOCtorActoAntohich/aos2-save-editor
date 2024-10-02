@@ -1,7 +1,4 @@
-pub mod sized_section;
-
 mod avatar;
-mod bin_bool;
 mod title;
 mod version;
 
@@ -12,14 +9,16 @@ pub use self::{
 
 use anyhow::Context;
 
-use self::{
-    bin_bool::BinBool,
-    sized_section::{
-        LobbyNameSection, LobbyPasswordSection, NicknameSection, TitlesSection,
-        UnlockableAvatarsSection, UnlockableBackbroundsSection,
-    },
-    version::Version,
-};
+use self::version::Version;
+
+use super::{bin_bool::BinBool, sized_section::SizedBinarySection};
+
+pub type NicknameSection = SizedBinarySection<1, 16>;
+pub type LobbyNameSection = SizedBinarySection<1, 24>;
+pub type LobbyPasswordSection = SizedBinarySection<0, 24>;
+pub type UnlockableAvatarsSection = SizedBinarySection<33, 33>;
+pub type UnlockableBackbroundsSection = SizedBinarySection<19, 19>;
+pub type TitlesSection = SizedBinarySection<285, 285>;
 
 #[binrw::binrw]
 #[derive(Debug)]

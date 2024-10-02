@@ -1,10 +1,3 @@
-pub type NicknameSection = SizedBinarySection<1, 16>;
-pub type LobbyNameSection = SizedBinarySection<1, 24>;
-pub type LobbyPasswordSection = SizedBinarySection<0, 24>;
-pub type UnlockableAvatarsSection = SizedBinarySection<33, 33>;
-pub type UnlockableBackbroundsSection = SizedBinarySection<19, 19>;
-pub type TitlesSection = SizedBinarySection<285, 285>;
-
 #[binrw::binrw]
 #[derive(Debug, Clone, Copy, derive_more::Into)]
 #[brw(little, assert(Self::contains_u32(&self_0)))]
@@ -68,23 +61,23 @@ mod tests {
 
     use binrw::{BinRead, BinWrite};
 
-    use super::{LobbyNameSection, LobbyPasswordSection, NicknameSection, SizedBinarySection};
+    use super::SizedBinarySection;
 
     #[rstest::rstest]
     #[case::shortest_nick(
-        NicknameSection { bytes: b"W".to_vec() },
+        SizedBinarySection::<1, 16> { bytes: b"W".to_vec() },
         b"\x01\x00\x00\x00W"
     )]
     #[case::longest_nick(
-        NicknameSection { bytes: b"Crazy Boii XDDDD".to_vec() },
+        SizedBinarySection::<1, 16> { bytes: b"Crazy Boii XDDDD".to_vec() },
         b"\x10\x00\x00\x00Crazy Boii XDDDD"
     )]
     #[case::lobby_name(
-        LobbyNameSection { bytes: b"1234567890 1234567890".to_vec() },
+        SizedBinarySection::<1, 24> { bytes: b"1234567890 1234567890".to_vec() },
         b"\x15\x00\x00\x001234567890 1234567890"
     )]
     #[case::lobby_password(
-        LobbyPasswordSection { bytes: b"can't hacc this password".to_vec() },
+        SizedBinarySection::<0, 24> { bytes: b"can't hacc this password".to_vec() },
         b"\x18\x00\x00\x00can't hacc this password"
     )]
     fn encodes_properly<const MIN: usize, const MAX: usize>(
@@ -99,9 +92,9 @@ mod tests {
     }
 
     #[rstest::rstest]
-    #[case::empty_lobby_pass(b"\x00\x00\x00\x00", LobbyPasswordSection{ bytes: vec![] })]
-    #[case::lobby_name(b"\x01\x00\x00\x00A", LobbyNameSection{ bytes: b"A".to_vec() })]
-    #[case::nickname(b"\x06\x00\x00\x00abobus", NicknameSection{ bytes: b"abobus".to_vec() })]
+    #[case::empty_lobby_pass(b"\x00\x00\x00\x00", SizedBinarySection::<0, 24> { bytes: vec![] })]
+    #[case::lobby_name(b"\x01\x00\x00\x00A", SizedBinarySection::<1, 24> { bytes: b"A".to_vec() })]
+    #[case::nickname(b"\x06\x00\x00\x00abobus", SizedBinarySection::<1, 16> { bytes: b"abobus".to_vec() })]
     fn decodes_properly<const MIN: usize, const MAX: usize>(
         #[case] input: &[u8],
         #[case] expected_value: SizedBinarySection<MIN, MAX>,
