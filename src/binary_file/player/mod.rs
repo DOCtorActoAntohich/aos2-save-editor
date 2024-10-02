@@ -74,7 +74,7 @@ mod tests {
 
     use binrw::BinRead;
 
-    use crate::player::PlayerFile;
+    use super::PlayerFile;
 
     #[rstest::fixture]
     fn manually_constructed_player_file() -> Vec<u8> {
