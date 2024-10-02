@@ -1,7 +1,8 @@
-mod player;
+mod binary_file;
+
 mod settings;
 
-use player::{
+use self::binary_file::player::{
     sized_section::SizedBinarySection, AvatarBackground, AvatarCharacter, PlayerFile,
     TitleCharacter, TitleColor, TitleText,
 };
