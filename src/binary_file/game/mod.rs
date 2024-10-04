@@ -1,3 +1,5 @@
+mod wins_amount;
+
 use super::{savefile::GameSaveFile, sized_section::SizedBinarySection};
 
 #[binrw::binrw]

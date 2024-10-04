@@ -13,3 +13,4 @@ serde = { version = "1", features = ["derive"] }
 
 [dev-dependencies]
 rstest = "0.22"
+rstest_reuse = "0.7"
