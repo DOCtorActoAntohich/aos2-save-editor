@@ -8,6 +8,9 @@ Using Cheat Engine helped me figure out the game uses
 a normal `u32` at runtime to store wins per character.
 Neato.
 
+Extra fun fact: wins are in static memory,
+so the address of the wins amount persists before runs.
+
 Then a simple diff on a file after obtaining one win
 showed the location where wins are stored for this character.
 
