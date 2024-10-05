@@ -30,14 +30,14 @@ fn main() -> anyhow::Result<()> {
     game_sys._0x9f_is_story_1cc_mira = EncodedBool::encode_from_raw(false);
     game_sys._0xa0_is_story_1cc_sham = EncodedBool::encode_from_raw(false);
     game_sys._0xa1_is_story_1cc_nath = EncodedBool::encode_from_raw(false);
-    game_sys._0xa2_is_story_1cc_star_breaker = EncodedBool::encode_from_raw(true);
+    game_sys._0xa2_is_story_1cc_star_breaker = EncodedBool::encode_from_raw(false);
     game_sys._0xa3_is_story_1cc_suguri = EncodedBool::encode_from_raw(false);
     game_sys._0xa4_is_story_1cc_saki = EncodedBool::encode_from_raw(false);
     game_sys._0xa5_is_story_1cc_iru = EncodedBool::encode_from_raw(false);
     game_sys._0xa6_is_story_1cc_nanako = EncodedBool::encode_from_raw(false);
     game_sys._0xa7_is_story_1cc_kae = EncodedBool::encode_from_raw(false);
     game_sys._0xa8_is_story_1cc_kyoko = EncodedBool::encode_from_raw(false);
-    game_sys._0xa9_is_story_1cc_hime = EncodedBool::encode_from_raw(true);
+    game_sys._0xa9_is_story_1cc_hime = EncodedBool::encode_from_raw(false);
 
     game_sys._0x63_is_arcade_easy_1cc_sora = EncodedBool::encode_from_raw(false);
     game_sys._0x64_is_arcade_easy_1cc_alte = EncodedBool::encode_from_raw(false);
