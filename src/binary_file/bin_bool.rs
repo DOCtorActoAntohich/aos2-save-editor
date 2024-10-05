@@ -1,7 +1,20 @@
 #[binrw::binrw]
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[brw(little)]
 pub struct BinBool(u8);
+
+impl BinBool {
+    pub const fn new(value: bool) -> Self {
+        match value {
+            true => Self(1),
+            false => Self(0),
+        }
+    }
+
+    pub const fn as_u8(&self) -> u8 {
+        self.0
+    }
+}
 
 impl From<bool> for BinBool {
     fn from(value: bool) -> Self {
