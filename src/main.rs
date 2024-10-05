@@ -16,7 +16,9 @@ fn main() -> anyhow::Result<()> {
 
     let mut game_sys = GameSysBinaryFile2::from_file(&settings.game_sys_path)?;
 
-    game_sys._0x4c_story_mode_wins = EncodedU32::encode_from_raw(0);
+    game_sys._0x1c_unlock_hime = EncodedU32::encode_from_raw(0);
+
+    game_sys._0x4c_singleplayer_wins = EncodedU32::encode_from_raw(0);
     game_sys._0x5c_story_1cc_completions = EncodedU32::encode_from_raw(0);
     game_sys._0x9c_is_story_1cc_sora = EncodedBool::encode_from_raw(false);
     game_sys._0x9d_is_story_1cc_alte = EncodedBool::encode_from_raw(false);
@@ -32,15 +34,13 @@ fn main() -> anyhow::Result<()> {
     game_sys._0xa7_is_story_1cc_kae = EncodedBool::encode_from_raw(false);
     game_sys._0xa8_is_story_1cc_kyoko = EncodedBool::encode_from_raw(false);
 
-    game_sys._0x1c_unlock_hime = EncodedU32::encode_from_raw(1);
-    game_sys._0x6a_another_byte = EncodedU8::encode_from_raw(0);
-
-    println!(
-        "0x1c hime unlocked: {}",
-        game_sys._0x1c_unlock_hime.decode()
-    );
-    println!("0x58 {}", game_sys._0x6a_another_byte.decode());
-    println!("0x90 {}", game_sys._0x90_funni.decode());
+    game_sys._0x90_is_arcade_hard_1cc_suguri = EncodedBool::encode_from_raw(false);
+    game_sys._0x91_is_arcade_hard_1cc_saki = EncodedBool::encode_from_raw(false);
+    game_sys._0x92_is_arcade_hard_1cc_iru = EncodedBool::encode_from_raw(false);
+    game_sys._0x93_is_arcade_hard_1cc_nanako = EncodedBool::encode_from_raw(false);
+    game_sys._0x94_is_arcade_hard_1cc_kae = EncodedBool::encode_from_raw(false);
+    game_sys._0x95_is_arcade_hard_1cc_kyoko = EncodedBool::encode_from_raw(false);
+    game_sys._0x96_is_arcade_hard_1cc_hime = EncodedBool::encode_from_raw(false);
 
     game_sys.save(&settings.game_sys_path)?;
 

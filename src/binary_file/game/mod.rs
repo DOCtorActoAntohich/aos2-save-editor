@@ -45,7 +45,7 @@ pub struct GameSysBinaryFile2 {
     pub _0x40: u32,
     pub _0x44: u32,
     pub _0x48: u32,
-    pub _0x4c_story_mode_wins: EncodedU32<0x8E, 0x9E, 0xAE, 0xBE>,
+    pub _0x4c_singleplayer_wins: EncodedU32<0x8E, 0x9E, 0xAE, 0xBE>,
     pub _0x50_arcade_easy_1ccs_unsure: EncodedU32<0xCE, 0xDE, 0xEE, 0xFE>,
     pub _0x54: u32,
     pub _0x58_arcade_hard_1ccs_unsure: EncodedU32<0x4F, 0x5F, 0x6F, 0x7F>,
@@ -54,7 +54,7 @@ pub struct GameSysBinaryFile2 {
     pub _0x64: u32,
     pub _0x68: u8,
     pub _0x69: u8,
-    pub _0x6a_another_byte: EncodedU8<0x60>,
+    pub _0x6a_is_arcade_easy_1cc_suguri: EncodedBool<0x60>,
     pub _0x6b: u8,
     pub _0x6c: u32,
     pub _0x70: u32,
@@ -65,11 +65,14 @@ pub struct GameSysBinaryFile2 {
     pub _0x84: u32,
     pub _0x88: u32,
     pub _0x8c: u32,
-    pub _0x90_funni: EncodedU8<0xC2>,
-    pub _0x91: u8,
-    pub _0x92: u8,
-    pub _0x93: u8,
-    pub _0x94: u32,
+    pub _0x90_is_arcade_hard_1cc_suguri: EncodedBool<0xC2>,
+    pub _0x91_is_arcade_hard_1cc_saki: EncodedBool<0xD2>,
+    pub _0x92_is_arcade_hard_1cc_iru: EncodedBool<0xE2>,
+    pub _0x93_is_arcade_hard_1cc_nanako: EncodedBool<0xF2>,
+    pub _0x94_is_arcade_hard_1cc_kae: EncodedBool<0x03>,
+    pub _0x95_is_arcade_hard_1cc_kyoko: EncodedBool<0x13>,
+    pub _0x96_is_arcade_hard_1cc_hime: EncodedBool<0x23>,
+    pub _0x97: EncodedBool<0x33>,
     pub _0x98: u32,
     pub _0x9c_is_story_1cc_sora: EncodedBool<0x83>,
     pub _0x9d_is_story_1cc_alte: EncodedBool<0x93>,
@@ -114,8 +117,7 @@ impl GameSysFile {
 
 impl From<GameSysBinaryFile2> for GameSysFile {
     fn from(value: GameSysBinaryFile2) -> Self {
-        Self {
-            singleplayer_mode_wins: value._0x4c_story_mode_wins.decode(),
-        }
+        dbg!(value);
+        todo!()
     }
 }
