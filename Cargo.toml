@@ -4,19 +4,20 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+aos2-env = { path = "./aos2-env" }
 binrw.workspace = true
 thiserror.workspace = true
 anyhow.workspace = true
 derive_more.workspace = true
 envy.workspace = true
-serde.workspace = true
+serde = { workspace = true, features = ["derive"] }
 
 [dev-dependencies]
 rstest.workspace = true
 rstest_reuse.workspace = true
 
 [workspace]
-members = ["easydiff"]
+members = ["aos2-env", "easydiff"]
 default-members = ["."]
 
 [workspace.dependencies]
@@ -24,7 +25,7 @@ thiserror = "1"
 anyhow = "1"
 derive_more = { version = "1", features = ["full"] }
 envy = "0.4"
-serde = { version = "1", features = ["derive"] }
+serde = "1"
 binrw = "0.14"
 clap = { version = "4" }
 rstest = "0.22"

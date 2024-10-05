@@ -1,13 +1,11 @@
-use aos2_save_editor::{
-    binary_file::{
-        game::{
-            encoded_bool::EncodedBool, encoded_u32::EncodedU32, encoded_u8::EncodedU8,
-            GameSysBinaryFile2,
-        },
-        player::PlayerFile,
-        savefile::GameBinarySaveFile,
+use aos2_env::Settings;
+use aos2_save_editor::binary_file::{
+    game::{
+        encoded_bool::EncodedBool, encoded_u32::EncodedU32, encoded_u8::EncodedU8,
+        GameSysBinaryFile2,
     },
-    settings::Settings,
+    player::PlayerFile,
+    savefile::GameBinarySaveFile,
 };
 
 fn main() -> anyhow::Result<()> {

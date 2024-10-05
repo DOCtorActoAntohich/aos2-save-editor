@@ -3,7 +3,7 @@ mod fmt;
 
 use std::path::PathBuf;
 
-use aos2_save_editor::settings::Settings;
+use aos2_env::Settings;
 use clap::Parser;
 use diff::{BinaryFile, FileDifference};
 
