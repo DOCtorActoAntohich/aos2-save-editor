@@ -20,7 +20,7 @@ fn main() -> anyhow::Result<()> {
     game_sys._0x15_unlock_star_breaker = EncodedBool::encode_from_raw(true);
 
     game_sys._0x4c_singleplayer_wins = EncodedU32::encode_from_raw(0);
-    game_sys._0x50_arcade_easy_1ccs_unsure = EncodedU32::encode_from_raw(0);
+    game_sys._0x50_arcade_easy_1ccs = EncodedU32::encode_from_raw(0);
     game_sys._0x58_arcade_hard_1ccs = EncodedU32::encode_from_raw(0);
     game_sys._0x5c_story_1cc_completions = EncodedU32::encode_from_raw(0);
 
