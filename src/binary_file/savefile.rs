@@ -4,7 +4,7 @@ use binrw::{
     BinRead, BinWrite,
 };
 
-pub trait GameSaveFile: BinRead + ReadEndian + BinWrite + WriteEndian
+pub trait GameBinarySaveFile: BinRead + ReadEndian + BinWrite + WriteEndian
 where
     Self: Sized,
 {

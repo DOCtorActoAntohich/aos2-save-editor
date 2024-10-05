@@ -9,7 +9,7 @@ pub use self::{
 
 use self::version::Version;
 
-use super::{bin_bool::BinBool, savefile::GameSaveFile, sized_section::SizedBinarySection};
+use super::{bin_bool::BinBool, savefile::GameBinarySaveFile, sized_section::SizedBinarySection};
 
 pub type NicknameSection = SizedBinarySection<1, 16>;
 pub type LobbyNameSection = SizedBinarySection<1, 24>;
@@ -40,7 +40,7 @@ pub struct PlayerFile {
     pub title_color: TitleColor,
 }
 
-impl GameSaveFile for PlayerFile {}
+impl GameBinarySaveFile for PlayerFile {}
 
 #[cfg(test)]
 mod tests {

@@ -15,4 +15,4 @@ pub struct GameSysFile {
 #[brw(magic = b"\x4C\x53\x44\x00")]
 struct Version;
 
-impl GameSaveFile for GameSysFile {}
+impl GameBinarySaveFile for GameSysBinaryFile {}

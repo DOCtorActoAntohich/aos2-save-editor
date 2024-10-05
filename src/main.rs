@@ -1,5 +1,5 @@
 use aos2_save_editor::{
-    binary_file::{game::GameSysFile, player::PlayerFile, savefile::GameSaveFile},
+    binary_file::{game::GameSysBinaryFile, player::PlayerFile, savefile::GameBinarySaveFile},
     settings::Settings,
 };
 
@@ -9,7 +9,7 @@ fn main() -> anyhow::Result<()> {
     let player_file = PlayerFile::from_file(&settings.player_file_path)?;
     player_file.save(&settings.player_file_path)?;
 
-    let mut game_sys = GameSysFile::from_file(&settings.game_sys_path)?;
+    let mut game_sys = GameSysBinaryFile::from_file(&settings.game_sys_path)?;
 
     let suguri_story_something_location = 0x4c - 8;
     println!("len is {}", game_sys.content.bytes.len());
