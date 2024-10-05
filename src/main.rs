@@ -1,4 +1,4 @@
-use aos2_env::Settings;
+use aos2_env::AoS2Paths;
 use aos2_save_editor::binary_file::{
     game::{
         encoded_bool::EncodedBool, encoded_u32::EncodedU32, encoded_u8::EncodedU8,
@@ -9,12 +9,12 @@ use aos2_save_editor::binary_file::{
 };
 
 fn main() -> anyhow::Result<()> {
-    let settings = Settings::from_env()?;
+    let settings = AoS2Paths::from_env()?;
 
-    let player_file = PlayerFile::from_file(&settings.player_file_path)?;
-    player_file.save(&settings.player_file_path)?;
+    let player_file = PlayerFile::from_file(&settings.player_rkg)?;
+    player_file.save(&settings.player_rkg)?;
 
-    let mut game_sys = GameSysBinaryFile2::from_file(&settings.game_sys_path)?;
+    let mut game_sys = GameSysBinaryFile2::from_file(&settings.game_sys)?;
 
     game_sys._0x1c_unlock_hime = EncodedU32::encode_from_raw(0);
 
@@ -42,7 +42,7 @@ fn main() -> anyhow::Result<()> {
     game_sys._0x95_is_arcade_hard_1cc_kyoko = EncodedBool::encode_from_raw(false);
     game_sys._0x96_is_arcade_hard_1cc_hime = EncodedBool::encode_from_raw(false);
 
-    game_sys.save(&settings.game_sys_path)?;
+    game_sys.save(&settings.game_sys)?;
 
     println!("Saved file");
 

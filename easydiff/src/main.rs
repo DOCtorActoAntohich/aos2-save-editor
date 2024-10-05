@@ -3,7 +3,7 @@ mod fmt;
 
 use std::path::PathBuf;
 
-use aos2_env::Settings;
+use aos2_env::AoS2Paths;
 use clap::Parser;
 use diff::{BinaryFile, FileDifference};
 
@@ -19,13 +19,13 @@ struct Args {
 }
 
 fn main() -> anyhow::Result<()> {
-    let settings = Settings::from_env()?;
+    let settings = AoS2Paths::from_env()?;
     let args = Args::parse();
 
     run(settings, args)
 }
 
-fn run(settings: Settings, args: Args) -> anyhow::Result<()> {
+fn run(settings: AoS2Paths, args: Args) -> anyhow::Result<()> {
     let before = BinaryFile::load(settings.saves_folder.join(args.before))?;
     let after = BinaryFile::load(settings.saves_folder.join(args.after))?;
 
