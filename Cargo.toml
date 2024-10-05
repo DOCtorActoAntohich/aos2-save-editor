@@ -4,13 +4,28 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-binrw = "0.14"
+binrw.workspace = true
+thiserror.workspace = true
+anyhow.workspace = true
+derive_more.workspace = true
+envy.workspace = true
+serde.workspace = true
+
+[dev-dependencies]
+rstest.workspace = true
+rstest_reuse.workspace = true
+
+[workspace]
+members = ["easydiff"]
+default-members = ["."]
+
+[workspace.dependencies]
 thiserror = "1"
 anyhow = "1"
 derive_more = { version = "1", features = ["full"] }
 envy = "0.4"
 serde = { version = "1", features = ["derive"] }
-
-[dev-dependencies]
+binrw = "0.14"
+clap = { version = "4" }
 rstest = "0.22"
 rstest_reuse = "0.7"

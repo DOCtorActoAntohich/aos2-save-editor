@@ -4,6 +4,7 @@ use serde::Deserialize;
 
 #[derive(Debug, Clone)]
 pub struct Settings {
+    pub saves_folder: PathBuf,
     pub player_file_path: PathBuf,
     pub game_sys_path: PathBuf,
 }
@@ -24,6 +25,7 @@ impl From<EnvVars> for Settings {
         Self {
             player_file_path: saves_folder.join("player.rkg"),
             game_sys_path: saves_folder.join("game.sys"),
+            saves_folder,
         }
     }
 }

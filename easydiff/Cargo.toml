@@ -1,0 +1,10 @@
+[package]
+name = "easydiff"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+aos2-save-editor = { path = "../" }
+anyhow.workspace = true
+clap = { workspace = true, features = ["derive"] }
+derive_more.workspace = true

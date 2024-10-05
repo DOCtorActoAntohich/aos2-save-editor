@@ -1,10 +1,7 @@
-mod binary_file;
-
-mod settings;
-
-use self::binary_file::{player::PlayerFile, savefile::GameSaveFile};
-use binary_file::game::GameSysFile;
-use settings::Settings;
+use aos2_save_editor::{
+    binary_file::{game::GameSysFile, player::PlayerFile, savefile::GameSaveFile},
+    settings::Settings,
+};
 
 fn main() -> anyhow::Result<()> {
     let settings = Settings::from_env()?;
