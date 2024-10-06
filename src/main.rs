@@ -16,11 +16,12 @@ fn main() -> anyhow::Result<()> {
 
     let mut game_sys = GameSysBinaryFile2::from_file(&settings.game_sys)?;
 
-    game_sys._0x1c_unlock_hime = EncodedBool::encode_from_raw(true);
-    game_sys._0x15_unlock_star_breaker = EncodedBool::encode_from_raw(true);
+    game_sys._0x1c_unlock_hime = EncodedBool::encode_from_raw(false);
+    game_sys._0x15_unlock_star_breaker = EncodedBool::encode_from_raw(false);
 
     game_sys._0x4c_singleplayer_wins = EncodedU32::encode_from_raw(0);
     game_sys._0x50_arcade_easy_1ccs = EncodedU32::encode_from_raw(0);
+    game_sys._0x54_arcade_medium_1ccs = EncodedU32::encode_from_raw(0);
     game_sys._0x58_arcade_hard_1ccs = EncodedU32::encode_from_raw(0);
     game_sys._0x5c_story_1cc_completions = EncodedU32::encode_from_raw(0);
 
@@ -53,6 +54,21 @@ fn main() -> anyhow::Result<()> {
     game_sys._0x6e_is_arcade_easy_1cc_kae = EncodedBool::encode_from_raw(false);
     game_sys._0x6f_is_arcade_easy_1cc_kyoko = EncodedBool::encode_from_raw(false);
     game_sys._0x70_is_arcade_easy_1cc_hime = EncodedBool::encode_from_raw(false);
+
+    game_sys._0x76_is_arcade_medium_1cc_sora = EncodedBool::encode_from_raw(true);
+    game_sys._0x77_is_arcade_medium_1cc_alte = EncodedBool::encode_from_raw(true);
+    game_sys._0x78_is_arcade_medium_1cc_tsih = EncodedBool::encode_from_raw(true);
+    game_sys._0x79_is_arcade_medium_1cc_mira = EncodedBool::encode_from_raw(true);
+    game_sys._0x7a_is_arcade_medium_1cc_sham = EncodedBool::encode_from_raw(true);
+    game_sys._0x7b_is_arcade_medium_1cc_nath = EncodedBool::encode_from_raw(true);
+    game_sys._0x7c_is_arcade_medium_1cc_star_breaker = EncodedBool::encode_from_raw(true);
+    game_sys._0x7d_is_arcade_medium_1cc_suguri = EncodedBool::encode_from_raw(true);
+    game_sys._0x7e_is_arcade_medium_1cc_saki = EncodedBool::encode_from_raw(true);
+    game_sys._0x7f_is_arcade_medium_1cc_iru = EncodedBool::encode_from_raw(true);
+    game_sys._0x80_is_arcade_medium_1cc_nanako = EncodedBool::encode_from_raw(true);
+    game_sys._0x81_is_arcade_medium_1cc_kae = EncodedBool::encode_from_raw(true);
+    game_sys._0x82_is_arcade_medium_1cc_kyoko = EncodedBool::encode_from_raw(true);
+    game_sys._0x83_is_arcade_medium_1cc_hime = EncodedBool::encode_from_raw(true);
 
     game_sys._0x89_is_arcade_hard_1cc_sora = EncodedBool::encode_from_raw(false);
     game_sys._0x8a_is_arcade_hard_1cc_alte = EncodedBool::encode_from_raw(false);
