@@ -108,18 +108,21 @@ fn main() -> anyhow::Result<()> {
     game_sys._0x28_unlock_bg_rain_and_sunset = EncodedBool::encode_from_raw(false);
     game_sys._0x29_unlock_bg_equator_doldrums = EncodedBool::encode_from_raw(false);
     game_sys._0x2a_unlock_bg_big_bridge = EncodedBool::encode_from_raw(false);
-    game_sys._0x2b_unlock_bg_capital_in_flames = EncodedBool::encode_from_raw(true);
+    game_sys._0x2b_unlock_bg_capital_in_flames = EncodedBool::encode_from_raw(false);
     game_sys._0x2c_unlock_bg_whirlpool_of_malice = EncodedBool::encode_from_raw(false);
     game_sys._0x2e_unlock_bg_nature_10k = EncodedBool::encode_from_raw(false);
     game_sys._0x2f_unlock_bg_crashed_spaceship = EncodedBool::encode_from_raw(false);
     game_sys._0x30_unlock_bg_guardians_chamber = EncodedBool::encode_from_raw(false);
-    game_sys._0x31_unlock_bg_moonlight_dance_hall = EncodedBool::encode_from_raw(false);
+    game_sys._0x31_unlock_bg_moonlight_dance_hall = EncodedBool::encode_from_raw(true);
     game_sys._0x32_unlock_bg_sumika_hideout = EncodedBool::encode_from_raw(true);
 
+    game_sys._0x3e_unlock_bgm_need_for_speed = EncodedBool::encode_from_raw(false);
+    game_sys._0x3f_unlock_bgm_black_hole = EncodedBool::encode_from_raw(false);
+    game_sys._0x40_unlock_bgm_distant_thunder = EncodedBool::encode_from_raw(false);
     game_sys._0x41_unlock_bgm_swordfish = EncodedBool::encode_from_raw(true);
-    game_sys._0x46_unlock_bgm_accelerator = EncodedBool::encode_from_raw(true);
-    game_sys._0x47_unlock_bgm_remember_me = EncodedBool::encode_from_raw(true);
-    game_sys._0x48_unlock_bgm_mgom = EncodedBool::encode_from_raw(true);
+    game_sys._0x46_unlock_bgm_accelerator = EncodedBool::encode_from_raw(false);
+    game_sys._0x47_unlock_bgm_remember_me = EncodedBool::encode_from_raw(false);
+    game_sys._0x48_unlock_bgm_mgom = EncodedBool::encode_from_raw(false);
 
     println!("0x08 {}", game_sys._0x08.decode());
 
@@ -129,15 +132,24 @@ fn main() -> anyhow::Result<()> {
 
     game_sys._0x1e = EncodedBool::encode_from_raw(false);
     game_sys._0x1f = EncodedBool::encode_from_raw(false);
-    game_sys._0x20 = EncodedU32::encode_from_raw(0);
+    game_sys._0x20 = EncodedBool::encode_from_raw(false);
+    game_sys._0x21 = EncodedBool::encode_from_raw(false);
+    game_sys._0x22 = EncodedBool::encode_from_raw(false);
+    game_sys._0x23 = EncodedBool::encode_from_raw(false);
 
     game_sys._0x2d = EncodedBool::encode_from_raw(false);
 
     game_sys._0x33 = EncodedU8::encode_from_raw(0);
-    game_sys._0x34 = EncodedU32::encode_from_raw(0);
-    game_sys._0x38 = EncodedU32::encode_from_raw(0);
-    game_sys._0x3c = EncodedU32::encode_from_raw(0);
-    game_sys._0x40 = EncodedU8::encode_from_raw(0);
+    game_sys._0x34 = EncodedBool::encode_from_raw(false);
+    game_sys._0x35 = EncodedBool::encode_from_raw(false);
+    game_sys._0x36 = EncodedBool::encode_from_raw(false);
+    game_sys._0x37 = EncodedBool::encode_from_raw(false);
+    game_sys._0x38 = EncodedBool::encode_from_raw(false);
+    game_sys._0x39 = EncodedBool::encode_from_raw(false);
+    game_sys._0x3a = EncodedBool::encode_from_raw(false);
+    game_sys._0x3b = EncodedBool::encode_from_raw(false);
+    game_sys._0x3c = EncodedBool::encode_from_raw(false);
+    game_sys._0x3d = EncodedBool::encode_from_raw(false);
 
     game_sys._0x42 = EncodedU8::encode_from_raw(0);
     game_sys._0x43 = EncodedU8::encode_from_raw(0);
