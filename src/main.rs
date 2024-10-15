@@ -101,8 +101,16 @@ fn main() -> anyhow::Result<()> {
     game_sys._0x96_is_arcade_hard_1cc_hime = EncodedBool::encode_from_raw(true);
     game_sys._0x97_is_arcade_hard_1cc_sumika = EncodedBool::encode_from_raw(true);
 
+    game_sys._0x24_unlock_bg_before_the_war = EncodedBool::encode_from_raw(false);
+    game_sys._0x25_unlock_bg_war_10k_years_ago = EncodedBool::encode_from_raw(false);
+    game_sys._0x26_unlock_bg_canyon_of_wind = EncodedBool::encode_from_raw(false);
+    game_sys._0x27_unlock_bg_dust_storm = EncodedBool::encode_from_raw(false);
+    game_sys._0x28_unlock_bg_rain_and_sunset = EncodedBool::encode_from_raw(false);
+    game_sys._0x29_unlock_bg_equator_doldrums = EncodedBool::encode_from_raw(false);
+    game_sys._0x2a_unlock_bg_big_bridge = EncodedBool::encode_from_raw(false);
     game_sys._0x2b_unlock_bg_capital_in_flames = EncodedBool::encode_from_raw(true);
     game_sys._0x2c_unlock_bg_whirlpool_of_malice = EncodedBool::encode_from_raw(false);
+    game_sys._0x2e_unlock_bg_nature_10k = EncodedBool::encode_from_raw(false);
     game_sys._0x2f_unlock_bg_crashed_spaceship = EncodedBool::encode_from_raw(false);
     game_sys._0x30_unlock_bg_guardians_chamber = EncodedBool::encode_from_raw(false);
     game_sys._0x31_unlock_bg_moonlight_dance_hall = EncodedBool::encode_from_raw(false);
@@ -122,13 +130,8 @@ fn main() -> anyhow::Result<()> {
     game_sys._0x1e = EncodedBool::encode_from_raw(false);
     game_sys._0x1f = EncodedBool::encode_from_raw(false);
     game_sys._0x20 = EncodedU32::encode_from_raw(0);
-    game_sys._0x24 = EncodedU32::encode_from_raw(0);
-    game_sys._0x28 = EncodedU8::encode_from_raw(0);
-    game_sys._0x29 = EncodedU8::encode_from_raw(0);
-    game_sys._0x2a = EncodedU8::encode_from_raw(0);
 
-    game_sys._0x2d = EncodedU8::encode_from_raw(0);
-    game_sys._0x2e = EncodedU8::encode_from_raw(0);
+    game_sys._0x2d = EncodedBool::encode_from_raw(false);
 
     game_sys._0x33 = EncodedU8::encode_from_raw(0);
     game_sys._0x34 = EncodedU32::encode_from_raw(0);
