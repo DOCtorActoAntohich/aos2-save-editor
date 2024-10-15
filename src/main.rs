@@ -119,7 +119,11 @@ fn main() -> anyhow::Result<()> {
     game_sys._0x3e_unlock_bgm_need_for_speed = EncodedBool::encode_from_raw(false);
     game_sys._0x3f_unlock_bgm_black_hole = EncodedBool::encode_from_raw(false);
     game_sys._0x40_unlock_bgm_distant_thunder = EncodedBool::encode_from_raw(false);
-    game_sys._0x41_unlock_bgm_swordfish = EncodedBool::encode_from_raw(true);
+    game_sys._0x41_unlock_bgm_swordfish = EncodedBool::encode_from_raw(false);
+    game_sys._0x42_unlock_bgm_shine = EncodedBool::encode_from_raw(false);
+    game_sys._0x43_unlock_bgm_expendables = EncodedBool::encode_from_raw(false);
+    game_sys._0x44_unlock_bgm_ribbon = EncodedBool::encode_from_raw(false);
+    game_sys._0x45_unlock_bgm_moving_out = EncodedBool::encode_from_raw(false);
     game_sys._0x46_unlock_bgm_accelerator = EncodedBool::encode_from_raw(false);
     game_sys._0x47_unlock_bgm_remember_me = EncodedBool::encode_from_raw(false);
     game_sys._0x48_unlock_bgm_mgom = EncodedBool::encode_from_raw(false);
@@ -151,10 +155,9 @@ fn main() -> anyhow::Result<()> {
     game_sys._0x3c = EncodedBool::encode_from_raw(false);
     game_sys._0x3d = EncodedBool::encode_from_raw(false);
 
-    game_sys._0x42 = EncodedU8::encode_from_raw(0);
-    game_sys._0x43 = EncodedU8::encode_from_raw(0);
-    game_sys._0x44 = EncodedU8::encode_from_raw(0);
-    game_sys._0x45 = EncodedU8::encode_from_raw(0);
+    game_sys._0x49 = EncodedBool::encode_from_raw(false);
+    game_sys._0x4a = EncodedBool::encode_from_raw(false);
+    game_sys._0x4b = EncodedBool::encode_from_raw(false);
 
     game_sys._0x60 = EncodedU8::encode_from_raw(0);
     game_sys._0x61 = EncodedU8::encode_from_raw(0);
