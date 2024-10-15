@@ -16,15 +16,27 @@ fn main() -> anyhow::Result<()> {
 
     let mut game_sys = GameSysBinaryFile2::from_file(&settings.game_sys)?;
 
+    game_sys._0x0f_unlock_sora = EncodedBool::encode_from_raw(true);
+    game_sys._0x10_unlock_alte = EncodedBool::encode_from_raw(false);
+    game_sys._0x11_unlock_tsih = EncodedBool::encode_from_raw(false);
+    game_sys._0x12_unlock_mira = EncodedBool::encode_from_raw(false);
+    game_sys._0x13_unlock_sham = EncodedBool::encode_from_raw(false);
+    game_sys._0x14_unlock_nath = EncodedBool::encode_from_raw(false);
+    game_sys._0x15_unlock_star_breaker = EncodedBool::encode_from_raw(false);
+    game_sys._0x16_unlock_suguri = EncodedBool::encode_from_raw(true);
+    game_sys._0x17_unlock_saki = EncodedBool::encode_from_raw(false);
+    game_sys._0x18_unlock_iru = EncodedBool::encode_from_raw(false);
+    game_sys._0x19_unlock_nanako = EncodedBool::encode_from_raw(false);
+    game_sys._0x1a_unlock_kae = EncodedBool::encode_from_raw(false);
+    game_sys._0x1b_unlock_kyoko = EncodedBool::encode_from_raw(false);
     game_sys._0x1c_unlock_hime = EncodedBool::encode_from_raw(true);
-    game_sys._0x15_unlock_star_breaker = EncodedBool::encode_from_raw(true);
-    game_sys._0x1d_unlock_sumika = EncodedBool::encode_from_raw(true);
+    game_sys._0x1d_unlock_sumika = EncodedBool::encode_from_raw(false);
 
-    game_sys._0x4c_singleplayer_wins = EncodedU32::encode_from_raw(0);
-    game_sys._0x50_arcade_easy_1ccs = EncodedU32::encode_from_raw(0);
-    game_sys._0x54_arcade_medium_1ccs = EncodedU32::encode_from_raw(0);
-    game_sys._0x58_arcade_hard_1ccs = EncodedU32::encode_from_raw(0);
-    game_sys._0x5c_story_1cc_completions = EncodedU32::encode_from_raw(0);
+    game_sys._0x4c_singleplayer_wins = EncodedU32::encode_from_raw(142536);
+    game_sys._0x50_arcade_easy_1ccs = EncodedU32::encode_from_raw(1);
+    game_sys._0x54_arcade_medium_1ccs = EncodedU32::encode_from_raw(2);
+    game_sys._0x58_arcade_hard_1ccs = EncodedU32::encode_from_raw(3);
+    game_sys._0x5c_story_1cc_completions = EncodedU32::encode_from_raw(4);
 
     game_sys._0x9c_is_story_1cc_sora = EncodedBool::encode_from_raw(true);
     game_sys._0x9d_is_story_1cc_alte = EncodedBool::encode_from_raw(true);
@@ -90,16 +102,65 @@ fn main() -> anyhow::Result<()> {
     game_sys._0x97_is_arcade_hard_1cc_sumika = EncodedBool::encode_from_raw(true);
 
     game_sys._0x2b_unlock_bg_capital_in_flames = EncodedBool::encode_from_raw(true);
-    game_sys._0x2c_unlock_bg_whirlpool_of_malice = EncodedBool::encode_from_raw(true);
-    game_sys._0x2f_unlock_bg_crashed_spaceship = EncodedBool::encode_from_raw(true);
-    game_sys._0x30_unlock_bg_guardians_chamber = EncodedBool::encode_from_raw(true);
-    game_sys._0x31_unlock_bg_moonlight_dance_hall = EncodedBool::encode_from_raw(true);
+    game_sys._0x2c_unlock_bg_whirlpool_of_malice = EncodedBool::encode_from_raw(false);
+    game_sys._0x2f_unlock_bg_crashed_spaceship = EncodedBool::encode_from_raw(false);
+    game_sys._0x30_unlock_bg_guardians_chamber = EncodedBool::encode_from_raw(false);
+    game_sys._0x31_unlock_bg_moonlight_dance_hall = EncodedBool::encode_from_raw(false);
     game_sys._0x32_unlock_bg_sumika_hideout = EncodedBool::encode_from_raw(true);
 
     game_sys._0x41_unlock_bgm_swordfish = EncodedBool::encode_from_raw(true);
     game_sys._0x46_unlock_bgm_accelerator = EncodedBool::encode_from_raw(true);
     game_sys._0x47_unlock_bgm_remember_me = EncodedBool::encode_from_raw(true);
     game_sys._0x48_unlock_bgm_mgom = EncodedBool::encode_from_raw(true);
+
+    println!("0x08 {}", game_sys._0x08.decode());
+
+    println!("Setting ugly values");
+
+    game_sys._0x08 = EncodedU32::encode_from_raw(0);
+
+    game_sys._0x1e = EncodedBool::encode_from_raw(false);
+    game_sys._0x1f = EncodedBool::encode_from_raw(false);
+    game_sys._0x20 = EncodedU32::encode_from_raw(0);
+    game_sys._0x24 = EncodedU32::encode_from_raw(0);
+    game_sys._0x28 = EncodedU8::encode_from_raw(0);
+    game_sys._0x29 = EncodedU8::encode_from_raw(0);
+    game_sys._0x2a = EncodedU8::encode_from_raw(0);
+
+    game_sys._0x2d = EncodedU8::encode_from_raw(0);
+    game_sys._0x2e = EncodedU8::encode_from_raw(0);
+
+    game_sys._0x33 = EncodedU8::encode_from_raw(0);
+    game_sys._0x34 = EncodedU32::encode_from_raw(0);
+    game_sys._0x38 = EncodedU32::encode_from_raw(0);
+    game_sys._0x3c = EncodedU32::encode_from_raw(0);
+    game_sys._0x40 = EncodedU8::encode_from_raw(0);
+
+    game_sys._0x42 = EncodedU8::encode_from_raw(0);
+    game_sys._0x43 = EncodedU8::encode_from_raw(0);
+    game_sys._0x44 = EncodedU8::encode_from_raw(0);
+    game_sys._0x45 = EncodedU8::encode_from_raw(0);
+
+    game_sys._0x60 = EncodedU8::encode_from_raw(0);
+    game_sys._0x61 = EncodedU8::encode_from_raw(0);
+    game_sys._0x62 = EncodedU8::encode_from_raw(0);
+
+    game_sys._0x72 = EncodedU8::encode_from_raw(0);
+    game_sys._0x73 = EncodedU8::encode_from_raw(0);
+    game_sys._0x74 = EncodedU8::encode_from_raw(0);
+    game_sys._0x75 = EncodedU8::encode_from_raw(0);
+
+    game_sys._0x85 = EncodedU8::encode_from_raw(0);
+    game_sys._0x86 = EncodedU8::encode_from_raw(0);
+    game_sys._0x87 = EncodedU8::encode_from_raw(0);
+    game_sys._0x88 = EncodedBool::encode_from_raw(false);
+
+    game_sys._0x98 = EncodedU32::encode_from_raw(0);
+
+    game_sys._0xaa = EncodedU8::encode_from_raw(0);
+    game_sys._0xab = EncodedU8::encode_from_raw(0);
+
+    println!("Set ugly values");
 
     game_sys.save(&settings.game_sys)?;
 
