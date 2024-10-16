@@ -20,10 +20,7 @@ impl<const KEY: u8> EncodedBool<KEY> {
 
     pub const fn decode(self) -> bool {
         let inner = self.0.decode();
-        match inner {
-            0 => false,
-            _ => true,
-        }
+        inner != 0
     }
 
     pub const fn get(&self) -> u8 {
