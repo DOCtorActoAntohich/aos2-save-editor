@@ -25,6 +25,7 @@ where
     {
         let mut writer = std::fs::OpenOptions::new()
             .create(true)
+            .truncate(true)
             .write(true)
             .open(path)
             .context("Failed to create or open the file for writing")?;
