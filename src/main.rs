@@ -2,7 +2,7 @@ use aos2_env::AoS2Paths;
 use aos2_save_editor::binary_file::{
     game::{
         encoded_bool::EncodedBool, encoded_u32::EncodedU32, encoded_u8::EncodedU8,
-        GameSysBinaryFile2,
+        GameSysBinaryFile,
     },
     player::PlayerFile,
     savefile::GameBinarySaveFile,
@@ -14,7 +14,7 @@ fn main() -> anyhow::Result<()> {
     let player_file = PlayerFile::from_file(&settings.player_rkg)?;
     player_file.save(&settings.player_rkg)?;
 
-    let mut game_sys = GameSysBinaryFile2::from_file(&settings.game_sys)?;
+    let mut game_sys = GameSysBinaryFile::from_file(&settings.game_sys)?;
 
     game_sys._0x0f_unlock_sora = EncodedBool::encode_from_raw(true);
     game_sys._0x10_unlock_alte = EncodedBool::encode_from_raw(false);

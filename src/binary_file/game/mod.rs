@@ -8,7 +8,7 @@ use encoded_bool::EncodedBool;
 use encoded_u32::EncodedU32;
 use encoded_u8::EncodedU8;
 
-use super::{savefile::GameBinarySaveFile, sized_section::SizedBinarySection};
+use super::savefile::GameBinarySaveFile;
 
 pub struct GameSysFile {
     pub singleplayer_mode_wins: u32,
@@ -18,14 +18,6 @@ pub struct GameSysFile {
 #[derive(Debug)]
 #[brw(little)]
 pub struct GameSysBinaryFile {
-    _looks_like_version: Version,
-    pub content: SizedBinarySection<0xa4, 0xa4>,
-}
-
-#[binrw::binrw]
-#[derive(Debug)]
-#[brw(little)]
-pub struct GameSysBinaryFile2 {
     _0x00_version: Version,
     _0x04_size: Size,
     pub _0x08: EncodedU32<0x4A, 0x5A, 0x6A, 0x7A>,
@@ -186,19 +178,17 @@ struct Size;
 
 impl GameBinarySaveFile for GameSysBinaryFile {}
 
-impl GameBinarySaveFile for GameSysBinaryFile2 {}
-
 impl GameSysFile {
     pub fn from_file<P>(path: P) -> anyhow::Result<Self>
     where
         P: AsRef<Path>,
     {
-        GameSysBinaryFile2::from_file(path).map(Into::into)
+        GameSysBinaryFile::from_file(path).map(Into::into)
     }
 }
 
-impl From<GameSysBinaryFile2> for GameSysFile {
-    fn from(value: GameSysBinaryFile2) -> Self {
+impl From<GameSysBinaryFile> for GameSysFile {
+    fn from(value: GameSysBinaryFile) -> Self {
         dbg!(value);
         todo!()
     }
