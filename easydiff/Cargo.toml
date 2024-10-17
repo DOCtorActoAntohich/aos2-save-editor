@@ -6,5 +6,6 @@ edition = "2021"
 [dependencies]
 aos2-env = { path = "../aos2-env" }
 anyhow.workspace = true
+thiserror.workspace = true
 clap = { workspace = true, features = ["derive"] }
 derive_more.workspace = true

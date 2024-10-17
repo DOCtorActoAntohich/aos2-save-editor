@@ -229,6 +229,7 @@ dependencies = [
  "aos2-env",
  "clap",
  "derive_more",
+ "thiserror",
 ]
 
 [[package]]
