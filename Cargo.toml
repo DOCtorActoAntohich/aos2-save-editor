@@ -17,7 +17,7 @@ rstest.workspace = true
 rstest_reuse.workspace = true
 
 [workspace]
-members = ["aos2-env", "easydiff"]
+members = ["aos2-env", "easydiff", "savefile"]
 default-members = ["."]
 
 [workspace.dependencies]

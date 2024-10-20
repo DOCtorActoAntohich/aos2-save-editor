@@ -1,0 +1,11 @@
+[package]
+name = "savefile"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+binrw.workspace = true
+
+[dev-dependencies]
+rstest.workspace = true
+rstest_reuse.workspace = true

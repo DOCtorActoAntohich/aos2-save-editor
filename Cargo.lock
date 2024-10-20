@@ -575,6 +575,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "savefile"
+version = "0.1.0"
+dependencies = [
+ "binrw",
+ "rstest",
+ "rstest_reuse",
+]
+
+[[package]]
 name = "semver"
 version = "1.0.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
