@@ -1,6 +1,6 @@
-pub mod key;
-pub mod u8;
 pub mod bool;
+pub mod u32;
+pub mod u8;
 
 /// Nibbles are the most or the least significant 4 bits.
 /// In Hex `0x8A`, `8` is the highest nibble, and `A` is the lowest.

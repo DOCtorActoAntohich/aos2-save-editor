@@ -1,4 +1,4 @@
-use super::{key::Key, u8::EncodedU8};
+use super::u8::{EncodedU8, KeyU8};
 
 #[binrw::binrw]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -10,7 +10,7 @@ impl EncodedBool {
         Self(EncodedU8::pre_encoded(value))
     }
 
-    pub const fn from_raw(raw: bool, key: Key) -> Self {
+    pub const fn from_raw(raw: bool, key: KeyU8) -> Self {
         let inner = match raw {
             true => 1,
             false => 0,
@@ -18,7 +18,7 @@ impl EncodedBool {
         Self(EncodedU8::from_raw(inner, key))
     }
 
-    pub const fn decode(self, key: Key) -> bool {
+    pub const fn decode(self, key: KeyU8) -> bool {
         let inner = self.0.decode(key);
         inner != 0
     }
