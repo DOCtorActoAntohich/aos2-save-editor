@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 aos2-env = { path = "./aos2-env" }
+savefile = { path = "./savefile" }
 binrw.workspace = true
 thiserror.workspace = true
 anyhow.workspace = true

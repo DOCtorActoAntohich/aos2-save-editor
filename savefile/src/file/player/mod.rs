@@ -2,6 +2,8 @@ mod avatar;
 mod title;
 mod version;
 
+use crate::{bin_bool::BinBool, sized_section::SizedBinarySection};
+
 pub use self::{
     avatar::{background::AvatarBackground, character::AvatarCharacter},
     title::{character::TitleCharacter, color::TitleColor, text::TitleText},
@@ -9,7 +11,7 @@ pub use self::{
 
 use self::version::Version;
 
-use super::{bin_bool::BinBool, savefile::GameBinarySaveFile, sized_section::SizedBinarySection};
+use super::binary::GameBinarySaveFile;
 
 pub type NicknameSection = SizedBinarySection<1, 16>;
 pub type LobbyNameSection = SizedBinarySection<1, 24>;

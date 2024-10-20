@@ -1,8 +1,8 @@
 use aos2_env::AoS2Paths;
-use aos2_save_editor::binary_file::{
-    game::{encoded_bool::EncodedBool, encoded_u32::EncodedU32, GameSysBinaryFile},
-    savefile::GameBinarySaveFile,
+use aos2_save_editor::binary_file::game::{
+    encoded_bool::EncodedBool, encoded_u32::EncodedU32, GameSysBinaryFile,
 };
+use savefile::file::binary::GameBinarySaveFile;
 
 fn main() -> anyhow::Result<()> {
     let settings = AoS2Paths::from_env()?;

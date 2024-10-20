@@ -7,8 +7,7 @@ use std::path::Path;
 use encoded_bool::EncodedBool;
 use encoded_u32::EncodedU32;
 use encoded_u8::EncodedU8;
-
-use super::savefile::GameBinarySaveFile;
+use savefile::file::binary::GameBinarySaveFile;
 
 pub struct GameSysFile {
     pub singleplayer_mode_wins: u32,
