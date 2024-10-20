@@ -1,3 +1,4 @@
+pub mod encoded;
 pub mod encoded_bool;
 pub mod encoded_u32;
 pub mod encoded_u8;
