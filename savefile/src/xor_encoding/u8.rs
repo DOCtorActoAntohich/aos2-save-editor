@@ -14,7 +14,8 @@ pub struct EncodedU8(u8);
 /// - 0xFA
 /// - 0x0B
 /// - 0x1B
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, derive_more::Display)]
+#[display("{_0:#x}")]
 pub struct KeyU8(u8);
 
 impl EncodedU8 {
@@ -46,9 +47,13 @@ impl KeyU8 {
     }
 
     pub const fn increment(self) -> Self {
+        self.wrapping_add(1)
+    }
+
+    pub const fn wrapping_add(self, rhs: u8) -> Self {
         let Self(swapped) = self;
         let normal = swap_nibbles(swapped);
-        Self(swap_nibbles(normal.wrapping_add(1)))
+        Self(swap_nibbles(normal.wrapping_add(rhs)))
     }
 }
 
@@ -70,8 +75,18 @@ mod tests {
         assert_eq!(expected_encoded, actual_encoded);
     }
 
+    #[rstest::rstest]
+    #[case(KeyU8::new(0x8A), 1, KeyU8::new(0x9A))]
+    #[case(KeyU8::new(0x9A), 1, KeyU8::new(0xAA))]
+    #[case(KeyU8::new(0xFA), 1, KeyU8::new(0x0B))]
+    fn adds(#[case] key: KeyU8, #[case] to_add: u8, #[case] expected: KeyU8) {
+        let actual = key.wrapping_add(to_add);
+        assert_eq!(expected, actual);
+    }
+
     #[rstest_reuse::template]
     #[rstest::rstest]
+    #[case(0xe8, EncodedU8::pre_encoded(0x0), KeyU8::new(0x8e))]
     #[case(000, EncodedU8::pre_encoded(0x8e), KeyU8::new(0x8e))]
     #[case(001, EncodedU8::pre_encoded(0x9e), KeyU8::new(0x8e))]
     #[case(002, EncodedU8::pre_encoded(0xae), KeyU8::new(0x8e))]
