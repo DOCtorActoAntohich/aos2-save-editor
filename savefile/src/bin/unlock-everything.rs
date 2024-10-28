@@ -11,9 +11,9 @@ fn main() -> anyhow::Result<()> {
 
     let mut progress = PlayerProgress::from_file(&paths.game_sys)?;
 
-    progress.background_image = BackgroundImageSheet::FULLY_UNLOCKED;
-    progress.unlocked_background_music = BackgroundMusicSheet::FULLY_UNLOCKED;
-    progress.playable_character = FullCharacterSheet::FULLY_UNLOCKED;
+    progress.enabled_character = FullCharacterSheet::FULLY_UNLOCKED;
+    progress.enabled_background_image = BackgroundImageSheet::FULLY_UNLOCKED;
+    progress.enabled_background_music = BackgroundMusicSheet::FULLY_UNLOCKED;
 
     progress.arcade_easy_1cc_by_character = FullCharacterSheet::FULLY_UNLOCKED;
     progress.arcade_medium_1cc_by_character = FullCharacterSheet::FULLY_UNLOCKED;
