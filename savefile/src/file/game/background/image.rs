@@ -45,6 +45,26 @@ pub struct BinarySheet {
     sumika_hideout: BinBool,
 }
 
+impl BackgroundImageSheet {
+    pub const FULLY_UNLOCKED: Self = Self {
+        before_the_war: true,
+        war_10k_years_ago: true,
+        canyon_of_wind: true,
+        dust_storm: true,
+        rain_and_sunset: true,
+        equator_doldrums: true,
+        big_bridge: true,
+        capital_in_flames: true,
+        whirlpool_of_malice: true,
+        _0x2d: UnknownU8(1),
+        nature_10k: true,
+        crashed_spaceship: true,
+        guardians_chamber: true,
+        moonlight_dance_hall: true,
+        sumika_hideout: true,
+    };
+}
+
 impl BinRead for BackgroundImageSheet {
     type Args<'a> = <BinarySheet as BinRead>::Args<'a>;
 

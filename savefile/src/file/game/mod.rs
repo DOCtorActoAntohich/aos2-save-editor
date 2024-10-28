@@ -19,7 +19,7 @@ use crate::xor_encoding::u8::{EncodedU8, KeyU8};
 #[binrw::binrw]
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[brw(little)]
-struct PlayerProgress {
+pub struct PlayerProgress {
     _0x00: UnknownU32,
     _0x04: UnknownU32,
     _0x08: UnknownU32,
@@ -111,10 +111,10 @@ struct PlayerProgress {
     ///
     /// Save file offset: 0x89 - 0x97.
     pub arcade_hard_1cc_by_character: FullCharacterSheet,
-    pub _0x98: UnknownU8,
-    pub _0x99: UnknownU8,
-    pub _0x9a: UnknownU8,
-    pub _0x9b: UnknownU8,
+    _0x98: UnknownU8,
+    _0x99: UnknownU8,
+    _0x9a: UnknownU8,
+    _0x9b: UnknownU8,
     /// Remembers if a character 1CC'ed Story mode on any difficulty.
     ///
     /// In game, it shows a star next to the character's portrait.

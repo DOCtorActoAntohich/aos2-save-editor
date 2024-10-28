@@ -47,6 +47,26 @@ pub struct BinarySheet {
     sumika: BinBool,
 }
 
+impl FullCharacterSheet {
+    pub const FULLY_UNLOCKED: Self = Self {
+        sora: true,
+        alte: true,
+        tsih: true,
+        mira: true,
+        sham: true,
+        nath: true,
+        star_breaker: true,
+        suguri: true,
+        saki: true,
+        iru: true,
+        nanako: true,
+        kae: true,
+        kyoko: true,
+        hime: true,
+        sumika: true,
+    };
+}
+
 impl BinRead for FullCharacterSheet {
     type Args<'a> = <BinarySheet as BinRead>::Args<'a>;
 

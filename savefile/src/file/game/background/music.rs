@@ -34,6 +34,22 @@ pub struct BinarySheet {
     mgom: BinBool,
 }
 
+impl BackgroundMusicSheet {
+    pub const FULLY_UNLOCKED: Self = Self {
+        need_for_speed: true,
+        black_hole: true,
+        distant_thunder: true,
+        swordfish: true,
+        shine: true,
+        expendables: true,
+        ribbon: true,
+        moving_out: true,
+        accelerator: true,
+        remember_me: true,
+        mgom: true,
+    };
+}
+
 impl BinRead for BackgroundMusicSheet {
     type Args<'a> = <BinarySheet as BinRead>::Args<'a>;
 
