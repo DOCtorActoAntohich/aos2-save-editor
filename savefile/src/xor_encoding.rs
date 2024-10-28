@@ -1,8 +1,12 @@
-use super::swap_nibbles;
-
+/// AoS2 uses a fun data encoding algorithm for relatively important data.
+///
+/// A sequence of bytes is encoded with a sequence of keys.
+/// Keys are pre-determined.
+/// See [`KeyU8`].
 #[binrw::binrw]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, derive_more::Display)]
 #[brw(little)]
+#[display("{_0:#x}")]
 pub struct EncodedU8(u8);
 
 /// A xor "encryption" key for bytes in `game.sys`.
@@ -57,9 +61,26 @@ impl KeyU8 {
     }
 }
 
+/// Nibble is a half of an octet, which is 4 most/least significant bits.
+/// In Hex `0x8A`, `8` is the highest nibble, and `A` is the lowest.
+/// So, after swaping, the number will be `0xA8.
+const fn swap_nibbles(byte: u8) -> u8 {
+    const HALF_BYTE: u32 = 4;
+    byte.rotate_left(HALF_BYTE)
+}
+
 #[cfg(test)]
 mod tests {
-    use super::{EncodedU8, KeyU8};
+    use super::{swap_nibbles, EncodedU8, KeyU8};
+
+    #[rstest::rstest]
+    #[case(0x8A, 0xA8)]
+    #[case(0x00, 0x00)]
+    #[case(0x12, 0x21)]
+    fn nibbles_swap_properly(#[case] input: u8, #[case] expected: u8) {
+        let actual = swap_nibbles(input);
+        assert_eq!(expected, actual)
+    }
 
     #[rstest_reuse::apply(mapping)]
     fn decodes(#[case] expected_raw: u8, #[case] encoded: EncodedU8, #[case] key: KeyU8) {

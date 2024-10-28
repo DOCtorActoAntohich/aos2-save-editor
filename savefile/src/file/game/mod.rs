@@ -11,7 +11,7 @@ use std::{io::Cursor, path::Path};
 use anyhow::Context;
 use binrw::{BinRead, BinWrite};
 
-use crate::xor_encoding::u8::{EncodedU8, KeyU8};
+use crate::xor_encoding::{EncodedU8, KeyU8};
 
 /// Player progress file, aka `game.sys`.
 ///
