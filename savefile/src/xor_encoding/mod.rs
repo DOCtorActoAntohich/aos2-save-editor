@@ -1,5 +1,4 @@
 pub mod bool;
-pub mod u32;
 pub mod u8;
 
 /// Nibbles are the most or the least significant 4 bits.
