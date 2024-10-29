@@ -23,7 +23,7 @@ pub type TitlesSection = SizedBinarySection<285, 285>;
 #[binrw::binrw]
 #[derive(Debug)]
 #[brw(little)]
-pub struct PlayerFile {
+pub struct OnlineProfile {
     pub version: Version,
     pub show_country: BinBool,
     pub nickname: NicknameSection,
@@ -42,7 +42,7 @@ pub struct PlayerFile {
     pub title_color: TitleColor,
 }
 
-impl GameBinarySaveFile for PlayerFile {}
+impl GameBinarySaveFile for OnlineProfile {}
 
 #[cfg(test)]
 mod tests {
@@ -50,7 +50,7 @@ mod tests {
 
     use binrw::BinRead;
 
-    use super::PlayerFile;
+    use super::OnlineProfile;
 
     #[rstest::fixture]
     fn manually_constructed_player_file() -> Vec<u8> {
@@ -85,6 +85,6 @@ mod tests {
     #[rstest::rstest]
     fn it_parses(#[from(manually_constructed_player_file)] player_file: Vec<u8>) {
         let mut cursor = Cursor::new(player_file);
-        PlayerFile::read(&mut cursor).expect("Must parse");
+        OnlineProfile::read(&mut cursor).expect("Must parse");
     }
 }
