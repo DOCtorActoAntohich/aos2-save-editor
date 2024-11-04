@@ -1,26 +1,18 @@
 #[binrw::binrw]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[brw(little)]
-pub struct BinBool(u8);
-
-impl BinBool {
-    pub const fn new(value: bool) -> Self {
-        match value {
-            true => Self(1),
-            false => Self(0),
-        }
-    }
-
-    pub const fn as_u8(&self) -> u8 {
-        self.0
-    }
+pub enum BinBool {
+    #[brw(magic = 0x01u8)]
+    True,
+    #[brw(magic = 0x00u8)]
+    False,
 }
 
 impl From<bool> for BinBool {
     fn from(value: bool) -> Self {
         match value {
-            true => BinBool(1),
-            false => BinBool(0),
+            true => Self::True,
+            false => Self::False,
         }
     }
 }
@@ -34,8 +26,8 @@ impl From<&bool> for BinBool {
 impl From<BinBool> for bool {
     fn from(value: BinBool) -> Self {
         match value {
-            BinBool(0) => false,
-            BinBool(_) => true,
+            BinBool::True => true,
+            BinBool::False => false,
         }
     }
 }
