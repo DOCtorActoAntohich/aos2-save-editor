@@ -1,10 +1,5 @@
-mod background;
-mod characters;
-
-pub use self::{
-    background::{image::BackgroundImageSheet, music::BackgroundMusicSheet},
-    characters::{full::FullCharacterSheet, story::StoryCharacterSheet},
-};
+pub mod background;
+pub mod characters;
 
 use std::{io::Cursor, path::Path};
 
@@ -12,6 +7,11 @@ use anyhow::Context;
 use binrw::{BinRead, BinWrite};
 
 use crate::xor_encoding::{EncodedU8, KeyU8};
+
+use self::{
+    background::{image::BackgroundImageSheet, music::BackgroundMusicSheet},
+    characters::{full::FullCharacterSheet, story::StoryCharacterSheet},
+};
 
 /// Player progress file, aka `game.sys`.
 ///

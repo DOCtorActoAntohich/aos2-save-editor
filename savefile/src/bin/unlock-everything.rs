@@ -1,7 +1,8 @@
 use aos2_env::AoS2Paths;
 use savefile::file::game::{
-    BackgroundImageSheet, BackgroundMusicSheet, FullCharacterSheet, PlayerProgress,
-    StoryCharacterSheet,
+    background::{image::BackgroundImageSheet, music::BackgroundMusicSheet},
+    characters::{full::FullCharacterSheet, story::StoryCharacterSheet},
+    PlayerProgress,
 };
 
 fn main() -> anyhow::Result<()> {
