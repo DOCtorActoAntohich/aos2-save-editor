@@ -28,7 +28,6 @@ struct HelpTextWindow;
 struct Footer;
 
 impl<C> FullHelpToggle<C> {
-    pub const CONSTRAINT: Constraint = Constraint::Length(1);
     pub const KEY: KeyCode = KeyCode::F(12);
 }
 
