@@ -9,6 +9,7 @@ aos2-env = { path = "./aos2-env" }
 savefile = { path = "./savefile" }
 anyhow.workspace = true
 ratatui.workspace = true
+tokio = { version = "1", features = ["sync"] }
 
 [dev-dependencies]
 rstest.workspace = true
@@ -35,3 +36,4 @@ clap = { version = "4" }
 rstest = "0.22"
 rstest_reuse = "0.7"
 ratatui = "0.29"
+tokio = "1"
