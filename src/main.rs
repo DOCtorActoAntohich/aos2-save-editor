@@ -1,4 +1,4 @@
-use aos2_save_editor::app::EditorApp;
+use aos2_save_editor::EditorApp;
 use ratatui::DefaultTerminal;
 
 fn main() -> anyhow::Result<()> {
