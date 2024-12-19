@@ -1,4 +1,5 @@
 mod component;
+mod keyboard;
 mod tui;
 mod widget;
 
