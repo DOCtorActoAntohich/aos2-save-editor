@@ -2,15 +2,14 @@ use aos2_save_editor::EditorApp;
 use ratatui::DefaultTerminal;
 
 fn main() -> anyhow::Result<()> {
-    let mut terminal = ratatui::init();
-    terminal.clear()?;
-    let app_result = run(terminal);
-    ratatui::restore();
-    app_result
+    let app = EditorApp::new();
+    run_tui(app)
 }
 
-fn run(terminal: DefaultTerminal) -> anyhow::Result<()> {
-    EditorApp::new().run(terminal)?;
-
-    Ok(())
+fn run_tui(app: EditorApp) -> anyhow::Result<()> {
+    let mut terminal = ratatui::init();
+    terminal.clear()?;
+    let app_result = app.run(terminal);
+    ratatui::restore();
+    app_result
 }
