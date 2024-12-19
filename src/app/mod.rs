@@ -18,7 +18,6 @@ use self::component::{ContentWidget, FullHelpToggle, TitleHeader};
 #[derive(Debug)]
 pub struct EditorApp {
     should_run: bool,
-    header: TitleHeader,
     content: FullHelpToggle<ContentWidget>,
 }
 
@@ -26,7 +25,6 @@ impl EditorApp {
     pub fn new() -> Self {
         Self {
             should_run: true,
-            header: TitleHeader,
             content: FullHelpToggle::new(ContentWidget::new()),
         }
     }
@@ -85,7 +83,7 @@ impl Widget for &EditorApp {
 
         let [header_area, central_area] = Layout::vertical(CONSTRAINTS).areas(area);
 
-        self.header.render(header_area, buf);
+        TitleHeader.render(header_area, buf);
         self.content.render(central_area, buf);
     }
 }
