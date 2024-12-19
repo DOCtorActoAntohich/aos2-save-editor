@@ -1,27 +1,29 @@
 use ratatui::{
-    crossterm::event::{Event, KeyCode, KeyEventKind},
+    crossterm::event::{Event, KeyCode},
     layout::{Constraint, Layout},
-    widgets::{Block, Paragraph, Widget},
+    widgets::Widget,
 };
 
 use crate::{
+    keyboard::GetKeyCode,
     tui::{HandleEvent, VisualComponent},
     widget::EvenlySpacedTabs,
 };
 
-#[derive(Debug)]
+use super::tab::TabComponent;
+
 pub struct ContentWidget {
     current_tab: usize,
-    tab_names: Vec<&'static str>,
+    tabs: Vec<Box<dyn TabComponent>>,
 }
 
 impl ContentWidget {
     pub const CONSTRAINT: Constraint = Constraint::Min(3);
 
-    pub fn new() -> Self {
+    pub fn new(tabs: impl IntoIterator<Item = Box<dyn TabComponent>>) -> Self {
         Self {
             current_tab: 0,
-            tab_names: vec!["amog", "imposter", "sus", "beniz", "comk"],
+            tabs: tabs.into_iter().collect(),
         }
     }
 
@@ -29,14 +31,14 @@ impl ContentWidget {
         self.current_tab = self
             .current_tab
             .saturating_add(1)
-            .clamp(0, self.tab_names.len() - 1);
+            .clamp(0, self.tabs.len() - 1);
     }
 
     pub fn previous_tab(&mut self) {
         self.current_tab = self
             .current_tab
             .saturating_sub(1)
-            .clamp(0, self.tab_names.len() - 1);
+            .clamp(0, self.tabs.len() - 1);
     }
 }
 
@@ -44,19 +46,21 @@ impl HandleEvent for ContentWidget {
     type Error = anyhow::Error;
 
     fn handle_event(&mut self, event: Event) -> Result<Event, Self::Error> {
-        match event {
-            Event::Key(key_event) if key_event.kind == KeyEventKind::Press => {
-                if key_event.code == KeyCode::PageDown {
-                    self.next_tab();
-                } else if key_event.code == KeyCode::PageUp {
-                    self.previous_tab();
-                }
+        let Some(key_code) = event.key_code() else {
+            return Ok(event);
+        };
+
+        match key_code {
+            KeyCode::PageDown => {
+                self.next_tab();
+                Ok(event)
             }
-
-            _ => (),
+            KeyCode::PageUp => {
+                self.previous_tab();
+                Ok(event)
+            }
+            _ => self.tabs[self.current_tab].handle_event(event),
         }
-
-        Ok(event)
     }
 }
 
@@ -66,13 +70,10 @@ impl VisualComponent for ContentWidget {
         let layout = Layout::vertical(constraints);
         let [tabs_area, content_area] = layout.areas::<2>(area);
 
-        EvenlySpacedTabs::new(self.tab_names.clone())
+        EvenlySpacedTabs::new(self.tabs.iter().map(|tab| tab.name()))
             .select(self.current_tab)
             .render(tabs_area, buf);
 
-        let content = Paragraph::new("ur mom gay")
-            .centered()
-            .block(Block::bordered());
-        content.render(content_area, buf);
+        self.tabs[self.current_tab].render(content_area, buf);
     }
 }

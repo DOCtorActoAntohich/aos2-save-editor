@@ -1,8 +1,11 @@
+use aos2_env::AoS2Paths;
 use aos2_save_editor::EditorApp;
-use ratatui::DefaultTerminal;
+use savefile::file::game::PlayerProgress;
 
 fn main() -> anyhow::Result<()> {
-    let app = EditorApp::new();
+    let paths = AoS2Paths::from_env()?;
+    let progress = PlayerProgress::from_file(&paths.game_sys)?;
+    let app = EditorApp::new(paths, progress);
     run_tui(app)
 }
 
