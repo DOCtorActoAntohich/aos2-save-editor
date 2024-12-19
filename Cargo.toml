@@ -1,7 +1,8 @@
 [package]
 name = "aos2-save-editor"
-version = "0.1.0"
-edition = "2021"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
 
 [dependencies]
 aos2-env = { path = "./aos2-env" }
@@ -16,6 +17,12 @@ rstest_reuse.workspace = true
 [workspace]
 members = ["aos2-env", "easydiff", "savefile"]
 default-members = ["."]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+# hall of shame lol.
+authors = ["DOCtorActoAntohich"]
 
 [workspace.dependencies]
 thiserror = "1"
