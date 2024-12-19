@@ -6,12 +6,8 @@ edition = "2021"
 [dependencies]
 aos2-env = { path = "./aos2-env" }
 savefile = { path = "./savefile" }
-binrw.workspace = true
-thiserror.workspace = true
 anyhow.workspace = true
-derive_more.workspace = true
-envy.workspace = true
-serde = { workspace = true, features = ["derive"] }
+ratatui.workspace = true
 
 [dev-dependencies]
 rstest.workspace = true
@@ -31,3 +27,4 @@ binrw = "0.14"
 clap = { version = "4" }
 rstest = "0.22"
 rstest_reuse = "0.7"
+ratatui = "0.29"
