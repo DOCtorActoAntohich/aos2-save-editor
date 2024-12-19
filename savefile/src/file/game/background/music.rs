@@ -1,7 +1,7 @@
 use crate::bin_bool::BinBool;
 
 #[binrw::binrw]
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Default)]
 #[brw(little)]
 pub struct BackgroundMusicSheet {
     #[br(map = From::<BinBool>::from)]

@@ -6,7 +6,7 @@ use crate::bin_bool::BinBool;
 ///
 /// Also see [`StoryCharacterSheet`].
 #[binrw::binrw]
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
 #[brw(little)]
 pub struct FullCharacterSheet {
     #[br(map = From::<BinBool>::from)]

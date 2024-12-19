@@ -17,7 +17,7 @@ use crate::xor_encoding::{EncodedU8, KeyU8};
 ///
 /// Order of fields MATTERS. Do NOT reorder.
 #[binrw::binrw]
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[brw(little)]
 pub struct PlayerProgress {
     _0x00: UnknownU32,
@@ -129,13 +129,13 @@ pub struct PlayerProgress {
 ///
 /// Marked separately because explicit is better.
 #[binrw::binrw]
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[brw(little)]
 struct UnknownU32(u32);
 
 /// Same as [`UnknownU32`].
 #[binrw::binrw]
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Default)]
 #[brw(little)]
 struct UnknownU8(u8);
 

@@ -4,7 +4,7 @@ use crate::bin_bool::BinBool;
 ///
 /// Because that silly girl doesn't have her story mode playthrough.
 #[binrw::binrw]
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Default)]
 #[brw(little)]
 pub struct StoryCharacterSheet {
     #[br(map = From::<BinBool>::from)]
