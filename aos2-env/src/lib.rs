@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 
+use anyhow::Context;
 use serde::Deserialize;
 
 #[derive(Debug, Clone)]
@@ -32,7 +33,8 @@ impl From<EnvVars> for AoS2Paths {
 
 impl AoS2Paths {
     pub fn from_env() -> anyhow::Result<Self> {
-        let env_vars: EnvVars = envy::from_env()?;
+        let env_vars: EnvVars =
+            envy::from_env().context("Failed to get AoS2 savefile directory")?;
         Ok(env_vars.into())
     }
 }
