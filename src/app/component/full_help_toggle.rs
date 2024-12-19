@@ -1,9 +1,9 @@
 use ratatui::{
     buffer::Buffer,
     crossterm::event::{Event, KeyCode, KeyEventKind},
-    layout::{Constraint, Layout, Rect},
+    layout::{Alignment, Constraint, Layout, Rect},
     style::{Color, Style},
-    widgets::{Paragraph, Widget},
+    widgets::{Block, BorderType, Paragraph, Widget},
 };
 
 use crate::tui::{HandleEvent, InteractibleComponent, VisualComponent};
@@ -27,12 +27,15 @@ struct HelpTextWindow;
 #[derive(Debug)]
 struct Footer;
 
+impl<C> FullHelpToggle<C> {
+    pub const CONSTRAINT: Constraint = Constraint::Length(1);
+    pub const KEY: KeyCode = KeyCode::F(12);
+}
+
 impl<C> FullHelpToggle<C>
 where
     C: InteractibleComponent,
 {
-    pub const CONSTRAINT: Constraint = Constraint::Length(1);
-
     pub fn new(content: C) -> Self {
         Self {
             content,
@@ -50,7 +53,7 @@ where
     fn handle_event(&mut self, event: Event) -> Result<Event, Self::Error> {
         match event {
             Event::Key(key_event)
-                if key_event.kind == KeyEventKind::Press && key_event.code == KeyCode::F(1) =>
+                if key_event.kind == KeyEventKind::Press && key_event.code == Self::KEY =>
             {
                 self.mode = self.mode.toggle();
                 Ok(event)
@@ -85,8 +88,14 @@ where
 
 impl VisualComponent for HelpTextWindow {
     fn render(&self, area: Rect, buf: &mut Buffer) {
+        let block = Block::bordered()
+            .border_type(BorderType::Thick)
+            .title("[HELP]")
+            .title_alignment(Alignment::Center);
+
         Paragraph::new("TODO: write this help lol")
             .centered()
+            .block(block)
             .render(area, buf);
     }
 }
@@ -95,7 +104,9 @@ impl VisualComponent for Footer {
     fn render(&self, area: Rect, buf: &mut Buffer) {
         const DARK_GRAY: Color = Color::Indexed(236);
 
-        Paragraph::new("Press F1 to toggle help")
+        let text = format!("Press `{}` to toggle help", FullHelpToggle::<()>::KEY);
+
+        Paragraph::new(text)
             .style(Style::default().bg(DARK_GRAY).fg(Color::White))
             .render(area, buf);
     }
