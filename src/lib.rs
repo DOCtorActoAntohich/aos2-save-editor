@@ -6,11 +6,12 @@ mod widget;
 use anyhow::Context;
 use aos2_env::AoS2Paths;
 use component::tab::{character::CharacterTab, empty::EmptyTab, TabComponent};
+use keyboard::GetKeyCode;
 use ratatui::{
     buffer::Buffer,
     crossterm::{
         self,
-        event::{Event, KeyCode, KeyEventKind},
+        event::{Event, KeyCode},
     },
     layout::{Constraint, Layout, Rect},
     widgets::Widget,
@@ -61,9 +62,7 @@ impl EditorApp {
 
     fn handle_events(&mut self) -> anyhow::Result<()> {
         let event = crossterm::event::read()?;
-
-        self.handle_event(&event)
-            .and_then(|_| self.content.handle_event(&event))?;
+        self.handle_event(&event)?;
 
         self.handle_savefile_updates()?;
 
@@ -94,14 +93,9 @@ impl HandleEvent for EditorApp {
     type Error = anyhow::Error;
 
     fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
-        match event {
-            Event::Key(key_event)
-                if key_event.kind == KeyEventKind::Press
-                    && key_event.code == KeyCode::Char('q') =>
-            {
-                self.exit();
-            }
-            _ => (),
+        match event.key_code() {
+            Some(KeyCode::Char('q')) => self.exit(),
+            _ => self.content.handle_event(event)?,
         }
 
         Ok(())

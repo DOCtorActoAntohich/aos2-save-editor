@@ -1,12 +1,15 @@
 use ratatui::{
     buffer::Buffer,
-    crossterm::event::{Event, KeyCode, KeyEventKind},
+    crossterm::event::{Event, KeyCode},
     layout::{Alignment, Constraint, Layout, Rect},
     style::{Color, Style},
     widgets::{Block, BorderType, Paragraph, Widget},
 };
 
-use crate::tui::{HandleEvent, InteractibleComponent, VisualComponent};
+use crate::{
+    keyboard::GetKeyCode,
+    tui::{HandleEvent, InteractibleComponent, VisualComponent},
+};
 
 #[derive(Debug)]
 pub struct FullHelpToggle<C> {
@@ -50,21 +53,15 @@ where
     type Error = anyhow::Error;
 
     fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
-        match event {
-            Event::Key(key_event)
-                if key_event.kind == KeyEventKind::Press && key_event.code == Self::KEY =>
-            {
+        match event.key_code() {
+            Some(Self::KEY) => {
                 self.mode = self.mode.toggle();
-                Ok(())
             }
-            other => {
-                if self.mode == Mode::ShowContent {
-                    self.content.handle_event(other)
-                } else {
-                    Ok(())
-                }
-            }
+            _other if self.mode == Mode::ShowContent => self.content.handle_event(event)?,
+            _ => (),
         }
+
+        Ok(())
     }
 }
 

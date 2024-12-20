@@ -38,8 +38,7 @@ impl HandleEvent for CharacterTab {
                 self.progress
                     .send_modify(|progress| progress.enabled_character = self.grid.clone().into());
             }
-            Some(_other) => (),
-            None => (),
+            _ => (),
         }
 
         Ok(())
