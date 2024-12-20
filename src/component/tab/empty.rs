@@ -12,8 +12,8 @@ pub struct EmptyTab;
 impl HandleEvent for EmptyTab {
     type Error = anyhow::Error;
 
-    fn handle_event(&mut self, event: Event) -> Result<Event, Self::Error> {
-        Ok(event)
+    fn handle_event(&mut self, _: &Event) -> Result<(), Self::Error> {
+        Ok(())
     }
 }
 

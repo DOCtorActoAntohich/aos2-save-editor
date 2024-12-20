@@ -62,8 +62,8 @@ impl EditorApp {
     fn handle_events(&mut self) -> anyhow::Result<()> {
         let event = crossterm::event::read()?;
 
-        self.handle_event(event)
-            .and_then(|event| self.content.handle_event(event))?;
+        self.handle_event(&event)
+            .and_then(|_| self.content.handle_event(&event))?;
 
         self.handle_savefile_updates()?;
 
@@ -93,7 +93,7 @@ impl EditorApp {
 impl HandleEvent for EditorApp {
     type Error = anyhow::Error;
 
-    fn handle_event(&mut self, event: Event) -> Result<Event, Self::Error> {
+    fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
         match event {
             Event::Key(key_event)
                 if key_event.kind == KeyEventKind::Press
@@ -104,7 +104,7 @@ impl HandleEvent for EditorApp {
             _ => (),
         }
 
-        Ok(event)
+        Ok(())
     }
 }
 

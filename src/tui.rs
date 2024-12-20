@@ -3,7 +3,7 @@ use ratatui::{buffer::Buffer, crossterm::event::Event, layout::Rect};
 pub trait HandleEvent {
     type Error;
 
-    fn handle_event(&mut self, event: Event) -> Result<Event, Self::Error>;
+    fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error>;
 }
 
 /// Similar to [`ratatui::widgets::Widget`] but takes `self` by reference.

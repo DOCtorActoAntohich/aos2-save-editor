@@ -49,19 +49,19 @@ where
 {
     type Error = anyhow::Error;
 
-    fn handle_event(&mut self, event: Event) -> Result<Event, Self::Error> {
+    fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
         match event {
             Event::Key(key_event)
                 if key_event.kind == KeyEventKind::Press && key_event.code == Self::KEY =>
             {
                 self.mode = self.mode.toggle();
-                Ok(event)
+                Ok(())
             }
             other => {
                 if self.mode == Mode::ShowContent {
                     self.content.handle_event(other)
                 } else {
-                    Ok(other)
+                    Ok(())
                 }
             }
         }

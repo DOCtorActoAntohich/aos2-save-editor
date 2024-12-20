@@ -29,7 +29,7 @@ impl CharacterTab {
 impl HandleEvent for CharacterTab {
     type Error = anyhow::Error;
 
-    fn handle_event(&mut self, event: Event) -> Result<Event, Self::Error> {
+    fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
         match event.key_code() {
             Some(KeyCode::Up) => self.grid.switch_previous(),
             Some(KeyCode::Down) => self.grid.switch_next(),
@@ -42,7 +42,7 @@ impl HandleEvent for CharacterTab {
             None => (),
         }
 
-        Ok(event)
+        Ok(())
     }
 }
 
