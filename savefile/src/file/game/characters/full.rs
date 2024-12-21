@@ -1,6 +1,6 @@
 use crate::bin_bool::BinBool;
 
-use super::{Character, CharacterIndex};
+use super::Character;
 
 /// Full list of characters.
 ///
@@ -72,13 +72,9 @@ pub struct FullCharacterSheet {
     pub sumika: bool,
 }
 
-#[derive(Debug, Clone)]
-pub struct FullCharacterValueGrid<T> {
-    grid: [T; 15],
-    index: usize,
-}
-
 impl FullCharacterSheet {
+    pub const N_CHARACTERS: usize = 15;
+
     pub const FULLY_UNLOCKED: Self = Self {
         sora: true,
         alte: true,
@@ -96,49 +92,17 @@ impl FullCharacterSheet {
         hime: true,
         sumika: true,
     };
-}
 
-impl<T> FullCharacterValueGrid<T> {
-    pub fn switch_next(&mut self) {
-        self.index = self.index.saturating_add(1).clamp(0, self.grid.len() - 1);
+    pub fn as_array(&self) -> [bool; FullCharacterSheet::N_CHARACTERS] {
+        (*self).into()
     }
 
-    pub fn switch_previous(&mut self) {
-        self.index = self.index.saturating_sub(1).clamp(0, self.grid.len() - 1);
-    }
-
-    pub fn current_index(&self) -> usize {
-        self.index
-    }
-
-    pub fn get_current(&self) -> &T {
-        self.grid
-            .get(self.index)
-            .expect("Invariant Broken: bad index value")
-    }
-
-    pub fn get_current_mut(&mut self) -> &mut T {
-        self.grid
-            .get_mut(self.index)
-            .expect("Invariant Broken: bad index value")
-    }
-
-    pub fn characters(&self) -> impl Iterator<Item = (Character, &T)> + '_ {
-        self.grid
-            .iter()
-            .enumerate()
-            .map(|(index, item)| (CharacterIndex::from(index).into(), item))
+    pub fn iter(&self) -> impl Iterator<Item = (Character, bool)> {
+        Character::list().into_iter().zip(self.as_array())
     }
 }
 
-impl FullCharacterValueGrid<bool> {
-    pub fn toggle_current(&mut self) {
-        let current = self.get_current_mut();
-        *current = !*current;
-    }
-}
-
-impl From<FullCharacterSheet> for FullCharacterValueGrid<bool> {
+impl From<FullCharacterSheet> for [bool; FullCharacterSheet::N_CHARACTERS] {
     fn from(
         FullCharacterSheet {
             sora,
@@ -158,7 +122,7 @@ impl From<FullCharacterSheet> for FullCharacterValueGrid<bool> {
             sumika,
         }: FullCharacterSheet,
     ) -> Self {
-        let grid = [
+        [
             sora,
             alte,
             tsih,
@@ -174,18 +138,29 @@ impl From<FullCharacterSheet> for FullCharacterValueGrid<bool> {
             kyoko,
             hime,
             sumika,
-        ];
-        Self { grid, index: 0 }
+        ]
     }
 }
 
-impl From<FullCharacterValueGrid<bool>> for FullCharacterSheet {
+impl From<[bool; FullCharacterSheet::N_CHARACTERS]> for FullCharacterSheet {
     fn from(
-        FullCharacterValueGrid {
-            grid:
-                [sora, alte, tsih, mira, sham, nath, star_breaker, suguri, saki, iru, nanako, kae, kyoko, hime, sumika],
-            index: _,
-        }: FullCharacterValueGrid<bool>,
+        [
+        sora,
+        alte,
+        tsih,
+        mira,
+        sham,
+        nath,
+        star_breaker,
+        suguri,
+        saki,
+        iru,
+        nanako,
+        kae,
+        kyoko,
+        hime,
+        sumika,
+    ]: [bool; FullCharacterSheet::N_CHARACTERS],
     ) -> Self {
         Self {
             sora,
@@ -204,40 +179,5 @@ impl From<FullCharacterValueGrid<bool>> for FullCharacterSheet {
             hime,
             sumika,
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::file::game::characters::full::{FullCharacterSheet, FullCharacterValueGrid};
-
-    #[rstest::rstest]
-    fn grid_properly_switches_indexes() {
-        let mut grid = FullCharacterValueGrid::from(FullCharacterSheet::default());
-        assert_eq!(grid.current_index(), 0);
-
-        grid.switch_previous();
-        assert_eq!(grid.current_index(), 0);
-
-        grid.switch_next();
-        assert_eq!(grid.current_index(), 1);
-
-        for _ in 0..100 {
-            grid.switch_next();
-        }
-        assert_eq!(grid.current_index(), 14);
-    }
-
-    #[rstest::rstest]
-    fn negates_properly() {
-        let mut grid = FullCharacterValueGrid::from(FullCharacterSheet::default());
-
-        assert_eq!(*grid.get_current(), false);
-
-        grid.toggle_current();
-        assert_eq!(*grid.get_current(), true);
-
-        grid.toggle_current();
-        assert_eq!(*grid.get_current(), false);
     }
 }

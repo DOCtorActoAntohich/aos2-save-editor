@@ -38,6 +38,28 @@ pub enum Character {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 struct CharacterIndex(usize);
 
+impl Character {
+    pub fn list() -> impl IntoIterator<Item = Character> {
+        [
+            Self::Sora,
+            Self::Alte,
+            Self::Tsih,
+            Self::Mira,
+            Self::Sham,
+            Self::Nath,
+            Self::StarBreaker,
+            Self::Suguri,
+            Self::Saki,
+            Self::Iru,
+            Self::Nanako,
+            Self::Kae,
+            Self::Kyoko,
+            Self::Hime,
+            Self::Sumika,
+        ]
+    }
+}
+
 impl Add<usize> for CharacterIndex {
     type Output = Self;
 

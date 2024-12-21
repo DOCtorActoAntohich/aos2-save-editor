@@ -1,9 +1,10 @@
 use ratatui::{
     crossterm::event::{Event, KeyCode},
     layout::Constraint,
-    widgets::{Block, Row, Table, Widget},
+    style::{Color, Style},
+    widgets::{Block, Cell, Row, Table, Widget},
 };
-use savefile::file::game::{characters::full::FullCharacterValueGrid, PlayerProgress};
+use savefile::file::game::{characters::full::FullCharacterSheet, PlayerProgress};
 use tokio::sync::watch;
 
 use crate::{
@@ -16,13 +17,37 @@ use super::TabComponent;
 #[derive(Debug)]
 pub struct CharacterTab {
     progress: watch::Sender<PlayerProgress>,
-    grid: FullCharacterValueGrid<bool>,
+    selected_character: usize,
 }
 
 impl CharacterTab {
     pub fn new(progress: watch::Sender<PlayerProgress>) -> Self {
-        let grid = progress.borrow().enabled_character.into();
-        Self { progress, grid }
+        Self {
+            progress,
+            selected_character: 0,
+        }
+    }
+
+    pub fn next_character(&mut self) {
+        self.selected_character = self
+            .selected_character
+            .saturating_add(1)
+            .clamp(0, FullCharacterSheet::N_CHARACTERS - 1);
+    }
+
+    pub fn previous_character(&mut self) {
+        self.selected_character = self
+            .selected_character
+            .saturating_sub(1)
+            .clamp(0, FullCharacterSheet::N_CHARACTERS - 1);
+    }
+
+    pub fn toggle_current_character(&mut self) {
+        self.progress.send_modify(|progress| {
+            let mut characters = progress.enabled_character.as_array();
+            characters[self.selected_character] = !characters[self.selected_character];
+            progress.enabled_character = characters.into();
+        });
     }
 }
 
@@ -31,13 +56,9 @@ impl HandleEvent for CharacterTab {
 
     fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
         match event.key_code() {
-            Some(KeyCode::Up) => self.grid.switch_previous(),
-            Some(KeyCode::Down) => self.grid.switch_next(),
-            Some(KeyCode::Enter) => {
-                self.grid.toggle_current();
-                self.progress
-                    .send_modify(|progress| progress.enabled_character = self.grid.clone().into());
-            }
+            Some(KeyCode::Up) => self.previous_character(),
+            Some(KeyCode::Down) => self.next_character(),
+            Some(KeyCode::Enter) => self.toggle_current_character(),
             _ => (),
         }
 
@@ -47,21 +68,31 @@ impl HandleEvent for CharacterTab {
 
 impl VisualComponent for CharacterTab {
     fn render(&self, area: ratatui::prelude::Rect, buf: &mut ratatui::prelude::Buffer) {
-        let rows: Vec<_> = self
-            .grid
-            .characters()
-            .map(|(name, &is_enabled)| {
-                Row::new(vec![
-                    name.to_string(),
-                    if is_enabled {
-                        "[+]".to_owned()
-                    } else {
-                        "[ ]".to_owned()
-                    },
-                ])
-            })
-            .collect();
-        let widths = (0..rows.len()).into_iter().map(|_| Constraint::Max(32));
+        let rows = self
+            .progress
+            .borrow()
+            .enabled_character
+            .iter()
+            .enumerate()
+            .map(|(row_index, (character, is_enabled))| {
+                let is_selected = row_index == self.selected_character;
+
+                let character_name = Cell::new(character.to_string());
+
+                let status_cell = if is_enabled {
+                    Cell::new(" + ").style(Style::new().bg(Color::Green).fg(Color::Black))
+                } else {
+                    Cell::new(" X ").style(Style::new().bg(Color::Red).fg(Color::White))
+                };
+                let row = Row::new(vec![character_name, status_cell]);
+                if is_selected {
+                    row.style(Style::new().bg(Color::White).fg(Color::Black))
+                } else {
+                    row
+                }
+            });
+
+        let widths = [Constraint::Length(12), Constraint::Length(3)];
         Table::new(rows, widths)
             .block(Block::bordered())
             .render(area, buf);
