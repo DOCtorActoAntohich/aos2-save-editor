@@ -1,16 +1,20 @@
 use ratatui::{
+    buffer::Buffer,
     crossterm::event::{Event, KeyCode},
-    layout::Constraint,
+    layout::{Constraint, Flex, Layout, Rect},
     style::{Color, Style},
-    text::Text,
-    widgets::{Block, Cell, Row, Table, Widget},
+    widgets::{Block, Cell, Paragraph, Row, Table, Widget},
 };
-use savefile::file::game::{characters::full::FullCharacterSheet, PlayerProgress};
+use savefile::file::game::{
+    characters::{full::FullCharacterSheet, Character},
+    PlayerProgress,
+};
 use tokio::sync::watch;
 
 use crate::{
     keyboard::GetKeyCode,
     tui::{HandleEvent, VisualComponent},
+    widget::{horizontal_separator::HorizontalSeparator, status_toggle::StatusToggle},
 };
 
 use super::TabComponent;
@@ -18,6 +22,15 @@ use super::TabComponent;
 #[derive(Debug)]
 pub struct CharacterTab {
     progress: watch::Sender<PlayerProgress>,
+    selected_character: usize,
+}
+
+struct CharacterTabWidget<I: Iterator<Item = (Character, bool)>> {
+    table: CharacterTable<I>,
+}
+
+struct CharacterTable<I: Iterator<Item = (Character, bool)>> {
+    rows: I,
     selected_character: usize,
 }
 
@@ -50,6 +63,15 @@ impl CharacterTab {
             progress.enabled_character = characters.into();
         });
     }
+
+    fn as_widget(&self) -> CharacterTabWidget<impl Iterator<Item = (Character, bool)>> {
+        CharacterTabWidget {
+            table: CharacterTable {
+                rows: self.progress.borrow().enabled_character.iter(),
+                selected_character: self.selected_character,
+            },
+        }
+    }
 }
 
 impl HandleEvent for CharacterTab {
@@ -68,26 +90,76 @@ impl HandleEvent for CharacterTab {
 }
 
 impl VisualComponent for CharacterTab {
-    fn render(&self, area: ratatui::prelude::Rect, buf: &mut ratatui::prelude::Buffer) {
-        let rows = self
-            .progress
-            .borrow()
-            .enabled_character
-            .iter()
+    fn render(&self, area: Rect, buf: &mut Buffer) {
+        let borders = Block::bordered();
+        let inner_area = borders.inner(area);
+
+        borders.render(area, buf);
+
+        self.as_widget().render(inner_area, buf);
+    }
+}
+
+impl TabComponent for CharacterTab {
+    fn name(&self) -> &'static str {
+        "Characters"
+    }
+}
+
+impl<I> Widget for CharacterTabWidget<I>
+where
+    I: Iterator<Item = (Character, bool)>,
+{
+    fn render(self, area: Rect, buf: &mut Buffer)
+    where
+        Self: Sized,
+    {
+        let constraints = [
+            Constraint::Length(3),
+            HorizontalSeparator::CONSTRAINT,
+            Constraint::Fill(1),
+        ];
+        let [text_area, separator_area, table_area] =
+            Layout::vertical(constraints).areas::<3>(area);
+
+        Paragraph::new("some help text here")
+            .centered()
+            .block(Block::new())
+            .render(text_area, buf);
+
+        HorizontalSeparator::new()
+            .style(Style::new().bg(Color::Black).fg(Color::White))
+            .render(separator_area, buf);
+
+        self.table.render(table_area, buf);
+    }
+}
+
+impl<I> Widget for CharacterTable<I>
+where
+    I: Iterator<Item = (Character, bool)>,
+{
+    fn render(self, area: Rect, buf: &mut Buffer)
+    where
+        Self: Sized,
+    {
+        let [area] = Layout::horizontal([Constraint::Ratio(1, 3)])
+            .flex(Flex::Center)
+            .areas::<1>(area);
+
+        let CharacterTable {
+            rows,
+            selected_character,
+        } = self;
+
+        let rows = rows
             .enumerate()
             .map(|(row_index, (character, is_enabled))| {
-                let is_selected = row_index == self.selected_character;
-
                 let character_name = Cell::new(character.to_string());
-
-                let status_cell = if is_enabled {
-                    Cell::new(Text::from("+").centered())
-                        .style(Style::new().bg(Color::Green).fg(Color::Black))
-                } else {
-                    Cell::new(Text::from("X").centered())
-                        .style(Style::new().bg(Color::Red).fg(Color::White))
-                };
+                let status_cell = StatusToggle::from(is_enabled).into_cell();
                 let row = Row::new(vec![character_name, status_cell]);
+
+                let is_selected = row_index == selected_character;
                 if is_selected {
                     row.style(Style::new().bg(Color::White).fg(Color::Black))
                 } else {
@@ -95,16 +167,9 @@ impl VisualComponent for CharacterTab {
                 }
             });
 
-        let widths = [Constraint::Length(12), Constraint::Length(3)];
+        let widths = [Constraint::Min(12), Constraint::Min(3)];
         Table::new(rows, widths)
             .style(Style::new().bg(Color::Black).fg(Color::White))
-            .block(Block::bordered())
             .render(area, buf);
-    }
-}
-
-impl TabComponent for CharacterTab {
-    fn name(&self) -> &'static str {
-        "Characters"
     }
 }
