@@ -2,6 +2,7 @@ use ratatui::{
     crossterm::event::{Event, KeyCode},
     layout::Constraint,
     style::{Color, Style},
+    text::Text,
     widgets::{Block, Cell, Row, Table, Widget},
 };
 use savefile::file::game::{characters::full::FullCharacterSheet, PlayerProgress};
@@ -80,9 +81,11 @@ impl VisualComponent for CharacterTab {
                 let character_name = Cell::new(character.to_string());
 
                 let status_cell = if is_enabled {
-                    Cell::new(" + ").style(Style::new().bg(Color::Green).fg(Color::Black))
+                    Cell::new(Text::from("+").centered())
+                        .style(Style::new().bg(Color::Green).fg(Color::Black))
                 } else {
-                    Cell::new(" X ").style(Style::new().bg(Color::Red).fg(Color::White))
+                    Cell::new(Text::from("X").centered())
+                        .style(Style::new().bg(Color::Red).fg(Color::White))
                 };
                 let row = Row::new(vec![character_name, status_cell]);
                 if is_selected {
