@@ -8,7 +8,7 @@ use ratatui::{
 use crate::{
     keyboard::GetKeyCode,
     tui::{HandleEvent, VisualComponent},
-    widget::EvenlySpacedTabs,
+    widget::evenly_spaced_tabs::EvenlySpacedTabs,
 };
 
 use super::tab::TabComponent;
