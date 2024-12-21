@@ -3,7 +3,7 @@ use ratatui::{
     crossterm::event::{Event, KeyCode},
     layout::{Alignment, Constraint, Layout, Rect},
     style::{Color, Style},
-    widgets::{Block, BorderType, Paragraph, Widget},
+    widgets::{Block, Paragraph, Widget},
 };
 
 use crate::{
@@ -85,7 +85,6 @@ where
 impl VisualComponent for HelpTextWindow {
     fn render(&self, area: Rect, buf: &mut Buffer) {
         let block = Block::bordered()
-            .border_type(BorderType::Thick)
             .title("[HELP]")
             .title_alignment(Alignment::Center);
 
