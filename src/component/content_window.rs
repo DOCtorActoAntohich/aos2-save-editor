@@ -1,6 +1,7 @@
 use ratatui::{
     crossterm::event::{Event, KeyCode},
     layout::{Constraint, Layout},
+    style::{Color, Style, Stylize},
     widgets::Widget,
 };
 
@@ -62,7 +63,11 @@ impl VisualComponent for ContentWidget {
         let layout = Layout::vertical(constraints);
         let [tabs_area, content_area] = layout.areas::<2>(area);
 
+        let unselected_style = Style::new().fg(Color::White).bg(Color::Black);
         EvenlySpacedTabs::new(self.tabs.iter().map(|tab| tab.name()))
+            .selected_style(Style::new().fg(Color::Black).bg(Color::White).bold())
+            .regular_style(unselected_style)
+            .divider_style(unselected_style)
             .select(self.current_tab)
             .render(tabs_area, buf);
 

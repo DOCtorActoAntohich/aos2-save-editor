@@ -91,6 +91,7 @@ impl VisualComponent for HelpTextWindow {
         Paragraph::new("TODO: write this help lol")
             .centered()
             .block(block)
+            .style(Style::new().fg(Color::White).bg(Color::Black))
             .render(area, buf);
     }
 }

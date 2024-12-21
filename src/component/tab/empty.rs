@@ -1,6 +1,7 @@
 use ratatui::{
     crossterm::event::Event,
-    widgets::{Paragraph, Widget},
+    style::{Color, Style},
+    widgets::{Block, Paragraph, Widget},
 };
 
 use crate::tui::{HandleEvent, VisualComponent};
@@ -19,7 +20,11 @@ impl HandleEvent for EmptyTab {
 
 impl VisualComponent for EmptyTab {
     fn render(&self, area: ratatui::prelude::Rect, buf: &mut ratatui::prelude::Buffer) {
-        Paragraph::new("ur mom gay").centered().render(area, buf);
+        Paragraph::new("ur mom gay")
+            .style(Style::new().bg(Color::Black).fg(Color::White))
+            .centered()
+            .block(Block::bordered())
+            .render(area, buf);
     }
 }
 

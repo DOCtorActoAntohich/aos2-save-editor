@@ -88,12 +88,13 @@ impl VisualComponent for CharacterTab {
                 if is_selected {
                     row.style(Style::new().bg(Color::White).fg(Color::Black))
                 } else {
-                    row
+                    row.style(Style::new().bg(Color::Black).fg(Color::White))
                 }
             });
 
         let widths = [Constraint::Length(12), Constraint::Length(3)];
         Table::new(rows, widths)
+            .style(Style::new().bg(Color::Black).fg(Color::White))
             .block(Block::bordered())
             .render(area, buf);
     }

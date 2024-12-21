@@ -55,6 +55,21 @@ impl<'a> EvenlySpacedTabs<'a> {
         self.current = index;
         self
     }
+
+    pub fn selected_style(mut self, style: Style) -> Self {
+        self.selected_style = style;
+        self
+    }
+
+    pub fn regular_style(mut self, style: Style) -> Self {
+        self.regular_style = style;
+        self
+    }
+
+    pub fn divider_style(mut self, style: Style) -> Self {
+        self.divider_style = style;
+        self
+    }
 }
 
 impl Widget for EvenlySpacedTabs<'_> {
