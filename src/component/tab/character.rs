@@ -3,7 +3,8 @@ use ratatui::{
     crossterm::event::{Event, KeyCode},
     layout::{Constraint, Flex, Layout, Rect},
     style::{Color, Style},
-    widgets::{Block, Cell, Paragraph, Row, Table, Widget},
+    text::Line,
+    widgets::{Block, Cell, List, Row, Table, Widget},
 };
 use savefile::file::game::{
     characters::{full::FullCharacterSheet, Character},
@@ -24,6 +25,8 @@ pub struct CharacterTab {
     progress: watch::Sender<PlayerProgress>,
     selected_character: usize,
 }
+
+struct HelpText;
 
 struct CharacterTabWidget<I: Iterator<Item = (Character, bool)>> {
     table: CharacterTable<I>,
@@ -74,6 +77,10 @@ impl CharacterTab {
     }
 }
 
+impl HelpText {
+    pub const CONSTRAINT: Constraint = Constraint::Length(3);
+}
+
 impl HandleEvent for CharacterTab {
     type Error = anyhow::Error;
 
@@ -115,23 +122,35 @@ where
         Self: Sized,
     {
         let constraints = [
-            Constraint::Length(3),
+            HelpText::CONSTRAINT,
             HorizontalSeparator::CONSTRAINT,
             Constraint::Fill(1),
         ];
         let [text_area, separator_area, table_area] =
             Layout::vertical(constraints).areas::<3>(area);
 
-        Paragraph::new("some help text here")
-            .centered()
-            .block(Block::new())
-            .render(text_area, buf);
+        HelpText.render(text_area, buf);
 
         HorizontalSeparator::new()
             .style(Style::new().bg(Color::Black).fg(Color::White))
             .render(separator_area, buf);
 
         self.table.render(table_area, buf);
+    }
+}
+
+impl Widget for HelpText {
+    fn render(self, area: Rect, buf: &mut Buffer)
+    where
+        Self: Sized,
+    {
+        let warning = Line::from("!! Keep at least 3-5 characters enabled !!")
+            .style(Style::new().fg(Color::Red));
+        let empty = Line::from("");
+        let other = Line::from("Otherwise the game will crash regularly")
+            .style(Style::new().fg(Color::White));
+        let lines = [warning, empty, other];
+        List::new(lines.into_iter().map(|line| line.centered())).render(area, buf);
     }
 }
 
