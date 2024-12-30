@@ -4,7 +4,7 @@ use ratatui::{
     layout::{Constraint, Flex, Layout, Rect},
     style::{Color, Style},
     text::Line,
-    widgets::{Block, Cell, List, Row, Table, Widget},
+    widgets::{Cell, List, Row, Table, Widget},
 };
 use savefile::file::game::{
     characters::{full::FullCharacterSheet, Character},
@@ -15,7 +15,10 @@ use tokio::sync::watch;
 use crate::{
     keyboard::GetKeyCode,
     tui::{HandleEvent, VisualComponent},
-    widget::{horizontal_separator::HorizontalSeparator, status_toggle::StatusToggle},
+    widget::{
+        black_box::BlackBox, default_text::DefaultText, horizontal_separator::HorizontalSeparator,
+        status_toggle::StatusToggle,
+    },
 };
 
 use super::TabComponent;
@@ -98,7 +101,7 @@ impl HandleEvent for CharacterTab {
 
 impl VisualComponent for CharacterTab {
     fn render(&self, area: Rect, buf: &mut Buffer) {
-        let borders = Block::bordered();
+        let borders = BlackBox::default();
         let inner_area = borders.inner(area);
 
         borders.render(area, buf);
@@ -131,9 +134,7 @@ where
 
         HelpText.render(text_area, buf);
 
-        HorizontalSeparator::new()
-            .style(Style::new().bg(Color::Black).fg(Color::White))
-            .render(separator_area, buf);
+        HorizontalSeparator::default().render(separator_area, buf);
 
         self.table.render(table_area, buf);
     }
@@ -144,13 +145,17 @@ impl Widget for HelpText {
     where
         Self: Sized,
     {
-        let warning = Line::from("!! Keep at least 3-5 characters enabled !!")
-            .style(Style::new().fg(Color::Red));
-        let empty = Line::from("");
-        let other = Line::from("Otherwise the game will crash regularly")
-            .style(Style::new().fg(Color::White));
-        let lines = [warning, empty, other];
-        List::new(lines.into_iter().map(|line| line.centered())).render(area, buf);
+        let lines = [
+            DefaultText::new("!! Keep at least 3-5 characters enabled !!").red(),
+            DefaultText::new(""),
+            DefaultText::new("Otherwise the game will crash regularly"),
+        ]
+        .into_iter()
+        .map(|line| Line::from(line).centered());
+
+        List::new(lines)
+            .style(Style::new().bg(Color::Black))
+            .render(area, buf);
     }
 }
 

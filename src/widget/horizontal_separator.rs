@@ -1,26 +1,25 @@
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
-    style::Style,
+    style::{Color, Style},
     widgets::{Block, Borders, Widget},
 };
 
-#[derive(Default)]
+#[derive(Debug)]
 pub struct HorizontalSeparator {
     style: Style,
 }
 
+impl Default for HorizontalSeparator {
+    fn default() -> Self {
+        Self {
+            style: Style::new().bg(Color::Black).fg(Color::White),
+        }
+    }
+}
+
 impl HorizontalSeparator {
     pub const CONSTRAINT: Constraint = Constraint::Length(1);
-
-    pub fn new() -> Self {
-        Self::default()
-    }
-
-    pub fn style(mut self, style: Style) -> Self {
-        self.style = style;
-        self
-    }
 }
 
 impl Widget for HorizontalSeparator {

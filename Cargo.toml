@@ -8,6 +8,7 @@ authors.workspace = true
 aos2-env = { path = "./aos2-env" }
 savefile = { path = "./savefile" }
 anyhow.workspace = true
+derive_more.workspace = true
 ratatui.workspace = true
 tokio = { workspace = true, features = ["sync"] }
 
