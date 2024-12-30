@@ -19,6 +19,12 @@ pub trait VisualComponent {
     fn render(&self, area: Rect, buf: &mut Buffer);
 }
 
-pub trait InteractibleComponent: HandleEvent<Error = anyhow::Error> + VisualComponent {}
+pub trait InteractibleComponent:
+    HandleEvent<Error = anyhow::Error> + VisualComponent + Send
+{
+}
 
-impl<C> InteractibleComponent for C where C: HandleEvent<Error = anyhow::Error> + VisualComponent {}
+impl<C> InteractibleComponent for C where
+    C: HandleEvent<Error = anyhow::Error> + VisualComponent + Send
+{
+}
