@@ -1,3 +1,5 @@
+pub mod signal;
+
 mod component;
 mod keyboard;
 mod tui;
@@ -6,6 +8,8 @@ mod widget;
 use anyhow::Context;
 use aos2_env::AoS2Paths;
 use component::tab::{character::CharacterTab, empty::EmptyTab, TabComponent};
+use crossterm::event::EventStream;
+use futures::StreamExt;
 use keyboard::GetKeyCode;
 use ratatui::{
     buffer::Buffer,
@@ -32,6 +36,7 @@ pub struct EditorApp {
     content: FullHelpToggle<ContentWidget>,
     paths: AoS2Paths,
     progress_rx: watch::Receiver<PlayerProgress>,
+    event_stream: EventStream,
 }
 
 impl EditorApp {
@@ -44,13 +49,16 @@ impl EditorApp {
             content: FullHelpToggle::new(ContentWidget::new(tabs)),
             paths,
             progress_rx,
+            event_stream: EventStream::new(),
         }
     }
 
-    pub fn run(mut self, mut terminal: DefaultTerminal) -> anyhow::Result<()> {
+    pub async fn run(mut self, mut terminal: DefaultTerminal) -> anyhow::Result<()> {
+        terminal.clear()?;
+
         while self.should_run {
             terminal.draw(|frame| self.draw(frame))?;
-            self.handle_events()?;
+            self.handle_events().await?;
         }
 
         Ok(())
@@ -60,8 +68,14 @@ impl EditorApp {
         frame.render_widget(self, frame.area());
     }
 
-    fn handle_events(&mut self) -> anyhow::Result<()> {
-        let event = crossterm::event::read()?;
+    async fn handle_events(&mut self) -> anyhow::Result<()> {
+        let event = self
+            .event_stream
+            .next()
+            .await
+            .context("No more events can be received")?
+            .context("Failed to receive event")?;
+
         self.handle_event(&event)?;
 
         self.handle_savefile_updates()?;
