@@ -172,6 +172,7 @@ impl EncodedProgress {
 
     pub fn save_to_file(&self, path: impl AsRef<Path>) -> anyhow::Result<()> {
         let mut writer = std::fs::File::options()
+            .create(true)
             .write(true)
             .truncate(true)
             .open(path)
