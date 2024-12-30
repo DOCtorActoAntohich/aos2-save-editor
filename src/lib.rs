@@ -7,16 +7,10 @@ mod widget;
 
 use anyhow::Context;
 use aos2_env::AoS2Paths;
-use component::tab::{character::CharacterTab, empty::EmptyTab, TabComponent};
-use crossterm::event::EventStream;
 use futures::StreamExt;
-use keyboard::GetKeyCode;
 use ratatui::{
     buffer::Buffer,
-    crossterm::{
-        self,
-        event::{Event, KeyCode},
-    },
+    crossterm::event::{Event, EventStream, KeyCode},
     layout::{Constraint, Layout, Rect},
     widgets::Widget,
     DefaultTerminal, Frame,
@@ -26,8 +20,12 @@ use tokio::sync::watch;
 
 use crate::{
     component::{
-        content_window::ContentWidget, full_help_toggle::FullHelpToggle, title_header::TitleHeader,
+        content_window::ContentWidget,
+        full_help_toggle::FullHelpToggle,
+        tab::{character::CharacterTab, empty::EmptyTab, TabComponent},
+        title_header::TitleHeader,
     },
+    keyboard::GetKeyCode,
     tui::{HandleEvent, VisualComponent},
 };
 
