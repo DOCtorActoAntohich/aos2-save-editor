@@ -1,21 +1,3 @@
-[package]
-name = "aos2-save-editor"
-version.workspace = true
-edition.workspace = true
-authors.workspace = true
-
-[dependencies]
-aos2-env = { path = "./aos2-env" }
-savefile = { path = "./savefile" }
-anyhow.workspace = true
-derive_more.workspace = true
-ratatui.workspace = true
-tokio = { workspace = true, features = ["sync"] }
-
-[dev-dependencies]
-rstest.workspace = true
-rstest_reuse.workspace = true
-
 [workspace]
 members = ["aos2-env", "easydiff", "savefile"]
 default-members = ["."]
@@ -38,3 +20,21 @@ rstest = "0.22"
 rstest_reuse = "0.7"
 ratatui = "0.29"
 tokio = "1"
+
+[package]
+name = "aos2-save-editor"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+
+[dependencies]
+aos2-env = { path = "./aos2-env" }
+savefile = { path = "./savefile" }
+anyhow.workspace = true
+derive_more.workspace = true
+ratatui.workspace = true
+tokio = { workspace = true, features = ["sync"] }
+
+[dev-dependencies]
+rstest.workspace = true
+rstest_reuse.workspace = true
