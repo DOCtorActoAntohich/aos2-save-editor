@@ -28,7 +28,7 @@ trait CustomButton: HandleEvent<Error = anyhow::Error> + Send {
     fn name(&self) -> &'static str;
 }
 
-pub struct UnlockablesTab {
+pub struct Tab {
     table: ButtonsTable,
 }
 
@@ -39,7 +39,7 @@ struct ButtonsTable {
     current_button: usize,
 }
 
-impl UnlockablesTab {
+impl Tab {
     pub fn new(progress_tx: watch::Sender<PlayerProgress>) -> Self {
         let buttons: Vec<Box<dyn CustomButton>> = vec![
             Box::new(backgrounds::Button::new(progress_tx.clone())),
@@ -74,7 +74,7 @@ impl ButtonsTable {
     }
 }
 
-impl HandleEvent for UnlockablesTab {
+impl HandleEvent for Tab {
     type Error = anyhow::Error;
 
     fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
@@ -95,7 +95,7 @@ impl HandleEvent for ButtonsTable {
     }
 }
 
-impl VisualComponent for UnlockablesTab {
+impl VisualComponent for Tab {
     fn render(&self, area: Rect, buf: &mut Buffer) {
         let borders = BlackBox::default();
         let inner_area = borders.inner(area);
@@ -137,7 +137,7 @@ impl VisualComponent for ButtonsTable {
     }
 }
 
-impl InteratibleTab for UnlockablesTab {
+impl InteratibleTab for Tab {
     fn name(&self) -> &'static str {
         "Unlockables"
     }

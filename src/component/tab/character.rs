@@ -24,7 +24,7 @@ use crate::{
 use super::InteratibleTab;
 
 #[derive(Debug)]
-pub struct CharacterTab {
+pub struct Tab {
     progress: watch::Sender<PlayerProgress>,
     selected_character: usize,
 }
@@ -40,7 +40,7 @@ struct CharacterTable<I: Iterator<Item = (Character, bool)>> {
     selected_character: usize,
 }
 
-impl CharacterTab {
+impl Tab {
     pub fn new(progress: watch::Sender<PlayerProgress>) -> Self {
         Self {
             progress,
@@ -84,7 +84,7 @@ impl HelpText {
     pub const CONSTRAINT: Constraint = Constraint::Length(3);
 }
 
-impl HandleEvent for CharacterTab {
+impl HandleEvent for Tab {
     type Error = anyhow::Error;
 
     fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
@@ -99,7 +99,7 @@ impl HandleEvent for CharacterTab {
     }
 }
 
-impl VisualComponent for CharacterTab {
+impl VisualComponent for Tab {
     fn render(&self, area: Rect, buf: &mut Buffer) {
         let borders = BlackBox::default();
         let inner_area = borders.inner(area);
@@ -110,7 +110,7 @@ impl VisualComponent for CharacterTab {
     }
 }
 
-impl InteratibleTab for CharacterTab {
+impl InteratibleTab for Tab {
     fn name(&self) -> &'static str {
         "Characters"
     }

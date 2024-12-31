@@ -8,7 +8,6 @@ mod widget;
 
 use anyhow::Context;
 use aos2_env::AoS2Paths;
-use component::tab::unlockables::UnlockablesTab;
 use ratatui::{
     buffer::Buffer,
     crossterm::{
@@ -24,14 +23,14 @@ use tokio::sync::watch;
 
 use crate::{
     component::{
-        content_window::ContentWidget,
-        full_help_toggle::FullHelpToggle,
-        tab::{character::CharacterTab, InteratibleTab},
+        content_window::ContentWidget, full_help_toggle::FullHelpToggle, tab::InteratibleTab,
         title_header::TitleHeader,
     },
     keyboard::GetKeyCode,
     tui::{HandleEvent, VisualComponent},
 };
+
+use self::component::tab::{character, unlockables};
 
 #[must_use]
 pub struct EditorApp {
@@ -45,8 +44,8 @@ impl EditorApp {
     pub fn new(paths: AoS2Paths, progress: PlayerProgress) -> Self {
         let (progress_tx, progress_rx) = watch::channel(progress);
         let tabs: [Box<dyn InteratibleTab>; 2] = [
-            Box::new(CharacterTab::new(progress_tx.clone())),
-            Box::new(UnlockablesTab::new(progress_tx)),
+            Box::new(character::Tab::new(progress_tx.clone())),
+            Box::new(unlockables::Tab::new(progress_tx)),
         ];
         Self {
             should_run: true,
