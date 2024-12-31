@@ -1,8 +1,6 @@
 pub mod full;
 pub mod story;
 
-use std::ops::{Add, AddAssign, Sub, SubAssign};
-
 #[derive(
     Debug,
     Clone,
@@ -35,9 +33,6 @@ pub enum Character {
     Sumika = 14,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-struct CharacterIndex(usize);
-
 impl Character {
     pub fn list() -> impl IntoIterator<Item = Character> {
         [
@@ -57,47 +52,5 @@ impl Character {
             Self::Hime,
             Self::Sumika,
         ]
-    }
-}
-
-impl Add<usize> for CharacterIndex {
-    type Output = Self;
-
-    fn add(self, rhs: usize) -> Self::Output {
-        let Self(lhs) = self;
-        lhs.saturating_add(rhs).into()
-    }
-}
-
-impl AddAssign<usize> for CharacterIndex {
-    fn add_assign(&mut self, rhs: usize) {
-        *self = *self + rhs
-    }
-}
-
-impl Sub<usize> for CharacterIndex {
-    type Output = Self;
-
-    fn sub(self, rhs: usize) -> Self::Output {
-        let Self(lhs) = self;
-        lhs.saturating_sub(rhs).into()
-    }
-}
-
-impl SubAssign<usize> for CharacterIndex {
-    fn sub_assign(&mut self, rhs: usize) {
-        *self = *self - rhs
-    }
-}
-
-impl From<usize> for CharacterIndex {
-    fn from(value: usize) -> Self {
-        Self(value.clamp(0, 14))
-    }
-}
-
-impl From<CharacterIndex> for Character {
-    fn from(CharacterIndex(index): CharacterIndex) -> Self {
-        Character::try_from(index).expect("Invariant Broken: character index was invalid")
     }
 }
