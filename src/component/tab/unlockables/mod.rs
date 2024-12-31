@@ -1,4 +1,4 @@
-mod background;
+mod backgrounds;
 mod music;
 mod style;
 
@@ -21,8 +21,6 @@ use crate::{
     },
 };
 
-use self::{background::UnlockBackgroundsButton, music::UnlockMusicButton};
-
 use super::Tab;
 
 trait CustomButton: HandleEvent<Error = anyhow::Error> + Send {
@@ -44,8 +42,8 @@ struct ButtonsTable {
 impl UnlockablesTab {
     pub fn new(progress_tx: watch::Sender<PlayerProgress>) -> Self {
         let buttons: Vec<Box<dyn CustomButton>> = vec![
-            Box::new(UnlockBackgroundsButton::new(progress_tx.clone())),
-            Box::new(UnlockMusicButton::new(progress_tx)),
+            Box::new(backgrounds::Button::new(progress_tx.clone())),
+            Box::new(music::Button::new(progress_tx)),
         ];
         Self {
             table: ButtonsTable {

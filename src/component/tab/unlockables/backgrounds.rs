@@ -12,11 +12,11 @@ use super::{
     CustomButton,
 };
 
-pub struct UnlockBackgroundsButton {
+pub struct Button {
     progress_tx: watch::Sender<PlayerProgress>,
 }
 
-impl UnlockBackgroundsButton {
+impl Button {
     pub fn new(progress_tx: watch::Sender<PlayerProgress>) -> Self {
         Self { progress_tx }
     }
@@ -28,7 +28,7 @@ impl UnlockBackgroundsButton {
     }
 }
 
-impl CustomButton for UnlockBackgroundsButton {
+impl CustomButton for Button {
     fn as_line(&self) -> Line<'_> {
         let all_backgrounds_unlocked = self.progress_tx.borrow().enabled_background_image
             == BackgroundImageSheet::FULLY_UNLOCKED;
@@ -45,7 +45,7 @@ impl CustomButton for UnlockBackgroundsButton {
     }
 }
 
-impl HandleEvent for UnlockBackgroundsButton {
+impl HandleEvent for Button {
     type Error = anyhow::Error;
 
     fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {

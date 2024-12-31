@@ -12,11 +12,11 @@ use super::{
     CustomButton,
 };
 
-pub struct UnlockMusicButton {
+pub struct Button {
     progress_tx: watch::Sender<PlayerProgress>,
 }
 
-impl UnlockMusicButton {
+impl Button {
     pub fn new(progress_tx: watch::Sender<PlayerProgress>) -> Self {
         Self { progress_tx }
     }
@@ -28,7 +28,7 @@ impl UnlockMusicButton {
     }
 }
 
-impl CustomButton for UnlockMusicButton {
+impl CustomButton for Button {
     fn as_line(&self) -> Line<'_> {
         let all_music_unlocked = self.progress_tx.borrow().enabled_background_music
             == BackgroundMusicSheet::FULLY_UNLOCKED;
@@ -45,7 +45,7 @@ impl CustomButton for UnlockMusicButton {
     }
 }
 
-impl HandleEvent for UnlockMusicButton {
+impl HandleEvent for Button {
     type Error = anyhow::Error;
 
     fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
