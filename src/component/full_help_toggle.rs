@@ -3,7 +3,7 @@ use ratatui::{
     crossterm::event::{Event, KeyCode},
     layout::{Alignment, Constraint, Layout, Rect},
     style::{Color, Style},
-    widgets::{Block, Paragraph, Widget},
+    widgets::{Block, Borders, Paragraph, Widget},
 };
 
 use crate::{
@@ -30,8 +30,18 @@ struct HelpTextWindow;
 #[derive(Debug)]
 struct Footer;
 
+#[derive(Debug, derive_more::Into)]
+struct HelpStyle(Style);
+
 impl<C> FullHelpToggle<C> {
     pub const KEY: KeyCode = KeyCode::F(12);
+}
+
+impl Default for HelpStyle {
+    fn default() -> Self {
+        const DARK_GRAY: Color = Color::Indexed(236);
+        Self(Style::new().bg(DARK_GRAY).fg(Color::White))
+    }
 }
 
 impl<C> FullHelpToggle<C>
@@ -84,26 +94,26 @@ where
 
 impl VisualComponent for HelpTextWindow {
     fn render(&self, area: Rect, buf: &mut Buffer) {
-        let block = Block::bordered()
+        let block = Block::new()
+            .borders(Borders::TOP | Borders::BOTTOM)
+            .style(HelpStyle::default())
             .title("[HELP]")
             .title_alignment(Alignment::Center);
 
         Paragraph::new("TODO: write this help lol")
             .centered()
             .block(block)
-            .style(Style::new().fg(Color::White).bg(Color::Black))
+            .style(HelpStyle::default())
             .render(area, buf);
     }
 }
 
 impl VisualComponent for Footer {
     fn render(&self, area: Rect, buf: &mut Buffer) {
-        const DARK_GRAY: Color = Color::Indexed(236);
-
         let text = format!("Press `{}` to toggle help", FullHelpToggle::<()>::KEY);
 
         Paragraph::new(text)
-            .style(Style::default().bg(DARK_GRAY).fg(Color::White))
+            .style(HelpStyle::default())
             .render(area, buf);
     }
 }
