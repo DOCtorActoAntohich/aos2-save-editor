@@ -3,6 +3,6 @@ use crate::tui::InteractibleComponent;
 pub mod character;
 pub mod unlockables;
 
-pub trait InteratibleTab: InteractibleComponent {
+pub trait InteratibleTabComponent: InteractibleComponent {
     fn name(&self) -> &'static str;
 }

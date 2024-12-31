@@ -21,7 +21,7 @@ use crate::{
     },
 };
 
-use super::InteratibleTab;
+use super::InteratibleTabComponent;
 
 #[derive(Debug)]
 pub struct Tab {
@@ -110,7 +110,7 @@ impl VisualComponent for Tab {
     }
 }
 
-impl InteratibleTab for Tab {
+impl InteratibleTabComponent for Tab {
     fn name(&self) -> &'static str {
         "Characters"
     }

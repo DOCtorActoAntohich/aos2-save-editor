@@ -21,7 +21,7 @@ use crate::{
     },
 };
 
-use super::InteratibleTab;
+use super::InteratibleTabComponent;
 
 trait CustomButton: HandleEvent<Error = anyhow::Error> + Send {
     fn as_line(&self) -> Line<'_>;
@@ -137,7 +137,7 @@ impl VisualComponent for ButtonsTable {
     }
 }
 
-impl InteratibleTab for Tab {
+impl InteratibleTabComponent for Tab {
     fn name(&self) -> &'static str {
         "Unlockables"
     }

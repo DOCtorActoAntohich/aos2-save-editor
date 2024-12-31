@@ -23,8 +23,8 @@ use tokio::sync::watch;
 
 use crate::{
     component::{
-        content_window::ContentWidget, full_help_toggle::FullHelpToggle, tab::InteratibleTab,
-        title_header::TitleHeader,
+        content_window::ContentWidget, full_help_toggle::FullHelpToggle,
+        tab::InteratibleTabComponent, title_header::TitleHeader,
     },
     keyboard::GetKeyCode,
     tui::{HandleEvent, VisualComponent},
@@ -43,7 +43,7 @@ pub struct EditorApp {
 impl EditorApp {
     pub fn new(paths: AoS2Paths, progress: PlayerProgress) -> Self {
         let (progress_tx, progress_rx) = watch::channel(progress);
-        let tabs: [Box<dyn InteratibleTab>; 2] = [
+        let tabs: [Box<dyn InteratibleTabComponent>; 2] = [
             Box::new(character::Tab::new(progress_tx.clone())),
             Box::new(unlockables::Tab::new(progress_tx)),
         ];
