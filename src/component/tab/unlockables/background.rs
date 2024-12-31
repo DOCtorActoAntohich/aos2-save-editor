@@ -49,9 +49,8 @@ impl HandleEvent for UnlockBackgroundsButton {
     type Error = anyhow::Error;
 
     fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
-        match event.key_code() {
-            Some(KeyCode::Enter) => self.unlock_all(),
-            _ => (),
+        if let Some(KeyCode::Enter) = event.key_code() {
+            self.unlock_all();
         }
         Ok(())
     }
