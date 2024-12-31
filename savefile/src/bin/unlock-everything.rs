@@ -1,5 +1,5 @@
 use aos2_env::AoS2Paths;
-use savefile::file::game::{
+use savefile::file::local::{
     background::{image::BackgroundImageSheet, music::BackgroundMusicSheet},
     characters::{full::FullCharacterSheet, story::StoryCharacterSheet},
     PlayerProgress,

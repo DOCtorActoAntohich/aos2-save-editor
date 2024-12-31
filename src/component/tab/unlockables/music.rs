@@ -2,7 +2,7 @@ use ratatui::{
     crossterm::event::{Event, KeyCode},
     text::Line,
 };
-use savefile::file::game::{background::music::BackgroundMusicSheet, PlayerProgress};
+use savefile::file::local::{background::music::BackgroundMusicSheet, PlayerProgress};
 use tokio::sync::watch;
 
 use crate::{keyboard::GetKeyCode, tui::HandleEvent};

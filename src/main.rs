@@ -1,6 +1,6 @@
 use aos2_env::AoS2Paths;
 use aos2_save_editor::EditorApp;
-use savefile::file::game::PlayerProgress;
+use savefile::file::local::PlayerProgress;
 
 fn main() -> anyhow::Result<()> {
     let paths = AoS2Paths::from_env()?;

@@ -247,7 +247,7 @@ mod tests {
 
     use binrw::{BinRead, BinWrite};
 
-    use crate::file::game::{EncodedProgress, PlayerProgress};
+    use crate::file::local::{EncodedProgress, PlayerProgress};
 
     const CARGO_TOML: &str = env!("CARGO_MANIFEST_DIR");
 

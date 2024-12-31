@@ -1,4 +1,4 @@
-use crate::{bin_bool::BinBool, file::game::UnknownU8};
+use crate::{bin_bool::BinBool, file::local::UnknownU8};
 
 #[binrw::binrw]
 #[derive(Debug, Clone, Default)]

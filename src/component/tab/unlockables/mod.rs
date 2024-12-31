@@ -10,7 +10,7 @@ use ratatui::{
     text::Line,
     widgets::{List, Row, Table, Widget},
 };
-use savefile::file::game::PlayerProgress;
+use savefile::file::local::PlayerProgress;
 use tokio::sync::watch;
 
 use crate::{
