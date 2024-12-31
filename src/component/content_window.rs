@@ -11,17 +11,17 @@ use crate::{
     widget::evenly_spaced_tabs::EvenlySpacedTabs,
 };
 
-use super::tab::Tab;
+use super::tab::InteratibleTab;
 
 pub struct ContentWidget {
     current_tab: usize,
-    tabs: Vec<Box<dyn Tab>>,
+    tabs: Vec<Box<dyn InteratibleTab>>,
 }
 
 impl ContentWidget {
     pub const CONSTRAINT: Constraint = Constraint::Min(3);
 
-    pub fn new(tabs: impl IntoIterator<Item = Box<dyn Tab>>) -> Self {
+    pub fn new(tabs: impl IntoIterator<Item = Box<dyn InteratibleTab>>) -> Self {
         Self {
             current_tab: 0,
             tabs: tabs.into_iter().collect(),
