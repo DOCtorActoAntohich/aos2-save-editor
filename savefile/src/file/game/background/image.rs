@@ -1,7 +1,7 @@
 use crate::{bin_bool::BinBool, file::game::UnknownU8};
 
 #[binrw::binrw]
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Default)]
+#[derive(Debug, Clone, Hash, Default)]
 #[brw(little)]
 pub struct BackgroundImageSheet {
     #[br(map = From::<BinBool>::from)]
@@ -85,3 +85,26 @@ impl BackgroundImageSheet {
         sumika_hideout: true,
     };
 }
+
+/// Skips unknown field because who knows what it does.
+/// Otherwise must be derived.
+impl PartialEq for BackgroundImageSheet {
+    fn eq(&self, other: &Self) -> bool {
+        self.before_the_war == other.before_the_war
+            && self.war_10k_years_ago == other.war_10k_years_ago
+            && self.canyon_of_wind == other.canyon_of_wind
+            && self.dust_storm == other.dust_storm
+            && self.rain_and_sunset == other.rain_and_sunset
+            && self.equator_doldrums == other.equator_doldrums
+            && self.big_bridge == other.big_bridge
+            && self.capital_in_flames == other.capital_in_flames
+            && self.whirlpool_of_malice == other.whirlpool_of_malice
+            && self.nature_10k == other.nature_10k
+            && self.crashed_spaceship == other.crashed_spaceship
+            && self.guardians_chamber == other.guardians_chamber
+            && self.moonlight_dance_hall == other.moonlight_dance_hall
+            && self.sumika_hideout == other.sumika_hideout
+    }
+}
+
+impl Eq for BackgroundImageSheet {}
