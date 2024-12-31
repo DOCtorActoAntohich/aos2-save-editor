@@ -1,0 +1,58 @@
+use ratatui::{
+    crossterm::event::{Event, KeyCode},
+    text::Line,
+};
+use savefile::file::game::{background::music::BackgroundMusicSheet, PlayerProgress};
+use tokio::sync::watch;
+
+use crate::{keyboard::GetKeyCode, tui::HandleEvent};
+
+use super::{
+    style::{PossibleUnlocksStyle, UnlockedStyle},
+    CustomButton,
+};
+
+pub struct UnlockMusicButton {
+    progress_tx: watch::Sender<PlayerProgress>,
+}
+
+impl UnlockMusicButton {
+    pub fn new(progress_tx: watch::Sender<PlayerProgress>) -> Self {
+        Self { progress_tx }
+    }
+
+    pub fn unlock_all(&mut self) {
+        self.progress_tx.send_modify(|progress| {
+            progress.enabled_background_music = BackgroundMusicSheet::FULLY_UNLOCKED
+        });
+    }
+}
+
+impl CustomButton for UnlockMusicButton {
+    fn as_line(&self) -> Line<'_> {
+        let all_music_unlocked = self.progress_tx.borrow().enabled_background_music
+            == BackgroundMusicSheet::FULLY_UNLOCKED;
+
+        if all_music_unlocked {
+            Line::from("Fully unlocked").style(UnlockedStyle::default())
+        } else {
+            Line::from("[Press Enter to Unlock]").style(PossibleUnlocksStyle::default())
+        }
+    }
+
+    fn name(&self) -> &'static str {
+        "Music"
+    }
+}
+
+impl HandleEvent for UnlockMusicButton {
+    type Error = anyhow::Error;
+
+    fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
+        match event.key_code() {
+            Some(KeyCode::Enter) => self.unlock_all(),
+            _ => (),
+        }
+        Ok(())
+    }
+}
