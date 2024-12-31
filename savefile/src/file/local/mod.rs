@@ -4,6 +4,7 @@ pub mod characters;
 use std::{io::Cursor, path::Path};
 
 use anyhow::Context;
+use aos2_env::AoS2Env;
 use binrw::{BinRead, BinWrite};
 
 use crate::xor_encoding::{EncodedU8, KeyU8};
@@ -150,12 +151,22 @@ struct EncodedProgress {
 }
 
 impl PlayerProgress {
+    const FILE_NAME: &'static str = "game.sys";
+
     pub fn from_file(path: impl AsRef<Path>) -> anyhow::Result<Self> {
         EncodedProgress::from_file(path)?.try_into()
     }
 
     pub fn save_to_file(&self, path: impl AsRef<Path>) -> anyhow::Result<()> {
         EncodedProgress::try_from(self.clone())?.save_to_file(path)
+    }
+
+    pub fn save(&self, env: &AoS2Env) -> anyhow::Result<()> {
+        self.save_to_file(env.saves_folder.join(Self::FILE_NAME))
+    }
+
+    pub fn load(env: &AoS2Env) -> anyhow::Result<Self> {
+        Self::from_file(env.saves_folder.join(Self::FILE_NAME))
     }
 }
 

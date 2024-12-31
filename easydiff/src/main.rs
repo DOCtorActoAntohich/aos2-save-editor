@@ -4,7 +4,7 @@ mod path;
 
 use std::path::PathBuf;
 
-use aos2_env::AoS2Paths;
+use aos2_env::AoS2Env;
 use clap::Parser;
 
 use crate::{
@@ -24,15 +24,15 @@ struct Args {
 }
 
 fn main() -> anyhow::Result<()> {
-    let settings = AoS2Paths::from_env()?;
+    let aos2_env = AoS2Env::from_env()?;
     let args = Args::parse();
 
-    run(settings, args)
+    run(aos2_env, args)
 }
 
-fn run(settings: AoS2Paths, args: Args) -> anyhow::Result<()> {
-    let before_path = CanonicalSaveFilePath::new(&settings.saves_folder, &args.before)?;
-    let after_path = CanonicalSaveFilePath::new(&settings.saves_folder, &args.after)?;
+fn run(aos2_env: AoS2Env, args: Args) -> anyhow::Result<()> {
+    let before_path = CanonicalSaveFilePath::new(&aos2_env.saves_folder, &args.before)?;
+    let after_path = CanonicalSaveFilePath::new(&aos2_env.saves_folder, &args.after)?;
 
     let before = BinaryFile::load(&before_path)?;
     let after = BinaryFile::load(&after_path)?;

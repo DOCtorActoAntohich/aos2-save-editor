@@ -1,11 +1,11 @@
-use aos2_env::AoS2Paths;
+use aos2_env::AoS2Env;
 use aos2_save_editor::EditorApp;
 use savefile::file::local::PlayerProgress;
 
 fn main() -> anyhow::Result<()> {
-    let paths = AoS2Paths::from_env()?;
-    let progress = PlayerProgress::from_file(&paths.game_sys)?;
-    let app = EditorApp::new(paths, progress);
+    let aos2_env = AoS2Env::from_env()?;
+    let progress = PlayerProgress::load(&aos2_env)?;
+    let app = EditorApp::new(aos2_env, progress);
     run_tui(app)
 }
 

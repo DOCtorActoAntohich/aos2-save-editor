@@ -7,7 +7,7 @@ mod tui;
 mod widget;
 
 use anyhow::Context;
-use aos2_env::AoS2Paths;
+use aos2_env::AoS2Env;
 use ratatui::{
     buffer::Buffer,
     crossterm::{
@@ -36,12 +36,12 @@ use self::component::tab::{character, unlockables};
 pub struct EditorApp {
     should_run: bool,
     content: FullHelpToggle<ContentWidget>,
-    paths: AoS2Paths,
+    aos2_env: AoS2Env,
     progress_rx: watch::Receiver<PlayerProgress>,
 }
 
 impl EditorApp {
-    pub fn new(paths: AoS2Paths, progress: PlayerProgress) -> Self {
+    pub fn new(aos2_env: AoS2Env, progress: PlayerProgress) -> Self {
         let (progress_tx, progress_rx) = watch::channel(progress);
         let tabs: [Box<dyn InteratibleTabComponent>; 2] = [
             Box::new(character::Tab::new(progress_tx.clone())),
@@ -50,7 +50,7 @@ impl EditorApp {
         Self {
             should_run: true,
             content: FullHelpToggle::new(ContentWidget::new(tabs)),
-            paths,
+            aos2_env,
             progress_rx,
         }
     }
@@ -85,7 +85,7 @@ impl EditorApp {
         {
             let progress = self.progress_rx.borrow_and_update();
             progress
-                .save_to_file(&self.paths.game_sys)
+                .save(&self.aos2_env)
                 .context("Failed to save player progress file")?;
         }
 

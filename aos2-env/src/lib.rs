@@ -4,10 +4,9 @@ use anyhow::Context;
 use serde::Deserialize;
 
 #[derive(Debug, Clone)]
-pub struct AoS2Paths {
+pub struct AoS2Env {
     pub saves_folder: PathBuf,
     pub player_rkg: PathBuf,
-    pub game_sys: PathBuf,
 }
 
 #[derive(Debug, Deserialize)]
@@ -15,7 +14,7 @@ struct EnvVars {
     home: PathBuf,
 }
 
-impl From<EnvVars> for AoS2Paths {
+impl From<EnvVars> for AoS2Env {
     fn from(value: EnvVars) -> Self {
         let saves_folder = value
             .home
@@ -25,13 +24,12 @@ impl From<EnvVars> for AoS2Paths {
 
         Self {
             player_rkg: saves_folder.join("player.rkg"),
-            game_sys: saves_folder.join("game.sys"),
             saves_folder,
         }
     }
 }
 
-impl AoS2Paths {
+impl AoS2Env {
     pub fn from_env() -> anyhow::Result<Self> {
         let env_vars: EnvVars =
             envy::from_env().context("Failed to get AoS2 savefile directory")?;

@@ -1,4 +1,4 @@
-use aos2_env::AoS2Paths;
+use aos2_env::AoS2Env;
 use savefile::file::local::{
     background::{image::BackgroundImageSheet, music::BackgroundMusicSheet},
     characters::{full::FullCharacterSheet, story::StoryCharacterSheet},
@@ -6,11 +6,14 @@ use savefile::file::local::{
 };
 
 fn main() -> anyhow::Result<()> {
-    let paths = AoS2Paths::from_env()?;
+    let aos2_env = AoS2Env::from_env()?;
 
-    println!("Opening `game.sys` at: {}\n", paths.game_sys.display());
+    println!(
+        "Opening `game.sys` at: {}\n",
+        aos2_env.saves_folder.display()
+    );
 
-    let mut progress = PlayerProgress::from_file(&paths.game_sys)?;
+    let mut progress = PlayerProgress::load(&aos2_env)?;
 
     progress.enabled_character = FullCharacterSheet::FULLY_UNLOCKED;
     progress.enabled_background_image = BackgroundImageSheet::FULLY_UNLOCKED;
@@ -33,9 +36,9 @@ Fully completed (no deaths):
 "#
     );
 
-    progress.save_to_file(&paths.game_sys)?;
+    progress.save(&aos2_env)?;
 
-    println!("Saved `game.sys` to: {}", paths.game_sys.display());
+    println!("Saved `game.sys` at: {}", aos2_env.saves_folder.display());
 
     Ok(())
 }
