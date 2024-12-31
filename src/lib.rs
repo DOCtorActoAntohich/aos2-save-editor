@@ -26,7 +26,7 @@ use crate::{
     component::{
         content_window::ContentWidget,
         full_help_toggle::FullHelpToggle,
-        tab::{character::CharacterTab, TabComponent},
+        tab::{character::CharacterTab, Tab},
         title_header::TitleHeader,
     },
     keyboard::GetKeyCode,
@@ -44,7 +44,7 @@ pub struct EditorApp {
 impl EditorApp {
     pub fn new(paths: AoS2Paths, progress: PlayerProgress) -> Self {
         let (progress_tx, progress_rx) = watch::channel(progress);
-        let tabs: [Box<dyn TabComponent>; 2] = [
+        let tabs: [Box<dyn Tab>; 2] = [
             Box::new(CharacterTab::new(progress_tx.clone())),
             Box::new(UnlockablesTab::new(progress_tx)),
         ];

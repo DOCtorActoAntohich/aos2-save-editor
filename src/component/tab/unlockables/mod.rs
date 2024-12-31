@@ -23,7 +23,7 @@ use crate::{
 
 use self::{background::UnlockBackgroundsButton, music::UnlockMusicButton};
 
-use super::TabComponent;
+use super::Tab;
 
 trait CustomButton: HandleEvent<Error = anyhow::Error> + Send {
     fn as_line(&self) -> Line<'_>;
@@ -139,7 +139,7 @@ impl VisualComponent for ButtonsTable {
     }
 }
 
-impl TabComponent for UnlockablesTab {
+impl Tab for UnlockablesTab {
     fn name(&self) -> &'static str {
         "Unlockables"
     }
