@@ -23,7 +23,7 @@ impl UnlockBackgroundsButton {
 
     pub fn unlock_all(&mut self) {
         self.progress_tx.send_modify(|progress| {
-            progress.enabled_background_image = BackgroundImageSheet::FULLY_UNLOCKED
+            progress.enabled_background_image = BackgroundImageSheet::FULLY_UNLOCKED;
         });
     }
 }

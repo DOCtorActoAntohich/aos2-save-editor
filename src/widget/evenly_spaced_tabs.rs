@@ -88,17 +88,17 @@ impl Widget for EvenlySpacedTabs<'_> {
                     line.style(self.regular_style)
                 }
             })
-            .map(|line| line.centered());
+            .map(Line::centered);
         let divider = Line::from(self.divider).style(self.divider_style);
 
-        let tab_blocks = TabBlocksSequence::alternating_from_tabs(stylized_tabs, divider);
+        let tab_blocks = TabBlocksSequence::alternating_from_tabs(stylized_tabs, &divider);
 
         tab_blocks.render(area, buf);
     }
 }
 
 impl<'a> TabBlocksSequence<'a> {
-    pub fn alternating_from_tabs<I>(tab_names: I, divider: Line<'a>) -> Self
+    pub fn alternating_from_tabs<I>(tab_names: I, divider: &Line<'a>) -> Self
     where
         I: Iterator<Item = Line<'a>>,
     {
@@ -114,7 +114,9 @@ impl<'a> TabBlocksSequence<'a> {
 impl TabBlock<'_> {
     pub fn constraint(&self) -> Constraint {
         match self {
-            TabBlock::Divider(divider) => Constraint::Length(divider.width() as u16),
+            TabBlock::Divider(divider) => Constraint::Length(
+                u16::try_from(divider.width()).expect("Short divider length here must fit"),
+            ),
             TabBlock::Name(_) => Constraint::Fill(1),
         }
     }

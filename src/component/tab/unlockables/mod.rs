@@ -72,7 +72,7 @@ impl ButtonsTable {
         self.current_button = self
             .current_button
             .saturating_sub(1)
-            .clamp(0, self.buttons.len() - 1)
+            .clamp(0, self.buttons.len() - 1);
     }
 }
 

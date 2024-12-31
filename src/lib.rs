@@ -1,3 +1,6 @@
+#![warn(clippy::pedantic)]
+#![allow(clippy::missing_errors_doc)]
+
 mod component;
 mod keyboard;
 mod tui;
@@ -30,6 +33,7 @@ use crate::{
     tui::{HandleEvent, VisualComponent},
 };
 
+#[must_use]
 pub struct EditorApp {
     should_run: bool,
     content: FullHelpToggle<ContentWidget>,
@@ -90,7 +94,7 @@ impl EditorApp {
     }
 
     fn exit(&mut self) {
-        self.should_run = false
+        self.should_run = false;
     }
 }
 
