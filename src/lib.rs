@@ -5,6 +5,7 @@ mod widget;
 
 use anyhow::Context;
 use aos2_env::AoS2Paths;
+use component::tab::unlockables::UnlockablesTab;
 use ratatui::{
     buffer::Buffer,
     crossterm::{
@@ -22,7 +23,7 @@ use crate::{
     component::{
         content_window::ContentWidget,
         full_help_toggle::FullHelpToggle,
-        tab::{character::CharacterTab, empty::EmptyTab, TabComponent},
+        tab::{character::CharacterTab, TabComponent},
         title_header::TitleHeader,
     },
     keyboard::GetKeyCode,
@@ -39,8 +40,10 @@ pub struct EditorApp {
 impl EditorApp {
     pub fn new(paths: AoS2Paths, progress: PlayerProgress) -> Self {
         let (progress_tx, progress_rx) = watch::channel(progress);
-        let tabs: [Box<dyn TabComponent>; 2] =
-            [Box::new(EmptyTab), Box::new(CharacterTab::new(progress_tx))];
+        let tabs: [Box<dyn TabComponent>; 2] = [
+            Box::new(CharacterTab::new(progress_tx)),
+            Box::new(UnlockablesTab::new()),
+        ];
         Self {
             should_run: true,
             content: FullHelpToggle::new(ContentWidget::new(tabs)),
