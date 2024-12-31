@@ -1,7 +1,7 @@
 use crate::{bin_bool::BinBool, file::game::UnknownU8};
 
 #[binrw::binrw]
-#[derive(Debug, Clone, Hash, Default)]
+#[derive(Debug, Clone, Default)]
 #[brw(little)]
 pub struct BackgroundImageSheet {
     #[br(map = From::<BinBool>::from)]
