@@ -7,10 +7,7 @@ use tokio::sync::watch;
 
 use crate::{keyboard::GetKeyCode, tui::HandleEvent};
 
-use super::{
-    style::{PossibleUnlocksStyle, UnlockedStyle},
-    CustomButton,
-};
+use super::{style, CustomButton};
 
 pub struct Button {
     progress_tx: watch::Sender<PlayerProgress>,
@@ -34,9 +31,9 @@ impl CustomButton for Button {
             == BackgroundImageSheet::FULLY_UNLOCKED;
 
         if all_backgrounds_unlocked {
-            Line::from("Fully unlocked").style(UnlockedStyle::default())
+            Line::from("Fully unlocked").style(style::Unlocked::default())
         } else {
-            Line::from("[Press Enter to Unlock]").style(PossibleUnlocksStyle::default())
+            Line::from("[Press Enter to Unlock]").style(style::PossibleUnlocks::default())
         }
     }
 
