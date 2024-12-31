@@ -2,6 +2,8 @@ mod avatar;
 mod title;
 mod version;
 
+use aos2_env::AoS2Env;
+
 use crate::{bin_bool::BinBool, sized_section::SizedBinarySection};
 
 pub use self::{
@@ -40,6 +42,18 @@ pub struct PlayerOnlineProfile {
     pub show_hitstun_meter: BinBool,
     pub show_spectators: BinBool,
     pub title_color: TitleColor,
+}
+
+impl PlayerOnlineProfile {
+    const FILE_NAME: &'static str = "player.rkg";
+
+    pub fn load(env: AoS2Env) -> anyhow::Result<Self> {
+        Self::from_file(env.saves_folder.join(Self::FILE_NAME))
+    }
+
+    pub fn save(&self, env: AoS2Env) -> anyhow::Result<()> {
+        self.save_to_file(env.saves_folder.join(Self::FILE_NAME))
+    }
 }
 
 impl GameBinarySaveFile for PlayerOnlineProfile {}

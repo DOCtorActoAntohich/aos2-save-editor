@@ -6,7 +6,6 @@ use serde::Deserialize;
 #[derive(Debug, Clone)]
 pub struct AoS2Env {
     pub saves_folder: PathBuf,
-    pub player_rkg: PathBuf,
 }
 
 #[derive(Debug, Deserialize)]
@@ -22,10 +21,7 @@ impl From<EnvVars> for AoS2Env {
             .join("Fruitbat Factory")
             .join("AoS2");
 
-        Self {
-            player_rkg: saves_folder.join("player.rkg"),
-            saves_folder,
-        }
+        Self { saves_folder }
     }
 }
 

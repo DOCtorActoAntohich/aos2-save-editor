@@ -18,7 +18,7 @@ where
         BinRead::read(&mut reader).context("Failed to parse file")
     }
 
-    fn save<P>(&self, path: P) -> anyhow::Result<()>
+    fn save_to_file<P>(&self, path: P) -> anyhow::Result<()>
     where
         P: AsRef<std::path::Path>,
         for<'a> <Self as BinWrite>::Args<'a>: Default,
