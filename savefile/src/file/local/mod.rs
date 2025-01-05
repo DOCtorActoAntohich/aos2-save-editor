@@ -21,9 +21,16 @@ use self::{
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[brw(little)]
 pub struct PlayerProgress {
-    _0x00: UnknownU32,
-    _0x04: UnknownU32,
-    _0x08: UnknownU32,
+    _0x00: UnknownU8,
+    _0x01: UnknownU8,
+    _0x02: UnknownU8,
+    _0x03: UnknownU8,
+    /// Offset: 0x04 - 0x07.
+    _body_length: BodyLength,
+    _0x08: UnknownU8,
+    _0x09: UnknownU8,
+    _0x0a: UnknownU8,
+    _0x0b: UnknownU8,
     _0x0c: UnknownU8,
     _0x0d: UnknownU8,
     _0x0e: UnknownU8,
@@ -126,19 +133,24 @@ pub struct PlayerProgress {
     _0xab: UnknownU8,
 }
 
-/// This basically means "No idea what it does".
+/// Means the purpose of the field is unknown.
 ///
-/// Marked separately because explicit is better.
-#[binrw::binrw]
-#[derive(Debug, Clone, PartialEq, Eq, Default)]
-#[brw(little)]
-struct UnknownU32(u32);
-
-/// Same as [`UnknownU32`].
+/// "Explicit is better than implicit".
 #[binrw::binrw]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Default)]
 #[brw(little)]
 struct UnknownU8(u8);
+
+/// Somehow it just matches.
+#[binrw::binrw]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Default)]
+#[brw(little)]
+#[br(assert(self_0 == Self::BYTES))]
+struct BodyLength(u32);
+
+impl BodyLength {
+    const BYTES: u32 = 164;
+}
 
 #[binrw::binrw]
 #[derive(Debug, Clone, PartialEq, Eq)]
