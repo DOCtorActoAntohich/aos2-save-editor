@@ -1,7 +1,7 @@
 use crate::bin_bool::BinBool;
 
 #[binrw::binrw]
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[brw(little)]
 pub struct BackgroundMusicSheet {
     #[br(map = From::<BinBool>::from)]
@@ -47,6 +47,25 @@ pub struct BackgroundMusicSheet {
     #[br(map = From::<BinBool>::from)]
     #[bw(map = BinBool::from)]
     pub mgom: bool,
+}
+
+impl Default for BackgroundMusicSheet {
+    fn default() -> Self {
+        Self {
+            need_for_speed: true,
+            black_hole: true,
+            distant_thunder: true,
+            shine: true,
+            expendables: true,
+            ribbon: true,
+            moving_out: true,
+
+            swordfish: false,
+            accelerator: false,
+            remember_me: false,
+            mgom: false,
+        }
+    }
 }
 
 impl BackgroundMusicSheet {

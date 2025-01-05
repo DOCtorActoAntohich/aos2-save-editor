@@ -1,7 +1,7 @@
 use crate::{bin_bool::BinBool, file::local::UnknownU8};
 
 #[binrw::binrw]
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone)]
 #[brw(little)]
 pub struct BackgroundImageSheet {
     #[br(map = From::<BinBool>::from)]
@@ -77,13 +77,37 @@ impl BackgroundImageSheet {
         big_bridge: true,
         capital_in_flames: true,
         whirlpool_of_malice: true,
-        _0x2d: UnknownU8(1),
+        _0x2d: UnknownU8(0),
         nature_10k: true,
         crashed_spaceship: true,
         guardians_chamber: true,
         moonlight_dance_hall: true,
         sumika_hideout: true,
     };
+}
+
+impl Default for BackgroundImageSheet {
+    fn default() -> Self {
+        Self {
+            before_the_war: true,
+            war_10k_years_ago: true,
+            canyon_of_wind: true,
+            dust_storm: true,
+            rain_and_sunset: true,
+            big_bridge: true,
+            nature_10k: true,
+
+            capital_in_flames: false,
+            whirlpool_of_malice: false,
+            crashed_spaceship: false,
+            guardians_chamber: false,
+            moonlight_dance_hall: false,
+            sumika_hideout: false,
+
+            equator_doldrums: false,
+            _0x2d: UnknownU8(0),
+        }
+    }
 }
 
 /// Skips unknown field because who knows what it does.

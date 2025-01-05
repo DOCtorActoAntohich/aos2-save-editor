@@ -8,7 +8,7 @@ use super::Character;
 ///
 /// Also see [`StoryCharacterSheet`].
 #[binrw::binrw]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[brw(little)]
 pub struct FullCharacterSheet {
     #[br(map = From::<BinBool>::from)]
@@ -99,6 +99,29 @@ impl FullCharacterSheet {
 
     pub fn iter(&self) -> impl Iterator<Item = (Character, bool)> {
         Character::list().into_iter().zip(self.as_array())
+    }
+}
+
+impl Default for FullCharacterSheet {
+    fn default() -> Self {
+        Self {
+            sora: true,
+            alte: true,
+            tsih: true,
+            mira: true,
+            sham: true,
+            nath: true,
+            suguri: true,
+            saki: true,
+            iru: true,
+            nanako: true,
+            kae: true,
+            kyoko: true,
+
+            star_breaker: false,
+            hime: false,
+            sumika: false,
+        }
     }
 }
 
