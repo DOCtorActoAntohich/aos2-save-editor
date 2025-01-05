@@ -1,6 +1,6 @@
 # `easydiff`
 
-A stupid crate intended for comparing binary files.
+A stupid crate intended for comparing binary files in AoS2 saves folder.
 
 Here's what you're supposed to do with it.
 
