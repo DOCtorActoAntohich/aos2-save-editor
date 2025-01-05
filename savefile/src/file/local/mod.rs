@@ -27,10 +27,8 @@ pub struct PlayerProgress {
     _0x03: UnknownU8,
     /// Offset: 0x04 - 0x07.
     _body_length: BodyLength,
-    _0x08: UnknownU8,
-    _0x09: UnknownU8,
-    _0x0a: UnknownU8,
-    _0x0b: UnknownU8,
+    /// Offset: 0x08 - 0x0b
+    _version: Version,
     _0x0c: UnknownU8,
     _0x0d: UnknownU8,
     _0x0e: UnknownU8,
@@ -151,6 +149,28 @@ struct BodyLength(u32);
 impl BodyLength {
     const BYTES: u32 = 164;
 }
+
+/// Reprents savefile version, parsed by a specific game version.
+///
+/// Here's the table with the decoded values of
+/// the least signigicant byte for each game version.
+///
+/// | Game version | Byte value |
+/// |:------------:|:----------:|
+/// |  1.6 (demo)  |     135    |
+/// |     1.6.2    |     137    |
+/// |    1.6.3b    |     138    |
+/// |     1.7.6    |     152    |
+/// |     1.8.4    |     160    |
+/// |      1.9     |     161    |
+///
+/// Therefore, version is the most probable explanation,
+/// because in a fresh savefile all other values are the same,
+/// except for the one at `0x08`.
+#[binrw::binrw]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Default)]
+#[brw(little)]
+struct Version(u32);
 
 #[binrw::binrw]
 #[derive(Debug, Clone, PartialEq, Eq)]
