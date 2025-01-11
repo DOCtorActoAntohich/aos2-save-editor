@@ -1,5 +1,5 @@
 [workspace]
-members = ["aos2-env", "easydiff", "savefile"]
+members = ["crates/*"]
 default-members = ["."]
 
 [workspace.package]
@@ -28,8 +28,8 @@ edition.workspace = true
 authors.workspace = true
 
 [dependencies]
-aos2-env = { path = "./aos2-env" }
-savefile = { path = "./savefile" }
+aos2-env = { path = "./crates/aos2-env" }
+savefile = { path = "./crates/savefile" }
 anyhow.workspace = true
 derive_more.workspace = true
 ratatui.workspace = true
