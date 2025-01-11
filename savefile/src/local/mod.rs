@@ -10,7 +10,7 @@ use binrw::{BinRead, BinWrite};
 use crate::xor_encoding::{EncodedU8, KeyU8};
 
 use self::{
-    background::{image::BackgroundImages, music::BackgroundMusicSheet},
+    background::{image::BackgroundImages, music::BackgroundMusic},
     characters::{full::CharacterSheet, story::CharacterStoryPerfectRuns},
 };
 
@@ -62,7 +62,7 @@ pub struct PlayerProgress {
     /// Remembers if the background music is unlocked.
     ///
     /// Offset: 0x3e - 0x48.
-    pub enabled_background_music: BackgroundMusicSheet,
+    pub background_music: BackgroundMusic,
     _0x49: UnknownU8,
     _0x4a: UnknownU8,
     _0x4b: UnknownU8,

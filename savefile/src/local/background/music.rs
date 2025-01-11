@@ -1,85 +1,53 @@
-use crate::bin_bool::BinBool;
+use crate::lock::Status;
 
 #[binrw::binrw]
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[brw(little)]
-pub struct BackgroundMusicSheet {
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub need_for_speed: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub black_hole: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub distant_thunder: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub swordfish: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub shine: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub expendables: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub ribbon: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub moving_out: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub accelerator: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub remember_me: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub mgom: bool,
+pub struct BackgroundMusic {
+    pub need_for_speed: Status,
+    pub black_hole: Status,
+    pub distant_thunder: Status,
+    pub swordfish: Status,
+    pub shine: Status,
+    pub expendables: Status,
+    pub ribbon: Status,
+    pub moving_out: Status,
+    pub accelerator: Status,
+    pub remember_me: Status,
+    pub mgom: Status,
 }
 
-impl Default for BackgroundMusicSheet {
+impl Default for BackgroundMusic {
     fn default() -> Self {
         Self {
-            need_for_speed: true,
-            black_hole: true,
-            distant_thunder: true,
-            shine: true,
-            expendables: true,
-            ribbon: true,
-            moving_out: true,
+            need_for_speed: Status::Enabled,
+            black_hole: Status::Enabled,
+            distant_thunder: Status::Enabled,
+            shine: Status::Enabled,
+            expendables: Status::Enabled,
+            ribbon: Status::Enabled,
+            moving_out: Status::Enabled,
 
-            swordfish: false,
-            accelerator: false,
-            remember_me: false,
-            mgom: false,
+            swordfish: Status::Disabled,
+            accelerator: Status::Disabled,
+            remember_me: Status::Disabled,
+            mgom: Status::Disabled,
         }
     }
 }
 
-impl BackgroundMusicSheet {
-    pub const FULLY_UNLOCKED: Self = Self {
-        need_for_speed: true,
-        black_hole: true,
-        distant_thunder: true,
-        swordfish: true,
-        shine: true,
-        expendables: true,
-        ribbon: true,
-        moving_out: true,
-        accelerator: true,
-        remember_me: true,
-        mgom: true,
+impl BackgroundMusic {
+    pub const ALL: Self = Self {
+        need_for_speed: Status::Enabled,
+        black_hole: Status::Enabled,
+        distant_thunder: Status::Enabled,
+        swordfish: Status::Enabled,
+        shine: Status::Enabled,
+        expendables: Status::Enabled,
+        ribbon: Status::Enabled,
+        moving_out: Status::Enabled,
+        accelerator: Status::Enabled,
+        remember_me: Status::Enabled,
+        mgom: Status::Enabled,
     };
 }
