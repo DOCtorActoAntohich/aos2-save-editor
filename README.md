@@ -42,6 +42,6 @@ Here are all the reasons:
 ## How to contribute
 
 I haven't been able to figure out all the fields in the savefile.
-[`easydiff`](./easydiff/) crate in this workspace can help with that.
+[`easydiff`](./crates/easydiff/) crate in this workspace can help with that.
 
 Simply leave an issue or open the PR if you have something to add.
