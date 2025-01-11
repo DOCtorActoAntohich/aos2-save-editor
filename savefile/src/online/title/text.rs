@@ -1,4 +1,10 @@
-/// "What a pain in the neck" (c) Kyoko.
+/// Title top text to display for everyone to see.
+///
+/// There are many. Way too many.
+/// Some are "paid" via the in-game currency,
+/// but why pay when you can do it for free.
+///
+/// "What a pain in the neck" (c) Kyoko, and me when writing all those down.
 #[binrw::binrw]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, derive_more::TryFrom, derive_more::Display)]
 #[brw(little, repr(u32))]
