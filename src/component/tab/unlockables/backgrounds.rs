@@ -2,7 +2,7 @@ use ratatui::{
     crossterm::event::{Event, KeyCode},
     text::Line,
 };
-use savefile::local::{background::image::BackgroundImages, PlayerProgress};
+use savefile::local::{Arenas, PlayerProgress};
 use tokio::sync::watch;
 
 use crate::{keyboard::GetKeyCode, tui::HandleEvent};
@@ -20,15 +20,14 @@ impl Button {
 
     pub fn unlock_all(&mut self) {
         self.progress_tx.send_modify(|progress| {
-            progress.background_images = BackgroundImages::ALL;
+            progress.arenas = Arenas::ALL;
         });
     }
 }
 
 impl CustomButton for Button {
     fn as_line(&self) -> Line<'_> {
-        let all_backgrounds_unlocked =
-            self.progress_tx.borrow().background_images == BackgroundImages::ALL;
+        let all_backgrounds_unlocked = self.progress_tx.borrow().arenas == Arenas::ALL;
 
         if all_backgrounds_unlocked {
             Line::from("Fully unlocked").style(style::Unlocked::default())

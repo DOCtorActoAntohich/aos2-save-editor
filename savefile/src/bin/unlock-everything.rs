@@ -1,11 +1,10 @@
 use aos2_env::AoS2Env;
 use savefile::local::{
-    background::{image::BackgroundImages, music::BackgroundMusic},
     characters::{
         full::CharacterSheet,
         runs::{PerfectArcadeModeRuns, PerfectStoryModeRuns},
     },
-    PlayerProgress,
+    Arenas, Music, PlayerProgress,
 };
 
 fn main() -> anyhow::Result<()> {
@@ -19,8 +18,8 @@ fn main() -> anyhow::Result<()> {
     let mut progress = PlayerProgress::load(&aos2_env)?;
 
     progress.enabled_character = CharacterSheet::FULLY_UNLOCKED;
-    progress.background_images = BackgroundImages::ALL;
-    progress.background_music = BackgroundMusic::ALL;
+    progress.arenas = Arenas::ALL;
+    progress.background_music = Music::ALL;
 
     progress.arcade_easy_1ccs = PerfectArcadeModeRuns::COMPLETED;
     progress.arcade_medium_1ccs = PerfectArcadeModeRuns::COMPLETED;

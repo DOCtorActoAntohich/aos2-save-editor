@@ -6,7 +6,7 @@ use crate::{local::UnknownU8, lock::Status};
 #[binrw::binrw]
 #[derive(Debug, Clone)]
 #[brw(little)]
-pub struct BackgroundImages {
+pub struct Arenas {
     pub before_the_war: Status,
     pub war_10k_years_ago: Status,
     pub canyon_of_wind: Status,
@@ -29,7 +29,7 @@ pub struct BackgroundImages {
     pub sumika_hideout: Status,
 }
 
-impl BackgroundImages {
+impl Arenas {
     pub const ALL: Self = Self {
         before_the_war: Status::Enabled,
         war_10k_years_ago: Status::Enabled,
@@ -49,7 +49,7 @@ impl BackgroundImages {
     };
 }
 
-impl Default for BackgroundImages {
+impl Default for Arenas {
     fn default() -> Self {
         Self {
             before_the_war: Status::Enabled,
@@ -75,7 +75,7 @@ impl Default for BackgroundImages {
 
 /// Skips an unknown field because who knows what it does.
 /// Otherwise must be derived.
-impl PartialEq for BackgroundImages {
+impl PartialEq for Arenas {
     fn eq(&self, other: &Self) -> bool {
         self.before_the_war == other.before_the_war
             && self.war_10k_years_ago == other.war_10k_years_ago
@@ -94,4 +94,4 @@ impl PartialEq for BackgroundImages {
     }
 }
 
-impl Eq for BackgroundImages {}
+impl Eq for Arenas {}

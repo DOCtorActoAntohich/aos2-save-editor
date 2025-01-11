@@ -1,5 +1,9 @@
-pub mod background;
 pub mod characters;
+
+mod arenas;
+mod music;
+
+pub use self::{arenas::Arenas, music::Music};
 
 use std::{io::Cursor, path::Path};
 
@@ -9,12 +13,9 @@ use binrw::{BinRead, BinWrite};
 
 use crate::xor_encoding::{EncodedU8, KeyU8};
 
-use self::{
-    background::{image::BackgroundImages, music::BackgroundMusic},
-    characters::{
-        full::CharacterSheet,
-        runs::{PerfectArcadeModeRuns, PerfectStoryModeRuns},
-    },
+use self::characters::{
+    full::CharacterSheet,
+    runs::{PerfectArcadeModeRuns, PerfectStoryModeRuns},
 };
 
 /// Player progress file, aka `game.sys`.
@@ -50,7 +51,7 @@ pub struct PlayerProgress {
     /// Remembers if the background image is unlocked.
     ///
     /// Offset: 0x24 - 0x32.
-    pub background_images: BackgroundImages,
+    pub arenas: Arenas,
     _0x33: UnknownU8,
     _0x34: UnknownU8,
     _0x35: UnknownU8,
@@ -65,7 +66,7 @@ pub struct PlayerProgress {
     /// Remembers if the background music is unlocked.
     ///
     /// Offset: 0x3e - 0x48.
-    pub background_music: BackgroundMusic,
+    pub background_music: Music,
     _0x49: UnknownU8,
     _0x4a: UnknownU8,
     _0x4b: UnknownU8,

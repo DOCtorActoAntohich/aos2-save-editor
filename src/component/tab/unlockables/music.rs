@@ -2,7 +2,7 @@ use ratatui::{
     crossterm::event::{Event, KeyCode},
     text::Line,
 };
-use savefile::local::{background::music::BackgroundMusic, PlayerProgress};
+use savefile::local::{Music, PlayerProgress};
 use tokio::sync::watch;
 
 use crate::{keyboard::GetKeyCode, tui::HandleEvent};
@@ -20,14 +20,14 @@ impl Button {
 
     pub fn unlock_all(&mut self) {
         self.progress_tx.send_modify(|progress| {
-            progress.background_music = BackgroundMusic::ALL;
+            progress.background_music = Music::ALL;
         });
     }
 }
 
 impl CustomButton for Button {
     fn as_line(&self) -> Line<'_> {
-        let all_music_unlocked = self.progress_tx.borrow().background_music == BackgroundMusic::ALL;
+        let all_music_unlocked = self.progress_tx.borrow().background_music == Music::ALL;
 
         if all_music_unlocked {
             Line::from("Fully unlocked").style(style::Unlocked::default())

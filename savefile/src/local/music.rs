@@ -3,7 +3,7 @@ use crate::lock::Status;
 #[binrw::binrw]
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[brw(little)]
-pub struct BackgroundMusic {
+pub struct Music {
     pub need_for_speed: Status,
     pub black_hole: Status,
     pub distant_thunder: Status,
@@ -17,7 +17,7 @@ pub struct BackgroundMusic {
     pub mgom: Status,
 }
 
-impl Default for BackgroundMusic {
+impl Default for Music {
     fn default() -> Self {
         Self {
             need_for_speed: Status::Enabled,
@@ -36,7 +36,7 @@ impl Default for BackgroundMusic {
     }
 }
 
-impl BackgroundMusic {
+impl Music {
     pub const ALL: Self = Self {
         need_for_speed: Status::Enabled,
         black_hole: Status::Enabled,
