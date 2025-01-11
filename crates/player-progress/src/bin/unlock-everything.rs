@@ -1,6 +1,6 @@
 use aos2_env::AoS2Env;
 use player_progress::{
-    Arenas, Music, PerfectArcadeModeRuns, PerfectStoryModeRuns, PlayableCharacters, PlayerProgress,
+    Arenas, Music, PerfectArcadeMode, PerfectStoryMode, PlayableCharacters, PlayerProgress,
 };
 
 fn main() -> anyhow::Result<()> {
@@ -17,10 +17,10 @@ fn main() -> anyhow::Result<()> {
     progress.arenas = Arenas::ALL;
     progress.background_music = Music::ALL;
 
-    progress.arcade_easy_1ccs = PerfectArcadeModeRuns::COMPLETED;
-    progress.arcade_medium_1ccs = PerfectArcadeModeRuns::COMPLETED;
-    progress.arcade_hard_1ccs = PerfectArcadeModeRuns::COMPLETED;
-    progress.story_1ccs = PerfectStoryModeRuns::COMPLETED;
+    progress.arcade_easy_1ccs = PerfectArcadeMode::COMPLETED;
+    progress.arcade_medium_1ccs = PerfectArcadeMode::COMPLETED;
+    progress.arcade_hard_1ccs = PerfectArcadeMode::COMPLETED;
+    progress.story_1ccs = PerfectStoryMode::COMPLETED;
 
     println!(
         r#"

@@ -15,7 +15,7 @@ pub use self::arenas::Arenas;
 pub use self::lock::Status;
 pub use self::music::Music;
 pub use self::playable_characters::{Character, PlayableCharacters};
-pub use self::runs::{PerfectArcadeModeRuns, PerfectRun, PerfectStoryModeRuns};
+pub use self::runs::{PerfectArcadeMode, PerfectStoryMode, Run};
 
 use std::{io::Cursor, path::Path};
 
@@ -107,7 +107,7 @@ pub struct PlayerProgress {
     /// In game, it shows a star next to the character's portrait.
     ///
     /// Save file offset: 0x63 - 0x71.
-    pub arcade_easy_1ccs: PerfectArcadeModeRuns,
+    pub arcade_easy_1ccs: PerfectArcadeMode,
     _0x72: UnknownU8,
     _0x73: UnknownU8,
     _0x74: UnknownU8,
@@ -117,7 +117,7 @@ pub struct PlayerProgress {
     /// In game, it shows a star next to the character's portrait.
     ///
     /// Save file offset: 0x76 - 0x84.
-    pub arcade_medium_1ccs: PerfectArcadeModeRuns,
+    pub arcade_medium_1ccs: PerfectArcadeMode,
     _0x85: UnknownU8,
     _0x86: UnknownU8,
     _0x87: UnknownU8,
@@ -127,7 +127,7 @@ pub struct PlayerProgress {
     /// In game, it shows a star next to the character's portrait.
     ///
     /// Save file offset: 0x89 - 0x97.
-    pub arcade_hard_1ccs: PerfectArcadeModeRuns,
+    pub arcade_hard_1ccs: PerfectArcadeMode,
     _0x98: UnknownU8,
     _0x99: UnknownU8,
     _0x9a: UnknownU8,
@@ -137,7 +137,7 @@ pub struct PlayerProgress {
     /// In game, it shows a star next to the character's portrait.
     ///
     /// Save file offset: 0x9c - 0xa9.
-    pub story_1ccs: PerfectStoryModeRuns,
+    pub story_1ccs: PerfectStoryMode,
     _0xaa: UnknownU8,
     _0xab: UnknownU8,
 }
