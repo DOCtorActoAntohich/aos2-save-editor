@@ -2,7 +2,6 @@
 #![allow(clippy::missing_errors_doc)]
 
 pub mod avatar;
-pub mod bin_bool;
 pub mod sized_section;
 pub mod title;
 
@@ -11,7 +10,7 @@ mod version;
 use anyhow::Context;
 use aos2_env::AoS2Env;
 
-use crate::{bin_bool::BinBool, sized_section::SizedBinarySection};
+use crate::sized_section::SizedBinarySection;
 
 use self::version::Version;
 
@@ -27,7 +26,7 @@ pub type TitlesSection = SizedBinarySection<285, 285>;
 #[brw(little)]
 pub struct PlayerOnlineProfile {
     pub version: Version,
-    pub show_country: BinBool,
+    pub country: Visibility,
     pub nickname: NicknameSection,
     pub lobby_name: LobbyNameSection,
     pub lobby_password: LobbyPasswordSection,
@@ -38,10 +37,21 @@ pub struct PlayerOnlineProfile {
     pub title_character_in_background: title::Character,
     pub title_text_id: title::Text,
     pub titles: TitlesSection,
-    pub show_ingame_title: BinBool,
-    pub show_hitstun_meter: BinBool,
-    pub show_spectators: BinBool,
+    pub ingame_title: Visibility,
+    pub hitstun_meter: Visibility,
+    pub spectators: Visibility,
     pub title_color: title::Color,
+}
+
+#[binrw::binrw]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
+#[brw(little)]
+pub enum Visibility {
+    #[brw(magic = 0x01u8)]
+    Show,
+    #[default]
+    #[brw(magic = 0x00u8)]
+    Hide,
 }
 
 impl PlayerOnlineProfile {
