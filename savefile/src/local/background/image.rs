@@ -1,118 +1,81 @@
-use crate::{bin_bool::BinBool, local::UnknownU8};
+use crate::{local::UnknownU8, lock::Status};
 
+/// List of Background Images aka Arena Backgrounds.
+///
+/// IMPORTANT: ORDER MATTERS. Do not reorder.
 #[binrw::binrw]
 #[derive(Debug, Clone)]
 #[brw(little)]
-pub struct BackgroundImageSheet {
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub before_the_war: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub war_10k_years_ago: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub canyon_of_wind: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub dust_storm: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub rain_and_sunset: bool,
-
-    /// Some placeholder that looks like Rain and Sunset
-    /// but has a buggy icon.
+pub struct BackgroundImages {
+    pub before_the_war: Status,
+    pub war_10k_years_ago: Status,
+    pub canyon_of_wind: Status,
+    pub dust_storm: Status,
+    pub rain_and_sunset: Status,
+    /// Some placeholder that looks like Rain and Sunset but has a buggy icon.
     /// Disabled by default.
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub equator_doldrums: bool,
+    pub equator_doldrums: Status,
+    pub big_bridge: Status,
+    pub capital_in_flames: Status,
+    pub whirlpool_of_malice: Status,
 
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub big_bridge: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub capital_in_flames: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub whirlpool_of_malice: bool,
-
+    /// Seems to have no effect when modified, but is needed for proper parsing.
     _0x2d: UnknownU8,
 
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub nature_10k: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub crashed_spaceship: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub guardians_chamber: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub moonlight_dance_hall: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub sumika_hideout: bool,
+    pub nature_10k: Status,
+    pub crashed_spaceship: Status,
+    pub guardians_chamber: Status,
+    pub moonlight_dance_hall: Status,
+    pub sumika_hideout: Status,
 }
 
-impl BackgroundImageSheet {
-    pub const FULLY_UNLOCKED: Self = Self {
-        before_the_war: true,
-        war_10k_years_ago: true,
-        canyon_of_wind: true,
-        dust_storm: true,
-        rain_and_sunset: true,
-        equator_doldrums: true,
-        big_bridge: true,
-        capital_in_flames: true,
-        whirlpool_of_malice: true,
+impl BackgroundImages {
+    pub const ALL: Self = Self {
+        before_the_war: Status::Enabled,
+        war_10k_years_ago: Status::Enabled,
+        canyon_of_wind: Status::Enabled,
+        dust_storm: Status::Enabled,
+        rain_and_sunset: Status::Enabled,
+        equator_doldrums: Status::Enabled,
+        big_bridge: Status::Enabled,
+        capital_in_flames: Status::Enabled,
+        whirlpool_of_malice: Status::Enabled,
         _0x2d: UnknownU8(0),
-        nature_10k: true,
-        crashed_spaceship: true,
-        guardians_chamber: true,
-        moonlight_dance_hall: true,
-        sumika_hideout: true,
+        nature_10k: Status::Enabled,
+        crashed_spaceship: Status::Enabled,
+        guardians_chamber: Status::Enabled,
+        moonlight_dance_hall: Status::Enabled,
+        sumika_hideout: Status::Enabled,
     };
 }
 
-impl Default for BackgroundImageSheet {
+impl Default for BackgroundImages {
     fn default() -> Self {
         Self {
-            before_the_war: true,
-            war_10k_years_ago: true,
-            canyon_of_wind: true,
-            dust_storm: true,
-            rain_and_sunset: true,
-            big_bridge: true,
-            nature_10k: true,
+            before_the_war: Status::Enabled,
+            war_10k_years_ago: Status::Enabled,
+            canyon_of_wind: Status::Enabled,
+            dust_storm: Status::Enabled,
+            rain_and_sunset: Status::Enabled,
+            big_bridge: Status::Enabled,
+            nature_10k: Status::Enabled,
 
-            capital_in_flames: false,
-            whirlpool_of_malice: false,
-            crashed_spaceship: false,
-            guardians_chamber: false,
-            moonlight_dance_hall: false,
-            sumika_hideout: false,
+            capital_in_flames: Status::Disabled,
+            whirlpool_of_malice: Status::Disabled,
+            crashed_spaceship: Status::Disabled,
+            guardians_chamber: Status::Disabled,
+            moonlight_dance_hall: Status::Disabled,
+            sumika_hideout: Status::Disabled,
 
-            equator_doldrums: false,
+            equator_doldrums: Status::Disabled,
             _0x2d: UnknownU8(0),
         }
     }
 }
 
-/// Skips unknown field because who knows what it does.
+/// Skips an unknown field because who knows what it does.
 /// Otherwise must be derived.
-impl PartialEq for BackgroundImageSheet {
+impl PartialEq for BackgroundImages {
     fn eq(&self, other: &Self) -> bool {
         self.before_the_war == other.before_the_war
             && self.war_10k_years_ago == other.war_10k_years_ago
@@ -131,4 +94,4 @@ impl PartialEq for BackgroundImageSheet {
     }
 }
 
-impl Eq for BackgroundImageSheet {}
+impl Eq for BackgroundImages {}
