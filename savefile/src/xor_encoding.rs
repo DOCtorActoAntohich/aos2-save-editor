@@ -64,6 +64,13 @@ impl KeyU8 {
         let normal = swap_nibbles(swapped);
         Self(swap_nibbles(normal.wrapping_add(rhs)))
     }
+
+    #[allow(clippy::cast_possible_truncation)]
+    pub const fn wrapping_add_usize(self, rhs: usize) -> Self {
+        // Should be truncated properly here
+        let rhs: u8 = (rhs % 256) as u8;
+        self.wrapping_add(rhs)
+    }
 }
 
 /// Nibble is a half of an octet, which is 4 most/least significant bits.

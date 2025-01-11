@@ -229,7 +229,7 @@ impl TryFrom<EncodedProgress> for PlayerProgress {
 
     fn try_from(EncodedProgress { header, body }: EncodedProgress) -> Result<Self, Self::Error> {
         let decoded_body = body.into_iter().enumerate().map(|(index, byte)| {
-            let key = EncodedProgress::ENCODING_START_KEY.wrapping_add(index as u8);
+            let key = EncodedProgress::ENCODING_START_KEY.wrapping_add_usize(index);
             EncodedU8::pre_encoded(byte).decode(key)
         });
         let raw_decoded: Vec<u8> = header.into_iter().chain(decoded_body).collect();
@@ -271,7 +271,7 @@ impl TryFrom<PlayerProgress> for EncodedProgress {
         let body: [u8; Self::BODY_SIZE] = iter
             .enumerate()
             .map(|(index, byte)| {
-                let key = Self::ENCODING_START_KEY.wrapping_add(index as u8);
+                let key = Self::ENCODING_START_KEY.wrapping_add_usize(index);
                 EncodedU8::from_raw(byte, key).get()
             })
             .collect::<Vec<_>>()
