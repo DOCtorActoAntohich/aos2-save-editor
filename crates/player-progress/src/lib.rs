@@ -1,13 +1,18 @@
 pub mod characters;
 
+// No export
+mod xor_encoding;
+
+// Re-export.
 mod arenas;
 mod lock;
 mod music;
-mod xor_encoding;
+mod runs;
 
 pub use self::arenas::Arenas;
 pub use self::lock::Status;
 pub use self::music::Music;
+pub use self::runs::{PerfectArcadeModeRuns, PerfectRun, PerfectStoryModeRuns};
 
 use std::{io::Cursor, path::Path};
 
@@ -17,10 +22,7 @@ use binrw::{BinRead, BinWrite};
 
 use crate::xor_encoding::{EncodedU8, KeyU8};
 
-use self::characters::{
-    full::CharacterSheet,
-    runs::{PerfectArcadeModeRuns, PerfectStoryModeRuns},
-};
+use self::characters::full::CharacterSheet;
 
 /// Player progress file, aka `game.sys`.
 ///

@@ -1,10 +1,7 @@
 use aos2_env::AoS2Env;
 use player_progress::{
-    characters::{
-        full::CharacterSheet,
-        runs::{PerfectArcadeModeRuns, PerfectStoryModeRuns},
-    },
-    Arenas, Music, PlayerProgress,
+    characters::full::CharacterSheet, Arenas, Music, PerfectArcadeModeRuns, PerfectStoryModeRuns,
+    PlayerProgress,
 };
 
 fn main() -> anyhow::Result<()> {
