@@ -97,6 +97,7 @@ impl CharacterSheet {
         sumika: true,
     };
 
+    #[must_use]
     pub fn as_array(&self) -> [bool; CharacterSheet::N_CHARACTERS] {
         (*self).into()
     }

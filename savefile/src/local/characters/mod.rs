@@ -34,6 +34,7 @@ pub enum Character {
 }
 
 impl Character {
+    #[must_use]
     pub fn list() -> impl IntoIterator<Item = Character> {
         [
             Self::Sora,

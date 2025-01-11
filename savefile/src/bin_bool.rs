@@ -10,9 +10,10 @@ pub enum BinBool {
 
 impl From<bool> for BinBool {
     fn from(value: bool) -> Self {
-        match value {
-            true => Self::True,
-            false => Self::False,
+        if value {
+            Self::True
+        } else {
+            Self::False
         }
     }
 }
