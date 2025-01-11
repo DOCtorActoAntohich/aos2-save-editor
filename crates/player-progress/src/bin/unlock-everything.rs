@@ -13,7 +13,7 @@ fn main() -> anyhow::Result<()> {
 
     let mut progress = PlayerProgress::load(&aos2_env)?;
 
-    progress.enabled_character = PlayableCharacters::ALL;
+    progress.playable_characters = PlayableCharacters::ALL;
     progress.arenas = Arenas::ALL;
     progress.background_music = Music::ALL;
 

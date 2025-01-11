@@ -61,16 +61,16 @@ impl Tab {
 
     pub fn toggle_current_character(&mut self) {
         self.progress.send_modify(|progress| {
-            let mut characters = progress.enabled_character.as_array();
+            let mut characters = progress.playable_characters.as_array();
             characters[self.selected_character] = !characters[self.selected_character];
-            progress.enabled_character = characters.into();
+            progress.playable_characters = characters.into();
         });
     }
 
     fn as_widget(&self) -> CharacterTabWidget<impl Iterator<Item = (Character, Status)>> {
         CharacterTabWidget {
             table: CharacterTable {
-                rows: self.progress.borrow().enabled_character.iter(),
+                rows: self.progress.borrow().playable_characters.iter(),
                 selected_character: self.selected_character,
             },
         }

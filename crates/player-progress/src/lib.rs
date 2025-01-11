@@ -45,7 +45,7 @@ pub struct PlayerProgress {
     /// It's possible to disable characters unlocked by default.
     ///
     /// Offset: 0x0f - 0x1d.
-    pub enabled_character: PlayableCharacters,
+    pub playable_characters: PlayableCharacters,
     _0x1e: UnknownU8,
     _0x1f: UnknownU8,
     _0x20: UnknownU8,
