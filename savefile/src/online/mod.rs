@@ -1,13 +1,11 @@
+pub mod avatar;
 pub mod title;
 
-mod avatar;
 mod version;
 
 use aos2_env::AoS2Env;
 
 use crate::{bin_bool::BinBool, sized_section::SizedBinarySection};
-
-pub use self::avatar::{background::AvatarBackground, character::AvatarCharacter};
 
 use self::version::Version;
 
@@ -29,8 +27,8 @@ pub struct PlayerOnlineProfile {
     pub nickname: NicknameSection,
     pub lobby_name: LobbyNameSection,
     pub lobby_password: LobbyPasswordSection,
-    pub avatar_character: AvatarCharacter,
-    pub avatar_background: AvatarBackground,
+    pub avatar_character: avatar::Character,
+    pub avatar_background: avatar::Background,
     pub unlockable_avatars: UnlockableAvatarsSection,
     pub unlockable_backgrounds: UnlockableBackbroundsSection,
     pub title_character_in_background: title::Character,

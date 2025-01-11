@@ -3,7 +3,7 @@
 #[try_from(repr)]
 #[repr(u32)]
 #[brw(little, repr(u32))]
-pub enum AvatarCharacter {
+pub enum Character {
     Silhouette = 0x00,
     Sora = 0x01,
     Alte = 0x02,

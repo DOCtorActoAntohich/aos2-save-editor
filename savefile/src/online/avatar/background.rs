@@ -2,7 +2,7 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq, derive_more::TryFrom, derive_more::Display)]
 #[brw(little, repr(u32))]
 #[repr(u32)]
-pub enum AvatarBackground {
+pub enum Background {
     LightBlue = 0x00,
     Pink = 0x01,
     Green = 0x02,
