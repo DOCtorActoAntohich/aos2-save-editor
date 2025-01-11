@@ -18,7 +18,7 @@ use ratatui::{
     widgets::Widget,
     DefaultTerminal, Frame,
 };
-use savefile::file::local::PlayerProgress;
+use savefile::local::PlayerProgress;
 use tokio::sync::watch;
 
 use crate::{

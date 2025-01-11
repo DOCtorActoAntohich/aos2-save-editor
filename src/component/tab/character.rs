@@ -6,7 +6,7 @@ use ratatui::{
     text::Line,
     widgets::{Cell, List, Row, Table, Widget},
 };
-use savefile::file::local::{
+use savefile::local::{
     characters::{full::CharacterSheet, Character},
     PlayerProgress,
 };

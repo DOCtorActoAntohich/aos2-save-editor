@@ -1,6 +1,6 @@
 use aos2_env::AoS2Env;
 use aos2_save_editor::EditorApp;
-use savefile::file::local::PlayerProgress;
+use savefile::local::PlayerProgress;
 
 fn main() -> anyhow::Result<()> {
     let aos2_env = AoS2Env::from_env()?;
