@@ -1,8 +1,8 @@
+use player_progress::{Music, PlayerProgress};
 use ratatui::{
     crossterm::event::{Event, KeyCode},
     text::Line,
 };
-use savefile::local::{Music, PlayerProgress};
 use tokio::sync::watch;
 
 use crate::{keyboard::GetKeyCode, tui::HandleEvent};

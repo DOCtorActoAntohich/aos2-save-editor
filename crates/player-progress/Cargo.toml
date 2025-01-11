@@ -1,0 +1,19 @@
+[package]
+name = "player-progress"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+
+[dependencies]
+aos2-env = { path = "../aos2-env" }
+anyhow.workspace = true
+thiserror.workspace = true
+derive_more.workspace = true
+binrw.workspace = true
+
+# will die soon
+savefile = { path = "../savefile" }
+
+[dev-dependencies]
+rstest.workspace = true
+rstest_reuse.workspace = true

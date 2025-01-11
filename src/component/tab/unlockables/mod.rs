@@ -2,6 +2,7 @@ mod backgrounds;
 mod music;
 mod style;
 
+use player_progress::PlayerProgress;
 use ratatui::{
     buffer::Buffer,
     crossterm::event::{Event, KeyCode},
@@ -10,7 +11,6 @@ use ratatui::{
     text::Line,
     widgets::{List, Row, Table, Widget},
 };
-use savefile::local::PlayerProgress;
 use tokio::sync::watch;
 
 use crate::{

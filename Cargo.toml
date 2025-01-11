@@ -30,6 +30,7 @@ authors.workspace = true
 [dependencies]
 aos2-env = { path = "./crates/aos2-env" }
 savefile = { path = "./crates/savefile" }
+player-progress = { path = "./crates/player-progress" }
 anyhow.workspace = true
 derive_more.workspace = true
 ratatui.workspace = true

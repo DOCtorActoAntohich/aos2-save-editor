@@ -1,9 +1,13 @@
 pub mod characters;
 
 mod arenas;
+mod lock;
 mod music;
+mod xor_encoding;
 
-pub use self::{arenas::Arenas, music::Music};
+pub use self::arenas::Arenas;
+pub use self::lock::Status;
+pub use self::music::Music;
 
 use std::{io::Cursor, path::Path};
 

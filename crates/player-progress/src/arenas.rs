@@ -1,4 +1,4 @@
-use crate::{local::UnknownU8, lock::Status};
+use crate::{lock::Status, UnknownU8};
 
 /// List of Background Images aka Arena Backgrounds.
 ///

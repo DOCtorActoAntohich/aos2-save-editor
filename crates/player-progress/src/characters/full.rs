@@ -1,4 +1,4 @@
-use crate::bin_bool::BinBool;
+use savefile::bin_bool::BinBool;
 
 use super::Character;
 

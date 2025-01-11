@@ -1,3 +1,7 @@
+use player_progress::{
+    characters::{full::CharacterSheet, Character},
+    PlayerProgress,
+};
 use ratatui::{
     buffer::Buffer,
     crossterm::event::{Event, KeyCode},
@@ -5,10 +9,6 @@ use ratatui::{
     style::{Color, Style},
     text::Line,
     widgets::{Cell, List, Row, Table, Widget},
-};
-use savefile::local::{
-    characters::{full::CharacterSheet, Character},
-    PlayerProgress,
 };
 use tokio::sync::watch;
 

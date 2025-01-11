@@ -8,6 +8,7 @@ mod widget;
 
 use anyhow::Context;
 use aos2_env::AoS2Env;
+use player_progress::PlayerProgress;
 use ratatui::{
     buffer::Buffer,
     crossterm::{
@@ -18,7 +19,6 @@ use ratatui::{
     widgets::Widget,
     DefaultTerminal, Frame,
 };
-use savefile::local::PlayerProgress;
 use tokio::sync::watch;
 
 use crate::{

@@ -1,8 +1,8 @@
+use player_progress::{Arenas, PlayerProgress};
 use ratatui::{
     crossterm::event::{Event, KeyCode},
     text::Line,
 };
-use savefile::local::{Arenas, PlayerProgress};
 use tokio::sync::watch;
 
 use crate::{keyboard::GetKeyCode, tui::HandleEvent};
