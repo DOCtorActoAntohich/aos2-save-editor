@@ -2,15 +2,19 @@ use crate::bin_bool::BinBool;
 
 use super::Character;
 
-/// Full list of characters.
+/// Markers for full list of characters.
 ///
-/// ORDER MATTERS. That's how they are coded in game.
+/// IMPORTANT: ORDER MATTERS.
+/// That's how they are coded in game.
 ///
-/// Also see [`StoryCharacterSheet`].
+/// The games uses it to mark characters as follows:
+///
+/// - Locked/Unlocked in the character selection screen.
+/// - Arcade Mode 1CC (no deaths) is completed or not.
 #[binrw::binrw]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[brw(little)]
-pub struct FullCharacterSheet {
+pub struct CharacterSheet {
     #[br(map = From::<BinBool>::from)]
     #[bw(map = BinBool::from)]
     pub sora: bool,
@@ -72,7 +76,7 @@ pub struct FullCharacterSheet {
     pub sumika: bool,
 }
 
-impl FullCharacterSheet {
+impl CharacterSheet {
     pub const N_CHARACTERS: usize = 15;
 
     pub const FULLY_UNLOCKED: Self = Self {
@@ -93,7 +97,7 @@ impl FullCharacterSheet {
         sumika: true,
     };
 
-    pub fn as_array(&self) -> [bool; FullCharacterSheet::N_CHARACTERS] {
+    pub fn as_array(&self) -> [bool; CharacterSheet::N_CHARACTERS] {
         (*self).into()
     }
 
@@ -102,7 +106,7 @@ impl FullCharacterSheet {
     }
 }
 
-impl Default for FullCharacterSheet {
+impl Default for CharacterSheet {
     fn default() -> Self {
         Self {
             sora: true,
@@ -125,9 +129,9 @@ impl Default for FullCharacterSheet {
     }
 }
 
-impl From<FullCharacterSheet> for [bool; FullCharacterSheet::N_CHARACTERS] {
+impl From<CharacterSheet> for [bool; CharacterSheet::N_CHARACTERS] {
     fn from(
-        FullCharacterSheet {
+        CharacterSheet {
             sora,
             alte,
             tsih,
@@ -143,7 +147,7 @@ impl From<FullCharacterSheet> for [bool; FullCharacterSheet::N_CHARACTERS] {
             kyoko,
             hime,
             sumika,
-        }: FullCharacterSheet,
+        }: CharacterSheet,
     ) -> Self {
         [
             sora,
@@ -165,7 +169,7 @@ impl From<FullCharacterSheet> for [bool; FullCharacterSheet::N_CHARACTERS] {
     }
 }
 
-impl From<[bool; FullCharacterSheet::N_CHARACTERS]> for FullCharacterSheet {
+impl From<[bool; CharacterSheet::N_CHARACTERS]> for CharacterSheet {
     fn from(
         [
         sora,
@@ -183,7 +187,7 @@ impl From<[bool; FullCharacterSheet::N_CHARACTERS]> for FullCharacterSheet {
         kyoko,
         hime,
         sumika,
-    ]: [bool; FullCharacterSheet::N_CHARACTERS],
+    ]: [bool; CharacterSheet::N_CHARACTERS],
     ) -> Self {
         Self {
             sora,

@@ -11,7 +11,7 @@ use crate::xor_encoding::{EncodedU8, KeyU8};
 
 use self::{
     background::{image::BackgroundImageSheet, music::BackgroundMusicSheet},
-    characters::{full::FullCharacterSheet, story::StoryCharacterSheet},
+    characters::{full::CharacterSheet, story::CharacterStory1cc},
 };
 
 /// Player progress file, aka `game.sys`.
@@ -37,7 +37,7 @@ pub struct PlayerProgress {
     /// It's possible to disable characters unlocked by default.
     ///
     /// Offset: 0x0f - 0x1d.
-    pub enabled_character: FullCharacterSheet,
+    pub enabled_character: CharacterSheet,
     _0x1e: UnknownU8,
     _0x1f: UnknownU8,
     _0x20: UnknownU8,
@@ -96,7 +96,7 @@ pub struct PlayerProgress {
     /// In game, it shows a star next to the character's portrait.
     ///
     /// Save file offset: 0x63 - 0x71.
-    pub arcade_easy_1cc_by_character: FullCharacterSheet,
+    pub arcade_easy_1cc_by_character: CharacterSheet,
     _0x72: UnknownU8,
     _0x73: UnknownU8,
     _0x74: UnknownU8,
@@ -106,7 +106,7 @@ pub struct PlayerProgress {
     /// In game, it shows a star next to the character's portrait.
     ///
     /// Save file offset: 0x76 - 0x84.
-    pub arcade_medium_1cc_by_character: FullCharacterSheet,
+    pub arcade_medium_1cc_by_character: CharacterSheet,
     _0x85: UnknownU8,
     _0x86: UnknownU8,
     _0x87: UnknownU8,
@@ -116,7 +116,7 @@ pub struct PlayerProgress {
     /// In game, it shows a star next to the character's portrait.
     ///
     /// Save file offset: 0x89 - 0x97.
-    pub arcade_hard_1cc_by_character: FullCharacterSheet,
+    pub arcade_hard_1cc_by_character: CharacterSheet,
     _0x98: UnknownU8,
     _0x99: UnknownU8,
     _0x9a: UnknownU8,
@@ -126,7 +126,7 @@ pub struct PlayerProgress {
     /// In game, it shows a star next to the character's portrait.
     ///
     /// Save file offset: 0x9c - 0xa9.
-    pub story_1cc_by_character: StoryCharacterSheet,
+    pub story_1cc_by_character: CharacterStory1cc,
     _0xaa: UnknownU8,
     _0xab: UnknownU8,
 }

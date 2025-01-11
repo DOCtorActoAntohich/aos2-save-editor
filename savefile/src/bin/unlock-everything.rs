@@ -1,7 +1,7 @@
 use aos2_env::AoS2Env;
 use savefile::file::local::{
     background::{image::BackgroundImageSheet, music::BackgroundMusicSheet},
-    characters::{full::FullCharacterSheet, story::StoryCharacterSheet},
+    characters::{full::CharacterSheet, story::CharacterStory1cc},
     PlayerProgress,
 };
 
@@ -15,14 +15,14 @@ fn main() -> anyhow::Result<()> {
 
     let mut progress = PlayerProgress::load(&aos2_env)?;
 
-    progress.enabled_character = FullCharacterSheet::FULLY_UNLOCKED;
+    progress.enabled_character = CharacterSheet::FULLY_UNLOCKED;
     progress.enabled_background_image = BackgroundImageSheet::FULLY_UNLOCKED;
     progress.enabled_background_music = BackgroundMusicSheet::FULLY_UNLOCKED;
 
-    progress.arcade_easy_1cc_by_character = FullCharacterSheet::FULLY_UNLOCKED;
-    progress.arcade_medium_1cc_by_character = FullCharacterSheet::FULLY_UNLOCKED;
-    progress.arcade_hard_1cc_by_character = FullCharacterSheet::FULLY_UNLOCKED;
-    progress.story_1cc_by_character = StoryCharacterSheet::FULLY_UNLOCKED;
+    progress.arcade_easy_1cc_by_character = CharacterSheet::FULLY_UNLOCKED;
+    progress.arcade_medium_1cc_by_character = CharacterSheet::FULLY_UNLOCKED;
+    progress.arcade_hard_1cc_by_character = CharacterSheet::FULLY_UNLOCKED;
+    progress.story_1cc_by_character = CharacterStory1cc::FULL;
 
     println!(
         r#"

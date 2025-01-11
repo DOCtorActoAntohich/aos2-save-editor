@@ -1,12 +1,13 @@
 use crate::bin_bool::BinBool;
 
-/// Same as [`FullCharacterSheet`] but doesn't have Sumika.
+/// Markers for 1CC (no deaths) story mode completion.
 ///
-/// Because that silly girl doesn't have her story mode playthrough.
+/// Unlike regular character sheet, it doesn't have Sumika,
+/// because she doesn't have her own story mode run.
 #[binrw::binrw]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Default)]
 #[brw(little)]
-pub struct StoryCharacterSheet {
+pub struct CharacterStory1cc {
     #[br(map = From::<BinBool>::from)]
     #[bw(map = BinBool::from)]
     pub sora: bool,
@@ -64,8 +65,8 @@ pub struct StoryCharacterSheet {
     pub hime: bool,
 }
 
-impl StoryCharacterSheet {
-    pub const FULLY_UNLOCKED: Self = Self {
+impl CharacterStory1cc {
+    pub const FULL: Self = Self {
         sora: true,
         alte: true,
         tsih: true,

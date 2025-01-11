@@ -7,7 +7,7 @@ use ratatui::{
     widgets::{Cell, List, Row, Table, Widget},
 };
 use savefile::file::local::{
-    characters::{full::FullCharacterSheet, Character},
+    characters::{full::CharacterSheet, Character},
     PlayerProgress,
 };
 use tokio::sync::watch;
@@ -52,14 +52,14 @@ impl Tab {
         self.selected_character = self
             .selected_character
             .saturating_add(1)
-            .clamp(0, FullCharacterSheet::N_CHARACTERS - 1);
+            .clamp(0, CharacterSheet::N_CHARACTERS - 1);
     }
 
     pub fn previous_character(&mut self) {
         self.selected_character = self
             .selected_character
             .saturating_sub(1)
-            .clamp(0, FullCharacterSheet::N_CHARACTERS - 1);
+            .clamp(0, CharacterSheet::N_CHARACTERS - 1);
     }
 
     pub fn toggle_current_character(&mut self) {
