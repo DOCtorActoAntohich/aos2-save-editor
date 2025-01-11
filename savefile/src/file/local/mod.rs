@@ -68,7 +68,7 @@ pub struct PlayerProgress {
     _0x4b: UnknownU8,
     /// A total number of singleplayer wins for any character on any difficulty.
     ///
-    /// Simple winning one match in story/arcade mode is enough to increase the counter.
+    /// Simply winning one match in story/arcade mode is enough to increase the counter.
     ///
     /// Offset: 0x4c - 0x4f.
     pub n_singleplayer_match_wins: u32,
