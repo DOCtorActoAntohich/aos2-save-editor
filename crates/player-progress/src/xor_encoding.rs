@@ -40,7 +40,7 @@ impl EncodedU8 {
     }
 
     #[must_use]
-    pub const fn get(&self) -> u8 {
+    pub const fn get(self) -> u8 {
         self.0
     }
 }
