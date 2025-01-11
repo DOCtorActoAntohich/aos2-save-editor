@@ -3,13 +3,12 @@ pub mod title;
 
 mod version;
 
+use anyhow::Context;
 use aos2_env::AoS2Env;
 
 use crate::{bin_bool::BinBool, sized_section::SizedBinarySection};
 
 use self::version::Version;
-
-use super::binary::GameBinarySaveFile;
 
 pub type NicknameSection = SizedBinarySection<1, 16>;
 pub type LobbyNameSection = SizedBinarySection<1, 24>;
@@ -50,9 +49,32 @@ impl PlayerOnlineProfile {
     pub fn save(&self, env: &AoS2Env) -> anyhow::Result<()> {
         self.save_to_file(env.saves_folder.join(Self::FILE_NAME))
     }
-}
 
-impl GameBinarySaveFile for PlayerOnlineProfile {}
+    pub fn from_file<P>(path: P) -> anyhow::Result<Self>
+    where
+        P: AsRef<std::path::Path>,
+        for<'a> <Self as binrw::BinRead>::Args<'a>: Default,
+    {
+        let mut reader = std::fs::File::open(path).context("Failed to open file")?;
+
+        binrw::BinRead::read(&mut reader).context("Failed to parse file")
+    }
+
+    pub fn save_to_file<P>(&self, path: P) -> anyhow::Result<()>
+    where
+        P: AsRef<std::path::Path>,
+        for<'a> <Self as binrw::BinWrite>::Args<'a>: Default,
+    {
+        let mut writer = std::fs::OpenOptions::new()
+            .create(true)
+            .truncate(true)
+            .write(true)
+            .open(path)
+            .context("Failed to create or open the file for writing")?;
+
+        binrw::BinWrite::write(self, &mut writer).context("Failed to overwrite file contents")
+    }
+}
 
 #[cfg(test)]
 mod tests {
