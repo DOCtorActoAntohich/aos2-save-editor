@@ -55,10 +55,6 @@ impl KeyU8 {
         self.0
     }
 
-    pub const fn increment(self) -> Self {
-        self.wrapping_add(1)
-    }
-
     pub const fn wrapping_add(self, rhs: u8) -> Self {
         let Self(swapped) = self;
         let normal = swap_nibbles(swapped);
