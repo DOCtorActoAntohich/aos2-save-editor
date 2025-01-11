@@ -3,7 +3,7 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq, derive_more::TryFrom, derive_more::Display)]
 #[brw(little, repr(u32))]
 #[repr(u32)]
-pub enum TitleText {
+pub enum Text {
     None = 0x00,
     HelloWorld = 1,
     Aos2Player,
@@ -288,7 +288,7 @@ mod tests {
 
     use binrw::BinRead;
 
-    use super::TitleText;
+    use super::Text;
 
     #[rstest::rstest]
     fn it_parses() {
@@ -297,7 +297,7 @@ mod tests {
         for value in range {
             let mut cursor = Cursor::new(value.to_le_bytes());
 
-            let _parsed = TitleText::read(&mut cursor).expect("Must read here");
+            let _parsed = Text::read(&mut cursor).expect("Must read here");
         }
     }
 }

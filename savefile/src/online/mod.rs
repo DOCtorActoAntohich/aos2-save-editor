@@ -1,15 +1,13 @@
+pub mod title;
+
 mod avatar;
-mod title;
 mod version;
 
 use aos2_env::AoS2Env;
 
 use crate::{bin_bool::BinBool, sized_section::SizedBinarySection};
 
-pub use self::{
-    avatar::{background::AvatarBackground, character::AvatarCharacter},
-    title::{character::TitleCharacter, color::TitleColor, text::TitleText},
-};
+pub use self::avatar::{background::AvatarBackground, character::AvatarCharacter};
 
 use self::version::Version;
 
@@ -35,13 +33,13 @@ pub struct PlayerOnlineProfile {
     pub avatar_background: AvatarBackground,
     pub unlockable_avatars: UnlockableAvatarsSection,
     pub unlockable_backgrounds: UnlockableBackbroundsSection,
-    pub title_character_in_background: TitleCharacter,
-    pub title_text_id: TitleText,
+    pub title_character_in_background: title::Character,
+    pub title_text_id: title::Text,
     pub titles: TitlesSection,
     pub show_ingame_title: BinBool,
     pub show_hitstun_meter: BinBool,
     pub show_spectators: BinBool,
-    pub title_color: TitleColor,
+    pub title_color: title::Color,
 }
 
 impl PlayerOnlineProfile {

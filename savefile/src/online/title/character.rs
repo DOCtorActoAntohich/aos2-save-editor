@@ -2,7 +2,7 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq, derive_more::TryFrom)]
 #[brw(little, repr(u32))]
 #[repr(u32)]
-pub enum TitleCharacter {
+pub enum Character {
     None = 0x00,
     Sora = 0x01,
     Alte = 0x02,
