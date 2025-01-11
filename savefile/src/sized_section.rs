@@ -1,6 +1,6 @@
 #[binrw::binrw]
 #[derive(Debug, Clone, Copy, derive_more::Into)]
-#[brw(little, assert(Self::contains_u32(&self_0)))]
+#[brw(little)]
 pub struct SectionSize<const MIN: usize, const MAX: usize>(u32);
 
 #[binrw::binrw]
@@ -20,12 +20,9 @@ pub enum SizedBinarySectionError<const MIN: usize, const MAX: usize> {
 }
 
 impl<const MIN: usize, const MAX: usize> SectionSize<MIN, MAX> {
+    #[must_use]
     pub fn contains(value: usize) -> bool {
         (MIN..=MAX).contains(&value)
-    }
-
-    fn contains_u32(value: &u32) -> bool {
-        Self::contains(*value as usize)
     }
 }
 
@@ -42,7 +39,9 @@ impl<const MIN: usize, const MAX: usize> TryFrom<usize> for SectionSize<MIN, MAX
 
     fn try_from(value: usize) -> Result<Self, Self::Error> {
         if Self::contains(value) {
-            Ok(Self(value as u32))
+            u32::try_from(value)
+                .map(Self)
+                .map_err(|_| SizedBinarySectionError::BadSize)
         } else {
             Err(SizedBinarySectionError::BadSize)
         }

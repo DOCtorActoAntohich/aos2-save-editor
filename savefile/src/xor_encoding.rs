@@ -3,6 +3,7 @@
 /// A sequence of bytes is encoded with a sequence of keys.
 /// Keys are pre-determined.
 /// See [`KeyU8`].
+#[must_use]
 #[binrw::binrw]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, derive_more::Display)]
 #[brw(little)]
@@ -18,6 +19,7 @@ pub struct EncodedU8(u8);
 /// - 0xFA
 /// - 0x0B
 /// - 0x1B
+#[must_use]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, derive_more::Display)]
 #[display("{_0:#x}")]
 pub struct KeyU8(u8);
@@ -31,11 +33,13 @@ impl EncodedU8 {
         Self(swap_nibbles(raw) ^ key.get())
     }
 
+    #[must_use]
     pub const fn decode(self, key: KeyU8) -> u8 {
         let Self(encoded) = self;
         swap_nibbles(encoded ^ key.get())
     }
 
+    #[must_use]
     pub const fn get(&self) -> u8 {
         self.0
     }
@@ -46,6 +50,7 @@ impl KeyU8 {
         Self(key)
     }
 
+    #[must_use]
     pub const fn get(self) -> u8 {
         self.0
     }
@@ -63,7 +68,7 @@ impl KeyU8 {
 
 /// Nibble is a half of an octet, which is 4 most/least significant bits.
 /// In Hex `0x8A`, `8` is the highest nibble, and `A` is the lowest.
-/// So, after swaping, the number will be `0xA8.
+/// So, after swaping, the number will be `0xA8`.
 const fn swap_nibbles(byte: u8) -> u8 {
     const HALF_BYTE: u32 = 4;
     byte.rotate_left(HALF_BYTE)

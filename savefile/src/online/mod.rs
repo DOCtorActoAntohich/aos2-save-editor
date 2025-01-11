@@ -47,11 +47,11 @@ pub struct PlayerOnlineProfile {
 impl PlayerOnlineProfile {
     const FILE_NAME: &'static str = "player.rkg";
 
-    pub fn load(env: AoS2Env) -> anyhow::Result<Self> {
+    pub fn load(env: &AoS2Env) -> anyhow::Result<Self> {
         Self::from_file(env.saves_folder.join(Self::FILE_NAME))
     }
 
-    pub fn save(&self, env: AoS2Env) -> anyhow::Result<()> {
+    pub fn save(&self, env: &AoS2Env) -> anyhow::Result<()> {
         self.save_to_file(env.saves_folder.join(Self::FILE_NAME))
     }
 }
