@@ -63,7 +63,7 @@ impl KeyU8 {
 
     #[allow(clippy::cast_possible_truncation)]
     pub const fn wrapping_add_usize(self, rhs: usize) -> Self {
-        // Should be truncated properly here
+        // Should be truncated properly here.
         let rhs: u8 = (rhs % 256) as u8;
         self.wrapping_add(rhs)
     }
