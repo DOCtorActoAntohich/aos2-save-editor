@@ -1,5 +1,3 @@
-pub mod characters;
-
 // No export
 mod xor_encoding;
 
@@ -7,11 +5,13 @@ mod xor_encoding;
 mod arenas;
 mod lock;
 mod music;
+mod playable_characters;
 mod runs;
 
 pub use self::arenas::Arenas;
 pub use self::lock::Status;
 pub use self::music::Music;
+pub use self::playable_characters::{Character, PlayableCharacters};
 pub use self::runs::{PerfectArcadeModeRuns, PerfectRun, PerfectStoryModeRuns};
 
 use std::{io::Cursor, path::Path};
@@ -21,8 +21,6 @@ use aos2_env::AoS2Env;
 use binrw::{BinRead, BinWrite};
 
 use crate::xor_encoding::{EncodedU8, KeyU8};
-
-use self::characters::full::CharacterSheet;
 
 /// Player progress file, aka `game.sys`.
 ///
@@ -47,7 +45,7 @@ pub struct PlayerProgress {
     /// It's possible to disable characters unlocked by default.
     ///
     /// Offset: 0x0f - 0x1d.
-    pub enabled_character: CharacterSheet,
+    pub enabled_character: PlayableCharacters,
     _0x1e: UnknownU8,
     _0x1f: UnknownU8,
     _0x20: UnknownU8,

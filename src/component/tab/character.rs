@@ -1,7 +1,4 @@
-use player_progress::{
-    characters::{full::CharacterSheet, Character},
-    PlayerProgress,
-};
+use player_progress::{Character, PlayableCharacters, PlayerProgress, Status};
 use ratatui::{
     buffer::Buffer,
     crossterm::event::{Event, KeyCode},
@@ -31,11 +28,11 @@ pub struct Tab {
 
 struct HelpText;
 
-struct CharacterTabWidget<I: Iterator<Item = (Character, bool)>> {
+struct CharacterTabWidget<I: Iterator<Item = (Character, Status)>> {
     table: CharacterTable<I>,
 }
 
-struct CharacterTable<I: Iterator<Item = (Character, bool)>> {
+struct CharacterTable<I: Iterator<Item = (Character, Status)>> {
     rows: I,
     selected_character: usize,
 }
@@ -52,14 +49,14 @@ impl Tab {
         self.selected_character = self
             .selected_character
             .saturating_add(1)
-            .clamp(0, CharacterSheet::N_CHARACTERS - 1);
+            .clamp(0, PlayableCharacters::N_CHARACTERS - 1);
     }
 
     pub fn previous_character(&mut self) {
         self.selected_character = self
             .selected_character
             .saturating_sub(1)
-            .clamp(0, CharacterSheet::N_CHARACTERS - 1);
+            .clamp(0, PlayableCharacters::N_CHARACTERS - 1);
     }
 
     pub fn toggle_current_character(&mut self) {
@@ -70,7 +67,7 @@ impl Tab {
         });
     }
 
-    fn as_widget(&self) -> CharacterTabWidget<impl Iterator<Item = (Character, bool)>> {
+    fn as_widget(&self) -> CharacterTabWidget<impl Iterator<Item = (Character, Status)>> {
         CharacterTabWidget {
             table: CharacterTable {
                 rows: self.progress.borrow().enabled_character.iter(),
@@ -118,7 +115,7 @@ impl InteratibleTabComponent for Tab {
 
 impl<I> Widget for CharacterTabWidget<I>
 where
-    I: Iterator<Item = (Character, bool)>,
+    I: Iterator<Item = (Character, Status)>,
 {
     fn render(self, area: Rect, buf: &mut Buffer)
     where
@@ -161,7 +158,7 @@ impl Widget for HelpText {
 
 impl<I> Widget for CharacterTable<I>
 where
-    I: Iterator<Item = (Character, bool)>,
+    I: Iterator<Item = (Character, Status)>,
 {
     fn render(self, area: Rect, buf: &mut Buffer)
     where
@@ -176,20 +173,18 @@ where
             selected_character,
         } = self;
 
-        let rows = rows
-            .enumerate()
-            .map(|(row_index, (character, is_enabled))| {
-                let character_name = Cell::new(character.to_string());
-                let status_cell = StatusToggle::from(is_enabled).into_cell();
-                let row = Row::new(vec![character_name, status_cell]);
+        let rows = rows.enumerate().map(|(row_index, (character, status))| {
+            let character_name = Cell::new(character.to_string());
+            let status_cell = StatusToggle::from(status).into_cell();
+            let row = Row::new(vec![character_name, status_cell]);
 
-                let is_selected = row_index == selected_character;
-                if is_selected {
-                    row.style(Style::new().bg(Color::White).fg(Color::Black))
-                } else {
-                    row.style(Style::new().bg(Color::Black).fg(Color::White))
-                }
-            });
+            let is_selected = row_index == selected_character;
+            if is_selected {
+                row.style(Style::new().bg(Color::White).fg(Color::Black))
+            } else {
+                row.style(Style::new().bg(Color::Black).fg(Color::White))
+            }
+        });
 
         let widths = [Constraint::Min(12), Constraint::Min(3)];
         Table::new(rows, widths)

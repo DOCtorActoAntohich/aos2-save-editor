@@ -11,9 +11,6 @@ thiserror.workspace = true
 derive_more.workspace = true
 binrw.workspace = true
 
-# will die soon
-savefile = { path = "../savefile" }
-
 [dev-dependencies]
 rstest.workspace = true
 rstest_reuse.workspace = true

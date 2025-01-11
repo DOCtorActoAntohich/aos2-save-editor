@@ -13,6 +13,12 @@ impl From<bool> for StatusToggle {
     }
 }
 
+impl From<player_progress::Status> for StatusToggle {
+    fn from(status: player_progress::Status) -> Self {
+        status.is_enabled().into()
+    }
+}
+
 impl StatusToggle {
     pub fn into_cell(self) -> Cell<'static> {
         let Self(is_enabled) = self;

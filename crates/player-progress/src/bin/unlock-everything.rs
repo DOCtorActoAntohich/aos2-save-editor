@@ -1,7 +1,6 @@
 use aos2_env::AoS2Env;
 use player_progress::{
-    characters::full::CharacterSheet, Arenas, Music, PerfectArcadeModeRuns, PerfectStoryModeRuns,
-    PlayerProgress,
+    Arenas, Music, PerfectArcadeModeRuns, PerfectStoryModeRuns, PlayableCharacters, PlayerProgress,
 };
 
 fn main() -> anyhow::Result<()> {
@@ -14,7 +13,7 @@ fn main() -> anyhow::Result<()> {
 
     let mut progress = PlayerProgress::load(&aos2_env)?;
 
-    progress.enabled_character = CharacterSheet::FULLY_UNLOCKED;
+    progress.enabled_character = PlayableCharacters::ALL;
     progress.arenas = Arenas::ALL;
     progress.background_music = Music::ALL;
 
