@@ -11,7 +11,10 @@ use crate::xor_encoding::{EncodedU8, KeyU8};
 
 use self::{
     background::{image::BackgroundImages, music::BackgroundMusic},
-    characters::{full::CharacterSheet, story::CharacterStoryPerfectRuns},
+    characters::{
+        full::CharacterSheet,
+        runs::{PerfectArcadeModeRuns, PerfectStoryModeRuns},
+    },
 };
 
 /// Player progress file, aka `game.sys`.
@@ -96,7 +99,7 @@ pub struct PlayerProgress {
     /// In game, it shows a star next to the character's portrait.
     ///
     /// Save file offset: 0x63 - 0x71.
-    pub arcade_easy_1cc_by_character: CharacterSheet,
+    pub arcade_easy_1ccs: PerfectArcadeModeRuns,
     _0x72: UnknownU8,
     _0x73: UnknownU8,
     _0x74: UnknownU8,
@@ -106,7 +109,7 @@ pub struct PlayerProgress {
     /// In game, it shows a star next to the character's portrait.
     ///
     /// Save file offset: 0x76 - 0x84.
-    pub arcade_medium_1cc_by_character: CharacterSheet,
+    pub arcade_medium_1ccs: PerfectArcadeModeRuns,
     _0x85: UnknownU8,
     _0x86: UnknownU8,
     _0x87: UnknownU8,
@@ -116,7 +119,7 @@ pub struct PlayerProgress {
     /// In game, it shows a star next to the character's portrait.
     ///
     /// Save file offset: 0x89 - 0x97.
-    pub arcade_hard_1cc_by_character: CharacterSheet,
+    pub arcade_hard_1ccs: PerfectArcadeModeRuns,
     _0x98: UnknownU8,
     _0x99: UnknownU8,
     _0x9a: UnknownU8,
@@ -126,7 +129,7 @@ pub struct PlayerProgress {
     /// In game, it shows a star next to the character's portrait.
     ///
     /// Save file offset: 0x9c - 0xa9.
-    pub story_1ccs: CharacterStoryPerfectRuns,
+    pub story_1ccs: PerfectStoryModeRuns,
     _0xaa: UnknownU8,
     _0xab: UnknownU8,
 }
