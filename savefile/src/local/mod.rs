@@ -11,7 +11,7 @@ use crate::xor_encoding::{EncodedU8, KeyU8};
 
 use self::{
     background::{image::BackgroundImageSheet, music::BackgroundMusicSheet},
-    characters::{full::CharacterSheet, story::CharacterStory1cc},
+    characters::{full::CharacterSheet, story::CharacterStoryPerfectRuns},
 };
 
 /// Player progress file, aka `game.sys`.
@@ -126,7 +126,7 @@ pub struct PlayerProgress {
     /// In game, it shows a star next to the character's portrait.
     ///
     /// Save file offset: 0x9c - 0xa9.
-    pub story_1cc_by_character: CharacterStory1cc,
+    pub story_1ccs: CharacterStoryPerfectRuns,
     _0xaa: UnknownU8,
     _0xab: UnknownU8,
 }

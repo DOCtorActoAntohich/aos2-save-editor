@@ -1,7 +1,7 @@
 use aos2_env::AoS2Env;
 use savefile::local::{
     background::{image::BackgroundImageSheet, music::BackgroundMusicSheet},
-    characters::{full::CharacterSheet, story::CharacterStory1cc},
+    characters::{full::CharacterSheet, story::CharacterStoryPerfectRuns},
     PlayerProgress,
 };
 
@@ -22,7 +22,7 @@ fn main() -> anyhow::Result<()> {
     progress.arcade_easy_1cc_by_character = CharacterSheet::FULLY_UNLOCKED;
     progress.arcade_medium_1cc_by_character = CharacterSheet::FULLY_UNLOCKED;
     progress.arcade_hard_1cc_by_character = CharacterSheet::FULLY_UNLOCKED;
-    progress.story_1cc_by_character = CharacterStory1cc::FULL;
+    progress.story_1ccs = CharacterStoryPerfectRuns::COMPLETED;
 
     println!(
         r#"

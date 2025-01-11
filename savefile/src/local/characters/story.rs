@@ -1,5 +1,3 @@
-use crate::bin_bool::BinBool;
-
 /// Markers for 1CC (no deaths) story mode completion.
 ///
 /// Unlike regular character sheet, it doesn't have Sumika,
@@ -7,79 +5,49 @@ use crate::bin_bool::BinBool;
 #[binrw::binrw]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Default)]
 #[brw(little)]
-pub struct CharacterStory1cc {
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub sora: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub alte: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub tsih: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub mira: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub sham: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub nath: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub star_breaker: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub suguri: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub saki: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub iru: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub nanako: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub kae: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub kyoko: bool,
-
-    #[br(map = From::<BinBool>::from)]
-    #[bw(map = BinBool::from)]
-    pub hime: bool,
+pub struct CharacterStoryPerfectRuns {
+    pub sora: PerfectRun,
+    pub alte: PerfectRun,
+    pub tsih: PerfectRun,
+    pub mira: PerfectRun,
+    pub sham: PerfectRun,
+    pub nath: PerfectRun,
+    pub star_breaker: PerfectRun,
+    pub suguri: PerfectRun,
+    pub saki: PerfectRun,
+    pub iru: PerfectRun,
+    pub nanako: PerfectRun,
+    pub kae: PerfectRun,
+    pub kyoko: PerfectRun,
+    pub hime: PerfectRun,
 }
 
-impl CharacterStory1cc {
-    pub const FULL: Self = Self {
-        sora: true,
-        alte: true,
-        tsih: true,
-        mira: true,
-        sham: true,
-        nath: true,
-        star_breaker: true,
-        suguri: true,
-        saki: true,
-        iru: true,
-        nanako: true,
-        kae: true,
-        kyoko: true,
-        hime: true,
+#[binrw::binrw]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
+#[brw(little)]
+pub enum PerfectRun {
+    #[brw(magic = 0x01u8)]
+    Completed,
+    #[default]
+    #[brw(magic = 0x00u8)]
+    NotCompleted,
+}
+
+impl CharacterStoryPerfectRuns {
+    pub const COMPLETED: Self = Self {
+        sora: PerfectRun::Completed,
+        alte: PerfectRun::Completed,
+        tsih: PerfectRun::Completed,
+        mira: PerfectRun::Completed,
+        sham: PerfectRun::Completed,
+        nath: PerfectRun::Completed,
+        star_breaker: PerfectRun::Completed,
+        suguri: PerfectRun::Completed,
+        saki: PerfectRun::Completed,
+        iru: PerfectRun::Completed,
+        nanako: PerfectRun::Completed,
+        kae: PerfectRun::Completed,
+        kyoko: PerfectRun::Completed,
+        hime: PerfectRun::Completed,
     };
 }
