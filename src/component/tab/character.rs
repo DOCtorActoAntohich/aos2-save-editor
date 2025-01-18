@@ -5,7 +5,7 @@ use ratatui::{
     layout::{Constraint, Flex, Layout, Rect},
     style::{Color, Style},
     text::Line,
-    widgets::{Cell, List, Row, Table, Widget},
+    widgets::{List, Widget},
 };
 use tokio::sync::watch;
 
@@ -14,7 +14,7 @@ use crate::{
     tui::{HandleEvent, VisualComponent},
     widget::{
         black_box::BlackBox, default_text::DefaultText, horizontal_separator::HorizontalSeparator,
-        status_toggle::StatusToggle,
+        toggles_table::TogglesTable,
     },
 };
 
@@ -28,13 +28,8 @@ pub struct Tab {
 
 struct HelpText;
 
-struct CharacterTabWidget<I: Iterator<Item = (Character, Status)>> {
-    table: CharacterTable<I>,
-}
-
-struct CharacterTable<I: Iterator<Item = (Character, Status)>> {
-    rows: I,
-    selected_character: usize,
+struct CharacterTabWidget {
+    table: TogglesTable<Character, Status>,
 }
 
 impl Tab {
@@ -67,11 +62,17 @@ impl Tab {
         });
     }
 
-    fn as_widget(&self) -> CharacterTabWidget<impl Iterator<Item = (Character, Status)>> {
+    fn as_widget(&self) -> CharacterTabWidget {
         CharacterTabWidget {
-            table: CharacterTable {
-                rows: self.progress.borrow().playable_characters.iter(),
-                selected_character: self.selected_character,
+            table: TogglesTable {
+                items: self
+                    .progress
+                    .borrow()
+                    .playable_characters
+                    .iter()
+                    .map(Into::into)
+                    .collect(),
+                current: self.selected_character,
             },
         }
     }
@@ -113,14 +114,13 @@ impl InteratibleTabComponent for Tab {
     }
 }
 
-impl<I> Widget for CharacterTabWidget<I>
-where
-    I: Iterator<Item = (Character, Status)>,
-{
+impl Widget for CharacterTabWidget {
     fn render(self, area: Rect, buf: &mut Buffer)
     where
         Self: Sized,
     {
+        let Self { table } = self;
+
         let constraints = [
             HelpText::CONSTRAINT,
             HorizontalSeparator::CONSTRAINT,
@@ -133,7 +133,11 @@ where
 
         HorizontalSeparator::default().render(separator_area, buf);
 
-        self.table.render(table_area, buf);
+        let [table_area] = Layout::horizontal([Constraint::Ratio(1, 3)])
+            .flex(Flex::Center)
+            .areas::<1>(table_area);
+
+        table.render(table_area, buf);
     }
 }
 
@@ -152,43 +156,6 @@ impl Widget for HelpText {
 
         List::new(lines)
             .style(Style::new().bg(Color::Black))
-            .render(area, buf);
-    }
-}
-
-impl<I> Widget for CharacterTable<I>
-where
-    I: Iterator<Item = (Character, Status)>,
-{
-    fn render(self, area: Rect, buf: &mut Buffer)
-    where
-        Self: Sized,
-    {
-        let [area] = Layout::horizontal([Constraint::Ratio(1, 3)])
-            .flex(Flex::Center)
-            .areas::<1>(area);
-
-        let CharacterTable {
-            rows,
-            selected_character,
-        } = self;
-
-        let rows = rows.enumerate().map(|(row_index, (character, status))| {
-            let character_name = Cell::new(character.to_string());
-            let status_cell = StatusToggle::from(status).into_cell();
-            let row = Row::new(vec![character_name, status_cell]);
-
-            let is_selected = row_index == selected_character;
-            if is_selected {
-                row.style(Style::new().bg(Color::White).fg(Color::Black))
-            } else {
-                row.style(Style::new().bg(Color::Black).fg(Color::White))
-            }
-        });
-
-        let widths = [Constraint::Min(12), Constraint::Min(3)];
-        Table::new(rows, widths)
-            .style(Style::new().bg(Color::Black).fg(Color::White))
             .render(area, buf);
     }
 }
