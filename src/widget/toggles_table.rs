@@ -3,9 +3,10 @@ use std::{fmt::Display, ops::Range};
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
-    style::{Color, Style, Stylize},
     widgets::{self, Cell, Table, Widget},
 };
+
+use crate::style::Selection;
 
 use super::status_toggle::StatusToggle;
 
@@ -21,12 +22,6 @@ pub struct Row<R, S> {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct TableSlice(Range<usize>);
-
-#[derive(derive_more::Into)]
-struct SelectedStyle(Style);
-
-#[derive(derive_more::Into)]
-struct UnselectedStyle(Style);
 
 impl<R, S> TogglesTable<R, S> {
     pub fn visible_slice(self, window_size: usize) -> Self {
@@ -65,18 +60,15 @@ where
             .map(|(row_index, Row { name, value })| {
                 let row_name = Cell::new(name.to_string());
                 let status_toggle: StatusToggle = value.into();
-                let row = widgets::Row::new(vec![row_name, status_toggle.into_cell()]);
 
                 let is_selected = row_index == current;
-                if is_selected {
-                    row.style(SelectedStyle::default())
-                } else {
-                    row.style(UnselectedStyle::default())
-                }
+                widgets::Row::new(vec![row_name, status_toggle.into_cell()])
+                    .style(Selection::from_is_selected(is_selected))
             });
+
         let widths = [Constraint::Min(12), Constraint::Min(3)];
         Table::new(rows, widths)
-            .style(UnselectedStyle::default())
+            .style(Selection::Unselected)
             .render(area, buf);
     }
 }
@@ -99,18 +91,6 @@ impl TableSlice {
             };
             Some(Self(range))
         }
-    }
-}
-
-impl Default for SelectedStyle {
-    fn default() -> Self {
-        Self(Style::new().bg(Color::White).fg(Color::Black).bold())
-    }
-}
-
-impl Default for UnselectedStyle {
-    fn default() -> Self {
-        Self(Style::new().bg(Color::Black).fg(Color::White))
     }
 }
 

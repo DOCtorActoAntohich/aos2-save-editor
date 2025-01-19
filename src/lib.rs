@@ -3,6 +3,7 @@
 
 mod component;
 mod keyboard;
+mod style;
 mod tui;
 mod widget;
 
