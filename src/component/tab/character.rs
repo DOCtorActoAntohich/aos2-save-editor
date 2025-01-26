@@ -10,6 +10,7 @@ use ratatui::{
 use tokio::sync::watch;
 
 use crate::{
+    collection::SelectibleArray,
     keyboard::GetKeyCode,
     tui::{HandleEvent, VisualComponent},
     widget::{
@@ -23,7 +24,7 @@ use super::InteratibleTabComponent;
 #[derive(Debug)]
 pub struct Tab {
     progress: watch::Sender<PlayerProgress>,
-    selected_character: usize,
+    characters: SelectibleArray<Status, { PlayableCharacters::N_CHARACTERS }>,
 }
 
 struct HelpText;
@@ -34,31 +35,17 @@ struct CharacterTabWidget {
 
 impl Tab {
     pub fn new(progress: watch::Sender<PlayerProgress>) -> Self {
+        let characters = progress.borrow().playable_characters.as_array();
         Self {
             progress,
-            selected_character: 0,
+            characters: SelectibleArray::new(characters),
         }
     }
 
-    pub fn next_character(&mut self) {
-        self.selected_character = self
-            .selected_character
-            .saturating_add(1)
-            .clamp(0, PlayableCharacters::N_CHARACTERS - 1);
-    }
-
-    pub fn previous_character(&mut self) {
-        self.selected_character = self
-            .selected_character
-            .saturating_sub(1)
-            .clamp(0, PlayableCharacters::N_CHARACTERS - 1);
-    }
-
     pub fn toggle_current_character(&mut self) {
+        self.characters.modify_current(|status| *status = !*status);
         self.progress.send_modify(|progress| {
-            let mut characters = progress.playable_characters.as_array();
-            characters[self.selected_character] = !characters[self.selected_character];
-            progress.playable_characters = characters.into();
+            progress.playable_characters = self.characters.to_array().into()
         });
     }
 
@@ -72,7 +59,7 @@ impl Tab {
                     .iter()
                     .map(Into::into)
                     .collect(),
-                current: self.selected_character,
+                current: self.characters.current_index(),
             },
         }
     }
@@ -87,8 +74,8 @@ impl HandleEvent for Tab {
 
     fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
         match event.key_code() {
-            Some(KeyCode::Up) => self.previous_character(),
-            Some(KeyCode::Down) => self.next_character(),
+            Some(KeyCode::Up) => self.characters.select_previous(),
+            Some(KeyCode::Down) => self.characters.select_next(),
             Some(KeyCode::Enter) => self.toggle_current_character(),
             _ => (),
         }
