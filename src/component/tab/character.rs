@@ -45,7 +45,7 @@ impl Tab {
     pub fn toggle_current_character(&mut self) {
         self.characters.modify_current(|status| *status = !*status);
         self.progress.send_modify(|progress| {
-            progress.playable_characters = self.characters.to_array().into()
+            progress.playable_characters = self.characters.to_array().into();
         });
     }
 

@@ -6,7 +6,7 @@ use ratatui::{
 #[derive(Debug, derive_more::Deref)]
 pub struct BlackBox<'a>(Block<'a>);
 
-impl<'a> Default for BlackBox<'a> {
+impl Default for BlackBox<'_> {
     fn default() -> Self {
         let block = Block::bordered().style(Style::new().bg(Color::Black).fg(Color::White));
         Self(block)
@@ -19,7 +19,7 @@ impl<'a> From<BlackBox<'a>> for Block<'a> {
     }
 }
 
-impl<'a> Widget for BlackBox<'a> {
+impl Widget for BlackBox<'_> {
     fn render(self, area: ratatui::prelude::Rect, buf: &mut ratatui::prelude::Buffer)
     where
         Self: Sized,

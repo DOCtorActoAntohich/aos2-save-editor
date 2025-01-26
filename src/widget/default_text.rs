@@ -30,7 +30,7 @@ impl<'a> From<DefaultText<'a>> for Line<'a> {
     }
 }
 
-impl<'a> Widget for DefaultText<'a> {
+impl Widget for DefaultText<'_> {
     fn render(self, area: ratatui::prelude::Rect, buf: &mut ratatui::prelude::Buffer)
     where
         Self: Sized,
