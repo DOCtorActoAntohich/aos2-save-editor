@@ -39,9 +39,10 @@ Here are all the reasons:
 - I wanted to cook a non-useless Rust project.
 - Always wanted to make some TUI app cos `nvim` is cute and inspiring.
 
-## How to contribute
+## Issues
 
-I haven't been able to figure out all the fields in the savefile.
-[`easydiff`](./crates/easydiff/) crate in this workspace can help with that.
+A few problems to maybe solve in the future.
 
-Simply leave an issue or open the PR if you have something to add.
+- I haven't tested if it works on Linux.
+- I haven't been able to figure out all the fields in the savefile.
+  [`easydiff`](./crates/easydiff/) crate in this workspace can help with that.
