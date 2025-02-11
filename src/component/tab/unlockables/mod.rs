@@ -95,23 +95,22 @@ impl HandleEvent for ButtonsTable {
 
 impl VisualComponent for Tab {
     fn render(&self, area: Rect, buf: &mut Buffer) {
-        let borders = BlackBox::default();
-        let inner_area = borders.inner(area);
-        borders.render(area, buf);
+        BlackBox::with_content(|area, buf| {
+            let constraints = [
+                HelpText::CONSTRAINT,
+                separator::Horizontal::CONSTRAINT,
+                Constraint::Fill(1),
+            ];
+            let [text_area, separator_area, table_area] =
+                Layout::vertical(constraints).areas::<3>(area);
 
-        let constraints = [
-            HelpText::CONSTRAINT,
-            separator::Horizontal::CONSTRAINT,
-            Constraint::Fill(1),
-        ];
-        let [text_area, separator_area, table_area] =
-            Layout::vertical(constraints).areas::<3>(inner_area);
+            HelpText.render(text_area, buf);
 
-        HelpText.render(text_area, buf);
+            separator::Horizontal::default().render(separator_area, buf);
 
-        separator::Horizontal::default().render(separator_area, buf);
-
-        self.table.render(table_area, buf);
+            self.table.render(table_area, buf);
+        })
+        .render(area, buf);
     }
 }
 

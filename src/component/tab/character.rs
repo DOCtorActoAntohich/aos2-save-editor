@@ -85,12 +85,10 @@ impl HandleEvent for Tab {
 
 impl VisualComponent for Tab {
     fn render(&self, area: Rect, buf: &mut Buffer) {
-        let borders = BlackBox::default();
-        let inner_area = borders.inner(area);
-
-        borders.render(area, buf);
-
-        self.as_widget().render(inner_area, buf);
+        BlackBox::with_content(|area, buf| {
+            self.as_widget().render(area, buf);
+        })
+        .render(area, buf);
     }
 }
 

@@ -1,29 +1,31 @@
 use ratatui::{
+    buffer::Buffer,
+    layout::Rect,
     style::{Color, Style},
     widgets::{Block, Widget},
 };
 
-#[derive(Debug, derive_more::Deref)]
-pub struct BlackBox<'a>(Block<'a>);
+pub struct BlackBox<F> {
+    render_inner_fn: F,
+}
 
-impl Default for BlackBox<'_> {
-    fn default() -> Self {
-        let block = Block::bordered().style(Style::new().bg(Color::Black).fg(Color::White));
-        Self(block)
+impl<F: FnOnce(Rect, &mut Buffer)> BlackBox<F> {
+    pub fn with_content(render_inner_fn: F) -> Self {
+        Self { render_inner_fn }
     }
 }
 
-impl<'a> From<BlackBox<'a>> for Block<'a> {
-    fn from(BlackBox(block): BlackBox<'a>) -> Self {
-        block
-    }
-}
-
-impl Widget for BlackBox<'_> {
+impl<F: FnOnce(Rect, &mut Buffer)> Widget for BlackBox<F> {
     fn render(self, area: ratatui::prelude::Rect, buf: &mut ratatui::prelude::Buffer)
     where
         Self: Sized,
     {
-        Block::from(self).render(area, buf);
+        let Self { render_inner_fn } = self;
+
+        let block = Block::bordered().style(Style::new().bg(Color::Black).fg(Color::White));
+        let content = block.inner(area);
+        block.render(area, buf);
+
+        render_inner_fn(content, buf);
     }
 }
