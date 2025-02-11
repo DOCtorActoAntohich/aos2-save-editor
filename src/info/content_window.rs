@@ -6,12 +6,11 @@ use ratatui::{
 };
 
 use crate::{
+    component::tab::InteratibleTabComponent,
     keyboard::GetKeyCode,
     tui::{HandleEvent, VisualComponent},
     widget::evenly_spaced_tabs::EvenlySpacedTabs,
 };
-
-use super::tab::InteratibleTabComponent;
 
 pub struct ContentWidget {
     current_tab: usize,
