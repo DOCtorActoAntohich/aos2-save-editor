@@ -25,7 +25,7 @@ use ratatui::{
 use tokio::sync::watch;
 
 use crate::{
-    component::{content_window::ContentWidget, tab::InteratibleTabComponent},
+    component::tab::InteratibleTabComponent,
     info::full_help_toggle::FullHelpToggle,
     keyboard::GetKeyCode,
     tui::{HandleEvent, VisualComponent},
@@ -33,7 +33,7 @@ use crate::{
 
 use self::{
     component::tab::{character, unlockables},
-    info::title_header::TitleHeader,
+    info::{content_window::ContentWidget, title_header::TitleHeader},
 };
 
 #[must_use]
