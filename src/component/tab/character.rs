@@ -23,7 +23,7 @@ use super::InteratibleTabComponent;
 #[derive(Debug)]
 pub struct Tab {
     progress: watch::Sender<PlayerProgress>,
-    characters: SelectibleArray<Status, { PlayableCharacters::N_CHARACTERS }>,
+    characters: SelectibleArray<Status, { PlayableCharacters::AMOUNT }>,
 }
 
 struct HelpText;

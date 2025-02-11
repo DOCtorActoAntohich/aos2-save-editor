@@ -63,7 +63,7 @@ pub enum Character {
 }
 
 impl PlayableCharacters {
-    pub const N_CHARACTERS: usize = 15;
+    pub const AMOUNT: usize = 15;
 
     pub const ALL: Self = Self {
         sora: Status::Enabled,
@@ -84,7 +84,7 @@ impl PlayableCharacters {
     };
 
     #[must_use]
-    pub fn as_array(&self) -> [Status; PlayableCharacters::N_CHARACTERS] {
+    pub fn as_array(&self) -> [Status; PlayableCharacters::AMOUNT] {
         (*self).into()
     }
 
@@ -116,7 +116,7 @@ impl Default for PlayableCharacters {
     }
 }
 
-impl From<PlayableCharacters> for [Status; PlayableCharacters::N_CHARACTERS] {
+impl From<PlayableCharacters> for [Status; PlayableCharacters::AMOUNT] {
     fn from(
         PlayableCharacters {
             sora,
@@ -156,7 +156,7 @@ impl From<PlayableCharacters> for [Status; PlayableCharacters::N_CHARACTERS] {
     }
 }
 
-impl From<[Status; PlayableCharacters::N_CHARACTERS]> for PlayableCharacters {
+impl From<[Status; PlayableCharacters::AMOUNT]> for PlayableCharacters {
     fn from(
         [
         sora,
@@ -174,7 +174,7 @@ impl From<[Status; PlayableCharacters::N_CHARACTERS]> for PlayableCharacters {
         kyoko,
         hime,
         sumika,
-    ]: [Status; PlayableCharacters::N_CHARACTERS],
+    ]: [Status; PlayableCharacters::AMOUNT],
     ) -> Self {
         Self {
             sora,
