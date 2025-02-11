@@ -1,3 +1,5 @@
+mod evenly_spaced_tabs;
+
 use ratatui::{
     crossterm::event::{Event, KeyCode},
     layout::{Constraint, Layout},
@@ -9,8 +11,9 @@ use crate::{
     keyboard::GetKeyCode,
     tab::InteratibleTabComponent,
     tui::{HandleEvent, VisualComponent},
-    widget::evenly_spaced_tabs::EvenlySpacedTabs,
 };
+
+use self::evenly_spaced_tabs::EvenlySpacedTabs;
 
 pub struct ContentWidget {
     current_tab: usize,
