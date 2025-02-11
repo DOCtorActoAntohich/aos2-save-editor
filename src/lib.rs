@@ -3,6 +3,7 @@
 
 mod collection;
 mod component;
+mod info;
 mod keyboard;
 mod style;
 mod tui;
@@ -24,15 +25,16 @@ use ratatui::{
 use tokio::sync::watch;
 
 use crate::{
-    component::{
-        content_window::ContentWidget, full_help_toggle::FullHelpToggle,
-        tab::InteratibleTabComponent, title_header::TitleHeader,
-    },
+    component::{content_window::ContentWidget, tab::InteratibleTabComponent},
+    info::full_help_toggle::FullHelpToggle,
     keyboard::GetKeyCode,
     tui::{HandleEvent, VisualComponent},
 };
 
-use self::component::tab::{character, unlockables};
+use self::{
+    component::tab::{character, unlockables},
+    info::title_header::TitleHeader,
+};
 
 #[must_use]
 pub struct EditorApp {
