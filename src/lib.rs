@@ -2,10 +2,10 @@
 #![allow(clippy::missing_errors_doc)]
 
 mod collection;
-mod component;
 mod info;
 mod keyboard;
 mod style;
+mod tab;
 mod tui;
 mod widget;
 
@@ -25,15 +25,15 @@ use ratatui::{
 use tokio::sync::watch;
 
 use crate::{
-    component::tab::InteratibleTabComponent,
     info::full_help_toggle::FullHelpToggle,
     keyboard::GetKeyCode,
+    tab::InteratibleTabComponent,
     tui::{HandleEvent, VisualComponent},
 };
 
 use self::{
-    component::tab::{character, unlockables},
     info::{content_window::ContentWidget, title_header::TitleHeader},
+    tab::{character, unlockables},
 };
 
 #[must_use]
