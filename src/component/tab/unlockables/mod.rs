@@ -16,9 +16,7 @@ use tokio::sync::watch;
 use crate::{
     keyboard::GetKeyCode,
     tui::{HandleEvent, VisualComponent},
-    widget::{
-        black_box::BlackBox, default_text::DefaultText, horizontal_separator::HorizontalSeparator,
-    },
+    widget::{black_box::BlackBox, default_text::DefaultText, separator},
 };
 
 use super::InteratibleTabComponent;
@@ -103,7 +101,7 @@ impl VisualComponent for Tab {
 
         let constraints = [
             HelpText::CONSTRAINT,
-            HorizontalSeparator::CONSTRAINT,
+            separator::Horizontal::CONSTRAINT,
             Constraint::Fill(1),
         ];
         let [text_area, separator_area, table_area] =
@@ -111,7 +109,7 @@ impl VisualComponent for Tab {
 
         HelpText.render(text_area, buf);
 
-        HorizontalSeparator::default().render(separator_area, buf);
+        separator::Horizontal::default().render(separator_area, buf);
 
         self.table.render(table_area, buf);
     }

@@ -14,8 +14,7 @@ use crate::{
     keyboard::GetKeyCode,
     tui::{HandleEvent, VisualComponent},
     widget::{
-        black_box::BlackBox, default_text::DefaultText, horizontal_separator::HorizontalSeparator,
-        toggles_table::TogglesTable,
+        black_box::BlackBox, default_text::DefaultText, separator, toggles_table::TogglesTable,
     },
 };
 
@@ -110,7 +109,7 @@ impl Widget for CharacterTabWidget {
 
         let constraints = [
             HelpText::CONSTRAINT,
-            HorizontalSeparator::CONSTRAINT,
+            separator::Horizontal::CONSTRAINT,
             Constraint::Fill(1),
         ];
         let [text_area, separator_area, table_area] =
@@ -118,7 +117,7 @@ impl Widget for CharacterTabWidget {
 
         HelpText.render(text_area, buf);
 
-        HorizontalSeparator::default().render(separator_area, buf);
+        separator::Horizontal::default().render(separator_area, buf);
 
         let [table_area] = Layout::horizontal([Constraint::Ratio(1, 3)])
             .flex(Flex::Center)
