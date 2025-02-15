@@ -33,7 +33,7 @@ use crate::{
 
 use self::{
     info::{content_window::ContentWidget, title_header::TitleHeader},
-    tab::{character, unlockables},
+    tab::{character, progress, unlockables},
 };
 
 #[must_use]
@@ -45,10 +45,11 @@ pub struct EditorApp {
 }
 
 impl EditorApp {
-    pub fn new(aos2_env: AoS2Env, progress: PlayerProgress) -> Self {
-        let (progress_tx, progress_rx) = watch::channel(progress);
-        let tabs: [Box<dyn InteratibleTabComponent>; 2] = [
+    pub fn new(aos2_env: AoS2Env, player_progress: PlayerProgress) -> Self {
+        let (progress_tx, progress_rx) = watch::channel(player_progress);
+        let tabs: [Box<dyn InteratibleTabComponent>; 3] = [
             Box::new(character::Tab::new(progress_tx.clone())),
+            Box::new(progress::Tab::new(progress_tx.clone())),
             Box::new(unlockables::Tab::new(progress_tx)),
         ];
         Self {
