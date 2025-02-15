@@ -45,7 +45,7 @@ impl<'a> Table<'a> {
         self
     }
 
-    pub fn visible_slice(self, window_size: usize) -> Self {
+    fn visible_slice(self, window_size: usize) -> Self {
         let Self {
             mut items,
             current,
