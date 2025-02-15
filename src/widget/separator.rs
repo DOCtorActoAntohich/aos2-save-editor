@@ -5,13 +5,13 @@ use ratatui::{
     widgets::{Block, Borders, Widget},
 };
 
-#[derive(Debug, derive_more::Into)]
+#[derive(Debug, Clone, Copy, derive_more::Into)]
 pub struct Style(ratatui::style::Style);
 
-#[derive(Debug, Default)]
+#[derive(Debug, Clone, Copy, Default)]
 pub struct Horizontal(Style);
 
-#[derive(Debug, Default)]
+#[derive(Debug, Clone, Copy, Default)]
 pub struct Vertical(Style);
 
 impl Default for Style {
@@ -26,10 +26,18 @@ impl Default for Style {
 
 impl Horizontal {
     pub const CONSTRAINT: Constraint = Constraint::Length(1);
+
+    pub const fn constraint(&self) -> Constraint {
+        Self::CONSTRAINT
+    }
 }
 
 impl Vertical {
     pub const CONSTRAINT: Constraint = Constraint::Length(1);
+
+    pub const fn constraint(&self) -> Constraint {
+        Self::CONSTRAINT
+    }
 }
 
 impl Widget for Horizontal {

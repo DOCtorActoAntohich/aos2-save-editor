@@ -49,6 +49,10 @@ impl TablesCollection {
 }
 
 impl Table {
+    pub const fn constraint(&self) -> Constraint {
+        Constraint::Fill(1)
+    }
+
     pub fn render(&self, area: Rect, buf: &mut Buffer, is_selected: bool) {
         let Self(table) = self;
 
@@ -99,31 +103,41 @@ impl HandleEvent for TablesCollection {
 
 impl VisualComponent for TablesCollection {
     fn render(&self, area: Rect, buf: &mut Buffer) {
-        let constraints = std::iter::once(Constraint::Fill(1)).chain(
-            std::iter::repeat_n(
-                [separator::Vertical::CONSTRAINT, Constraint::Fill(1)],
-                self.tables.length() - 1,
-            )
-            .flatten(),
-        );
-        let areas = Layout::horizontal(constraints).split(area);
-        let (table_areas, separator_areas): (Vec<_>, Vec<_>) = areas
+        enum Thing<'a> {
+            Table(usize, &'a Table),
+            Separator(&'a separator::Vertical),
+        }
+
+        let vertical_separator = separator::Vertical::default();
+
+        let to_draw: Vec<Thing<'_>> = self
+            .tables
             .iter()
             .enumerate()
-            .partition(|(index, _area)| index % 2 == 0);
+            .flat_map(|(index, table)| {
+                [
+                    Thing::Separator(&vertical_separator),
+                    Thing::Table(index, &table),
+                ]
+            })
+            .skip(1)
+            .collect();
 
-        table_areas
-            .into_iter()
-            .zip(self.tables.iter().enumerate().map(|(index, table)| {
-                let is_selected = index == self.tables.current_index();
-                (table, is_selected)
-            }))
-            .for_each(|((_index, &area), (table, is_selected))| {
-                table.render(area, buf, is_selected);
+        let constraints = to_draw.iter().map(|thing| match thing {
+            Thing::Table(_, table) => table.constraint(),
+            Thing::Separator(s) => s.constraint(),
+        });
+
+        Layout::horizontal(constraints)
+            .split(area)
+            .iter()
+            .zip(to_draw)
+            .for_each(|(&area, thing)| match thing {
+                Thing::Table(index, table) => {
+                    let is_selected = index == self.tables.current_index();
+                    table.render(area, buf, is_selected);
+                }
+                Thing::Separator(s) => s.render(area, buf),
             });
-
-        separator_areas
-            .into_iter()
-            .for_each(|(_index, &area)| separator::Vertical::default().render(area, buf));
     }
 }
