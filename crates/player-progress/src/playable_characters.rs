@@ -12,7 +12,7 @@ use crate::Status;
 /// - Locked/Unlocked in the character selection screen.
 /// - Arcade Mode 1CC (no deaths) is completed or not.
 #[binrw::binrw]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[brw(little)]
 pub struct PlayableCharacters {
     pub sora: Status,
@@ -86,12 +86,12 @@ impl PlayableCharacters {
     };
 
     #[must_use]
-    pub fn as_array(&self) -> [Status; PlayableCharacters::AMOUNT] {
-        (*self).into()
+    pub fn to_array(&self) -> [Status; PlayableCharacters::AMOUNT] {
+        self.clone().into()
     }
 
     pub fn iter(&self) -> impl Iterator<Item = (Character, Status)> {
-        Character::list().into_iter().zip(self.as_array())
+        Character::list().into_iter().zip(self.to_array())
     }
 }
 
