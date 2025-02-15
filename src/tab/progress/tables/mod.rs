@@ -103,29 +103,29 @@ impl HandleEvent for TablesCollection {
 
 impl VisualComponent for TablesCollection {
     fn render(&self, area: Rect, buf: &mut Buffer) {
-        enum Thing<'a> {
+        enum ToDraw<'a> {
             Table(usize, &'a Table),
             Separator(&'a separator::Vertical),
         }
 
         let vertical_separator = separator::Vertical::default();
 
-        let to_draw: Vec<Thing<'_>> = self
+        let to_draw: Vec<ToDraw<'_>> = self
             .tables
             .iter()
             .enumerate()
             .flat_map(|(index, table)| {
                 [
-                    Thing::Separator(&vertical_separator),
-                    Thing::Table(index, &table),
+                    ToDraw::Separator(&vertical_separator),
+                    ToDraw::Table(index, &table),
                 ]
             })
             .skip(1)
             .collect();
 
         let constraints = to_draw.iter().map(|thing| match thing {
-            Thing::Table(_, table) => table.constraint(),
-            Thing::Separator(s) => s.constraint(),
+            ToDraw::Table(_, table) => table.constraint(),
+            ToDraw::Separator(s) => s.constraint(),
         });
 
         Layout::horizontal(constraints)
@@ -133,11 +133,11 @@ impl VisualComponent for TablesCollection {
             .iter()
             .zip(to_draw)
             .for_each(|(&area, thing)| match thing {
-                Thing::Table(index, table) => {
+                ToDraw::Table(index, table) => {
                     let is_selected = index == self.tables.current_index();
                     table.render(area, buf, is_selected);
                 }
-                Thing::Separator(s) => s.render(area, buf),
+                ToDraw::Separator(s) => s.render(area, buf),
             });
     }
 }
