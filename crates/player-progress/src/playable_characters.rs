@@ -1,3 +1,5 @@
+use std::borrow::Cow;
+
 use crate::Status;
 
 /// Markers for full list of characters.
@@ -216,5 +218,11 @@ impl Character {
             Self::Hime,
             Self::Sumika,
         ]
+    }
+}
+
+impl From<Character> for Cow<'_, str> {
+    fn from(value: Character) -> Self {
+        value.to_string().into()
     }
 }
