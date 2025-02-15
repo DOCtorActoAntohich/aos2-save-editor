@@ -13,9 +13,7 @@ use crate::{
     collection::SelectibleArray,
     keyboard::GetKeyCode,
     tui::{HandleEvent, VisualComponent},
-    widget::{
-        black_box::BlackBox, default_text::DefaultText, separator, toggles_table::TogglesTable,
-    },
+    widget::{default_text::DefaultText, separator, toggles_table::TogglesTable},
 };
 
 use super::InteratibleTabComponent;
@@ -85,10 +83,7 @@ impl HandleEvent for Tab {
 
 impl VisualComponent for Tab {
     fn render(&self, area: Rect, buf: &mut Buffer) {
-        BlackBox::with_content(|area, buf| {
-            self.as_widget().render(area, buf);
-        })
-        .render(area, buf);
+        self.as_widget().render(area, buf);
     }
 }
 

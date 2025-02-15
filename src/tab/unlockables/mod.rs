@@ -16,7 +16,7 @@ use tokio::sync::watch;
 use crate::{
     keyboard::GetKeyCode,
     tui::{HandleEvent, VisualComponent},
-    widget::{black_box::BlackBox, default_text::DefaultText, separator},
+    widget::{default_text::DefaultText, separator},
 };
 
 use super::InteratibleTabComponent;
@@ -95,22 +95,19 @@ impl HandleEvent for ButtonsTable {
 
 impl VisualComponent for Tab {
     fn render(&self, area: Rect, buf: &mut Buffer) {
-        BlackBox::with_content(|area, buf| {
-            let constraints = [
-                HelpText::CONSTRAINT,
-                separator::Horizontal::CONSTRAINT,
-                Constraint::Fill(1),
-            ];
-            let [text_area, separator_area, table_area] =
-                Layout::vertical(constraints).areas::<3>(area);
+        let constraints = [
+            HelpText::CONSTRAINT,
+            separator::Horizontal::CONSTRAINT,
+            Constraint::Fill(1),
+        ];
+        let [text_area, separator_area, table_area] =
+            Layout::vertical(constraints).areas::<3>(area);
 
-            HelpText.render(text_area, buf);
+        HelpText.render(text_area, buf);
 
-            separator::Horizontal::default().render(separator_area, buf);
+        separator::Horizontal::default().render(separator_area, buf);
 
-            self.table.render(table_area, buf);
-        })
-        .render(area, buf);
+        self.table.render(table_area, buf);
     }
 }
 

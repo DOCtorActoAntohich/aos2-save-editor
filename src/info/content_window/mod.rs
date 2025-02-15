@@ -11,6 +11,7 @@ use crate::{
     keyboard::GetKeyCode,
     tab::InteratibleTabComponent,
     tui::{HandleEvent, VisualComponent},
+    widget::black_box::BlackBox,
 };
 
 use self::evenly_spaced_tabs::EvenlySpacedTabs;
@@ -73,6 +74,9 @@ impl VisualComponent for ContentWidget {
             .select(self.current_tab)
             .render(tabs_area, buf);
 
-        self.tabs[self.current_tab].render(content_area, buf);
+        BlackBox::with_content(|area, buf| {
+            self.tabs[self.current_tab].render(area, buf);
+        })
+        .render(content_area, buf);
     }
 }
