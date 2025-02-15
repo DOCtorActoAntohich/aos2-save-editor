@@ -35,11 +35,13 @@ impl<T, const LENGTH: usize> SelectibleArray<T, LENGTH> {
     }
 
     pub fn modify_current(&mut self, f: impl FnOnce(&mut T)) {
-        let current = self
-            .items
+        f(self.mut_current());
+    }
+
+    pub fn mut_current(&mut self) -> &mut T {
+        self.items
             .get_mut(self.current_index)
-            .expect("Invariant: Index must be constrained to collection size");
-        f(current);
+            .expect("Invariant: Index must be constrained to collection size")
     }
 }
 
