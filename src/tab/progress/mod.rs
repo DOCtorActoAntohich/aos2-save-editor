@@ -5,7 +5,7 @@ use player_progress::PlayerProgress;
 use ratatui::{
     buffer::Buffer,
     crossterm::event::Event,
-    layout::{Constraint, Layout, Rect},
+    layout::{Constraint, Rect},
     style::{Color, Style},
     text::Text,
     widgets::{List, Widget},
@@ -15,7 +15,7 @@ use tokio::sync::watch;
 use crate::{
     style::{IndexedColor, WithColor},
     tui::{HandleEvent, VisualComponent},
-    widget::separator,
+    widget::split,
 };
 
 use self::tables::TablesCollection;
@@ -49,19 +49,21 @@ impl HandleEvent for Tab {
 
 impl VisualComponent for Tab {
     fn render(&self, area: Rect, buf: &mut Buffer) {
-        let constraints = [
-            InfoText::CONSTRAINT,
-            separator::Horizontal::CONSTRAINT,
-            TablesCollection::CONSTRAINT,
-        ];
-        let [text_area, separator_area, tables_area] =
-            Layout::vertical(constraints).areas::<3>(area);
+        let top = split::Area {
+            constraint: InfoText::CONSTRAINT,
+            render: |area: Rect, buf: &mut Buffer| {
+                InfoText.render(area, buf);
+            },
+        };
 
-        InfoText.render(text_area, buf);
+        let bottom = split::Area {
+            constraint: TablesCollection::CONSTRAINT,
+            render: |area: Rect, buf: &mut Buffer| {
+                self.tables.render(area, buf);
+            },
+        };
 
-        separator::Horizontal::default().render(separator_area, buf);
-
-        self.tables.render(tables_area, buf);
+        split::Horizontal { top, bottom }.render(area, buf);
     }
 }
 

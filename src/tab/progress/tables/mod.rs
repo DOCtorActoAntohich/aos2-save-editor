@@ -17,7 +17,7 @@ use crate::{
     keyboard::GetKeyCode,
     style,
     tui::{HandleEvent, VisualComponent},
-    widget::separator,
+    widget::{separator, split},
 };
 
 trait InteractibleTable: HandleEvent + Send {
@@ -53,25 +53,27 @@ impl Table {
     pub fn render(&self, area: Rect, buf: &mut Buffer, is_selected: bool) {
         let Self(table) = self;
 
-        let constraints = [
-            Constraint::Length(1),
-            separator::Horizontal::CONSTRAINT,
-            Constraint::Fill(1),
-        ];
-        let [name_area, separator_area, table_area] =
-            Layout::vertical(constraints).areas::<3>(area);
+        let top = split::Area {
+            constraint: Constraint::Length(1),
+            render: |area: Rect, buf: &mut Buffer| {
+                Line::from(table.name())
+                    .centered()
+                    .style(style::Selection::from_is_selected(is_selected))
+                    .render(area, buf);
+            },
+        };
 
-        Line::from(table.name())
-            .centered()
-            .style(style::Selection::from_is_selected(is_selected))
-            .render(name_area, buf);
+        let bottom = split::Area {
+            constraint: Constraint::Fill(1),
+            render: |area: Rect, buf: &mut Buffer| {
+                table
+                    .as_widget()
+                    .highlight_current(is_selected)
+                    .render(area, buf);
+            },
+        };
 
-        separator::Horizontal::default().render(separator_area, buf);
-
-        table
-            .as_widget()
-            .highlight_current(is_selected)
-            .render(table_area, buf);
+        split::Horizontal { top, bottom }.render(area, buf);
     }
 }
 
