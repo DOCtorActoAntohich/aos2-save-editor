@@ -3,6 +3,7 @@ mod widget;
 
 use player_progress::PlayerProgress;
 use ratatui::{
+    crossterm::event::Event,
     layout::{Constraint, Layout},
     text::Text,
     widgets::{List, Widget},
@@ -31,16 +32,8 @@ impl Tab {
 }
 
 impl HandleEvent for Tab {
-    type Error = anyhow::Error;
-
-    fn handle_event(
-        &mut self,
-        event: &ratatui::crossterm::event::Event,
-    ) -> Result<(), Self::Error> {
-        match self.tables.handle_event(event) {
-            Ok(()) => Ok(()),
-            Err(infallible) => match infallible {},
-        }
+    fn handle_event(&mut self, event: &Event) {
+        self.tables.handle_event(event);
     }
 }
 

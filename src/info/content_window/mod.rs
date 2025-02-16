@@ -47,16 +47,12 @@ impl ContentWidget {
 }
 
 impl HandleEvent for ContentWidget {
-    type Error = anyhow::Error;
-
-    fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
+    fn handle_event(&mut self, event: &Event) {
         match event.key_code() {
             Some(KeyCode::PageDown) => self.next_tab(),
             Some(KeyCode::PageUp) => self.previous_tab(),
-            _ => self.tabs[self.current_tab].handle_event(event)?,
+            _ => self.tabs[self.current_tab].handle_event(event),
         }
-
-        Ok(())
     }
 }
 

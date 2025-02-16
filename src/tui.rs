@@ -1,9 +1,7 @@
 use ratatui::{buffer::Buffer, crossterm::event::Event, layout::Rect};
 
 pub trait HandleEvent {
-    type Error;
-
-    fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error>;
+    fn handle_event(&mut self, event: &Event);
 }
 
 /// Similar to [`ratatui::widgets::Widget`] but takes `self` by reference.
@@ -19,12 +17,6 @@ pub trait VisualComponent {
     fn render(&self, area: Rect, buf: &mut Buffer);
 }
 
-pub trait InteractibleComponent:
-    HandleEvent<Error = anyhow::Error> + VisualComponent + Send
-{
-}
+pub trait InteractibleComponent: HandleEvent + VisualComponent + Send {}
 
-impl<C> InteractibleComponent for C where
-    C: HandleEvent<Error = anyhow::Error> + VisualComponent + Send
-{
-}
+impl<C> InteractibleComponent for C where C: HandleEvent + VisualComponent + Send {}

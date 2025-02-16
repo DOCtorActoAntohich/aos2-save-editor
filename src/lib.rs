@@ -75,7 +75,7 @@ impl EditorApp {
 
     fn handle_events(&mut self) -> anyhow::Result<()> {
         let event = crossterm::event::read()?;
-        self.handle_event(&event)?;
+        self.handle_event(&event);
 
         self.handle_savefile_updates()?;
 
@@ -103,15 +103,11 @@ impl EditorApp {
 }
 
 impl HandleEvent for EditorApp {
-    type Error = anyhow::Error;
-
-    fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
+    fn handle_event(&mut self, event: &Event) {
         match event.key_code() {
             Some(KeyCode::Char('q')) => self.exit(),
-            _ => self.content.handle_event(event)?,
+            _ => self.content.handle_event(event),
         }
-
-        Ok(())
     }
 }
 

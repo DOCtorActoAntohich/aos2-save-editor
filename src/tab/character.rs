@@ -67,17 +67,13 @@ impl HelpText {
 }
 
 impl HandleEvent for Tab {
-    type Error = anyhow::Error;
-
-    fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
+    fn handle_event(&mut self, event: &Event) {
         match event.key_code() {
             Some(KeyCode::Up) => self.characters.select_previous(),
             Some(KeyCode::Down) => self.characters.select_next(),
             Some(KeyCode::Enter) => self.toggle_current_character(),
             _ => (),
         }
-
-        Ok(())
     }
 }
 

@@ -2,8 +2,6 @@ mod arena;
 mod character;
 mod music;
 
-use std::convert::Infallible;
-
 use player_progress::PlayerProgress;
 use ratatui::{
     buffer::Buffer,
@@ -22,7 +20,7 @@ use crate::{
     widget::separator,
 };
 
-trait InteractibleTable: HandleEvent<Error = Infallible> + Send {
+trait InteractibleTable: HandleEvent + Send {
     fn name(&self) -> &str;
 
     fn as_widget(&self) -> super::widget::Table;
@@ -76,25 +74,19 @@ impl Table {
 }
 
 impl HandleEvent for Table {
-    type Error = Infallible;
-
-    fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
+    fn handle_event(&mut self, event: &Event) {
         let Self(table) = self;
-        table.handle_event(event)
+        table.handle_event(event);
     }
 }
 
 impl HandleEvent for TablesCollection {
-    type Error = Infallible;
-
-    fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
+    fn handle_event(&mut self, event: &Event) {
         match event.key_code() {
             Some(KeyCode::Left) => self.tables.select_previous(),
             Some(KeyCode::Right) => self.tables.select_next(),
-            _ => self.tables.mut_current().handle_event(event)?,
+            _ => self.tables.mut_current().handle_event(event),
         }
-
-        Ok(())
     }
 }
 

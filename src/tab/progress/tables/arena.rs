@@ -1,5 +1,3 @@
-use std::convert::Infallible;
-
 use player_progress::{Arenas, PlayerProgress, Status};
 use ratatui::crossterm::event::{Event, KeyCode};
 use tokio::sync::watch;
@@ -26,9 +24,7 @@ impl Table {
 }
 
 impl HandleEvent for Table {
-    type Error = Infallible;
-
-    fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
+    fn handle_event(&mut self, event: &Event) {
         match event.key_code() {
             Some(KeyCode::Up) => self.arenas.select_previous(),
             Some(KeyCode::Down) => self.arenas.select_next(),
@@ -39,8 +35,6 @@ impl HandleEvent for Table {
             }
             _ => (),
         }
-
-        Ok(())
     }
 }
 

@@ -60,18 +60,14 @@ impl<C> HandleEvent for FullHelpToggle<C>
 where
     C: InteractibleComponent,
 {
-    type Error = anyhow::Error;
-
-    fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
+    fn handle_event(&mut self, event: &Event) {
         match event.key_code() {
             Some(Self::KEY) => {
                 self.mode = self.mode.toggle();
             }
-            _other if self.mode == Mode::ShowContent => self.content.handle_event(event)?,
+            _other if self.mode == Mode::ShowContent => self.content.handle_event(event),
             _ => (),
         }
-
-        Ok(())
     }
 }
 

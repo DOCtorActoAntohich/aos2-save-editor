@@ -21,7 +21,7 @@ use crate::{
 
 use super::InteratibleTabComponent;
 
-trait CustomButton: HandleEvent<Error = anyhow::Error> + Send {
+trait CustomButton: HandleEvent + Send {
     fn as_line(&self) -> Line<'_>;
     fn name(&self) -> &'static str;
 }
@@ -73,23 +73,18 @@ impl ButtonsTable {
 }
 
 impl HandleEvent for Tab {
-    type Error = anyhow::Error;
-
-    fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
+    fn handle_event(&mut self, event: &Event) {
         match event.key_code() {
             Some(KeyCode::Up) => self.table.previous_button(),
             Some(KeyCode::Down) => self.table.next_button(),
-            _ => self.table.handle_event(event)?,
+            _ => self.table.handle_event(event),
         }
-        Ok(())
     }
 }
 
 impl HandleEvent for ButtonsTable {
-    type Error = anyhow::Error;
-
-    fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
-        self.buttons[self.current_button].handle_event(event)
+    fn handle_event(&mut self, event: &Event) {
+        self.buttons[self.current_button].handle_event(event);
     }
 }
 

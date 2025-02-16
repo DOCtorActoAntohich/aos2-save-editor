@@ -42,12 +42,9 @@ impl CustomButton for Button {
 }
 
 impl HandleEvent for Button {
-    type Error = anyhow::Error;
-
-    fn handle_event(&mut self, event: &Event) -> Result<(), Self::Error> {
+    fn handle_event(&mut self, event: &Event) {
         if let Some(KeyCode::Enter) = event.key_code() {
             self.unlock_all();
         }
-        Ok(())
     }
 }
