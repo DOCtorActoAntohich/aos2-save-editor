@@ -45,7 +45,7 @@ impl HandleEvent for Table {
 }
 
 impl InteractibleTable for Table {
-    fn name(&self) -> &str {
+    fn name(&self) -> &'static str {
         "Arenas"
     }
 
