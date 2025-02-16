@@ -30,10 +30,6 @@ impl Horizontal {
 
 impl Vertical {
     pub const CONSTRAINT: Constraint = Constraint::Length(1);
-
-    pub const fn constraint(&self) -> Constraint {
-        Self::CONSTRAINT
-    }
 }
 
 impl Widget for Horizontal {

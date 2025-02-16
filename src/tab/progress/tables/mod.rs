@@ -124,7 +124,7 @@ impl VisualComponent for TablesCollection {
 
         let constraints = to_draw.iter().map(|thing| match thing {
             ToDraw::Table(_, table) => table.constraint(),
-            ToDraw::Separator(s) => s.constraint(),
+            ToDraw::Separator(_) => separator::Vertical::CONSTRAINT,
         });
 
         Layout::horizontal(constraints)
