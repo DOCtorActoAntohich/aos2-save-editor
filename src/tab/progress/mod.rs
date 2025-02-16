@@ -3,8 +3,10 @@ mod widget;
 
 use player_progress::PlayerProgress;
 use ratatui::{
+    buffer::Buffer,
     crossterm::event::Event,
-    layout::{Constraint, Layout},
+    layout::{Constraint, Layout, Rect},
+    style::{Color, Style},
     text::Text,
     widgets::{List, Widget},
 };
@@ -23,6 +25,13 @@ pub struct Tab {
     tables: TablesCollection,
 }
 
+struct InfoText;
+
+impl InfoText {
+    pub const N_LINES: u16 = 6;
+    pub const CONSTRAINT: Constraint = Constraint::Length(Self::N_LINES);
+}
+
 impl Tab {
     pub fn new(progress: watch::Sender<PlayerProgress>) -> Self {
         Self {
@@ -38,21 +47,16 @@ impl HandleEvent for Tab {
 }
 
 impl VisualComponent for Tab {
-    fn render(&self, area: ratatui::prelude::Rect, buf: &mut ratatui::prelude::Buffer) {
+    fn render(&self, area: Rect, buf: &mut Buffer) {
         let constraints = [
-            Constraint::Length(3),
+            InfoText::CONSTRAINT,
             separator::Horizontal::CONSTRAINT,
-            Constraint::Fill(1),
+            TablesCollection::CONSTRAINT,
         ];
         let [text_area, separator_area, tables_area] =
             Layout::vertical(constraints).areas::<3>(area);
 
-        List::new([
-            Text::from("amogus").centered(),
-            Text::from("imposter").centered(),
-            Text::from("sus").centered(),
-        ])
-        .render(text_area, buf);
+        InfoText.render(text_area, buf);
 
         separator::Horizontal::default().render(separator_area, buf);
 
@@ -63,5 +67,27 @@ impl VisualComponent for Tab {
 impl InteratibleTabComponent for Tab {
     fn name(&self) -> &'static str {
         "Progress"
+    }
+}
+
+impl Widget for InfoText {
+    fn render(self, area: Rect, buf: &mut Buffer)
+    where
+        Self: Sized,
+    {
+        let lines: [Text<'_>; InfoText::N_LINES as usize] = [
+            Text::from("!! Keep at least 2-3 options enabled in each category !!")
+                .centered()
+                .style(Style::new().bg(Color::Black).fg(Color::Red)),
+            Text::from("Otherwise the game will just crash randomly.").centered(),
+            Text::from("").centered(),
+            Text::from("Yes, you CAN disable Iru and Sham :trol face:").centered(),
+            Text::from("").centered(),
+            Text::from("DLC music is not available - Steam controls it, not the savefile.")
+                .centered()
+                .style(Style::new().bg(Color::Black).fg(Color::Indexed(220))),
+        ];
+
+        List::new(lines).render(area, buf);
     }
 }

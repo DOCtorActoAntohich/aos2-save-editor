@@ -33,6 +33,8 @@ pub struct TablesCollection {
 struct Table(Box<dyn InteractibleTable>);
 
 impl TablesCollection {
+    pub const CONSTRAINT: Constraint = Constraint::Fill(1);
+
     pub fn new(progress: watch::Sender<PlayerProgress>) -> Self {
         let tables: [Table; 3] = [
             Table(Box::new(self::character::Table::new(progress.clone()))),
