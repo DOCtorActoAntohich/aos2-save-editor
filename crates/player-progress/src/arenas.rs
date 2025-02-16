@@ -33,19 +33,33 @@ pub struct Arenas {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, derive_more::Display)]
 pub enum Arena {
+    #[display("Before the War")]
     BeforeTheWar,
+    #[display("War 10k years ago")]
     War10kYearsAgo,
+    #[display("Canyon of Wind")]
     CanyonOfWind,
+    #[display("Dust Storm")]
     DustStorm,
+    #[display("Rain and Sunset")]
     RainAndSunset,
+    #[display("Equator Doldrums")]
     EquatorDoldrums,
+    #[display("Big Bridge")]
     BigBridge,
+    #[display("Capital in Flames")]
     CapitalInFlames,
+    #[display("Whirlpool of Malice")]
     WhirlpoolOfMalice,
+    #[display("Nature 10k")]
     Nature10k,
+    #[display("Crashed Spaceship")]
     CrashedSpaceship,
+    #[display("Guardian's Chamber")]
     GuardiansChamber,
+    #[display("Moonlight Dance Hall")]
     MoonlightDanceHall,
+    #[display("Sumika's Hideout")]
     SumikaHideout,
 }
 

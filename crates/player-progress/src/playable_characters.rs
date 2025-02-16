@@ -53,6 +53,7 @@ pub enum Character {
     Mira = 3,
     Sham = 4,
     Nath = 5,
+    #[display("Star Breaker")]
     StarBreaker = 6,
     Suguri = 7,
     Saki = 8,
