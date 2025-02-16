@@ -114,7 +114,7 @@ impl VisualComponent for TablesCollection {
             .flat_map(|(index, table)| {
                 [
                     ToDraw::Separator(&vertical_separator),
-                    ToDraw::Table(index, &table),
+                    ToDraw::Table(index, table),
                 ]
             })
             .skip(1)
