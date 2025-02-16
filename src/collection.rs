@@ -7,11 +7,6 @@ pub struct SelectibleArray<T, const LENGTH: usize> {
 impl<T, const LENGTH: usize> SelectibleArray<T, LENGTH> {
     const MAX_INDEX: usize = LENGTH - 1;
 
-    #[inline(always)]
-    pub const fn length(&self) -> usize {
-        LENGTH
-    }
-
     pub fn new(array: [T; LENGTH]) -> Self {
         const { assert!(LENGTH > 0, "Zero-length array is not allowed") };
 

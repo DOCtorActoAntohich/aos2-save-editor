@@ -26,10 +26,6 @@ impl Default for Style {
 
 impl Horizontal {
     pub const CONSTRAINT: Constraint = Constraint::Length(1);
-
-    pub const fn constraint(&self) -> Constraint {
-        Self::CONSTRAINT
-    }
 }
 
 impl Vertical {
