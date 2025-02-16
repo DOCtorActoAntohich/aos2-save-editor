@@ -1,3 +1,4 @@
+mod arena;
 mod character;
 mod dummy;
 
@@ -39,7 +40,7 @@ impl TablesCollection {
     pub fn new(progress: watch::Sender<PlayerProgress>) -> Self {
         let tables: [Table; 3] = [
             Table(Box::new(self::character::Table::new(progress.clone()))),
-            Table(Box::new(Dummy::new("Second".into()))),
+            Table(Box::new(self::arena::Table::new(progress.clone()))),
             Table(Box::new(Dummy::new("Third".into()))),
         ];
         Self {

@@ -1,3 +1,5 @@
+use std::borrow::Cow;
+
 use crate::{lock::Status, UnknownU8};
 
 /// List of Background Images aka Arena Backgrounds.
@@ -29,7 +31,27 @@ pub struct Arenas {
     pub sumika_hideout: Status,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, derive_more::Display)]
+pub enum Arena {
+    BeforeTheWar,
+    War10kYearsAgo,
+    CanyonOfWind,
+    DustStorm,
+    RainAndSunset,
+    EquatorDoldrums,
+    BigBridge,
+    CapitalInFlames,
+    WhirlpoolOfMalice,
+    Nature10k,
+    CrashedSpaceship,
+    GuardiansChamber,
+    MoonlightDanceHall,
+    SumikaHideout,
+}
+
 impl Arenas {
+    pub const AMOUNT: usize = 14;
+
     pub const ALL: Self = Self {
         before_the_war: Status::Enabled,
         war_10k_years_ago: Status::Enabled,
@@ -47,6 +69,15 @@ impl Arenas {
         moonlight_dance_hall: Status::Enabled,
         sumika_hideout: Status::Enabled,
     };
+
+    #[must_use]
+    pub fn to_array(&self) -> [Status; Self::AMOUNT] {
+        self.clone().into()
+    }
+
+    pub fn iter(&self) -> impl Iterator<Item = (Arena, Status)> {
+        Arena::list().into_iter().zip(self.to_array())
+    }
 }
 
 impl Default for Arenas {
@@ -95,3 +126,109 @@ impl PartialEq for Arenas {
 }
 
 impl Eq for Arenas {}
+
+impl From<Arenas> for [Status; Arenas::AMOUNT] {
+    fn from(
+        Arenas {
+            before_the_war,
+            war_10k_years_ago,
+            canyon_of_wind,
+            dust_storm,
+            rain_and_sunset,
+            equator_doldrums,
+            big_bridge,
+            capital_in_flames,
+            whirlpool_of_malice,
+            _0x2d,
+            nature_10k,
+            crashed_spaceship,
+            guardians_chamber,
+            moonlight_dance_hall,
+            sumika_hideout,
+        }: Arenas,
+    ) -> Self {
+        [
+            before_the_war,
+            war_10k_years_ago,
+            canyon_of_wind,
+            dust_storm,
+            rain_and_sunset,
+            equator_doldrums,
+            big_bridge,
+            capital_in_flames,
+            whirlpool_of_malice,
+            nature_10k,
+            crashed_spaceship,
+            guardians_chamber,
+            moonlight_dance_hall,
+            sumika_hideout,
+        ]
+    }
+}
+
+impl From<[Status; Arenas::AMOUNT]> for Arenas {
+    fn from(
+        [
+        before_the_war,
+        war_10k_years_ago,
+        canyon_of_wind,
+        dust_storm,
+        rain_and_sunset,
+        equator_doldrums,
+        big_bridge,
+        capital_in_flames,
+        whirlpool_of_malice,
+        nature_10k,
+        crashed_spaceship,
+        guardians_chamber,
+        moonlight_dance_hall,
+        sumika_hideout,
+    ]: [Status; Arenas::AMOUNT],
+    ) -> Self {
+        Self {
+            before_the_war,
+            war_10k_years_ago,
+            canyon_of_wind,
+            dust_storm,
+            rain_and_sunset,
+            equator_doldrums,
+            big_bridge,
+            capital_in_flames,
+            whirlpool_of_malice,
+            nature_10k,
+            crashed_spaceship,
+            guardians_chamber,
+            moonlight_dance_hall,
+            sumika_hideout,
+            ..Default::default()
+        }
+    }
+}
+
+impl Arena {
+    #[must_use]
+    pub const fn list() -> impl IntoIterator<Item = Self> {
+        [
+            Self::BeforeTheWar,
+            Self::War10kYearsAgo,
+            Self::CanyonOfWind,
+            Self::DustStorm,
+            Self::RainAndSunset,
+            Self::EquatorDoldrums,
+            Self::BigBridge,
+            Self::CapitalInFlames,
+            Self::WhirlpoolOfMalice,
+            Self::Nature10k,
+            Self::CrashedSpaceship,
+            Self::GuardiansChamber,
+            Self::MoonlightDanceHall,
+            Self::SumikaHideout,
+        ]
+    }
+}
+
+impl From<Arena> for Cow<'_, str> {
+    fn from(value: Arena) -> Self {
+        value.to_string().into()
+    }
+}
