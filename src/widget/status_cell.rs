@@ -16,7 +16,7 @@ pub struct StatusCell<'a> {
 impl<'a> StatusCell<'a> {
     pub fn new(text: impl Into<Text<'a>>) -> Self {
         Self {
-            text: text.into(),
+            text: text.into().centered(),
             is_enabled: false,
         }
     }
