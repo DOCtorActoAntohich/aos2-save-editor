@@ -88,7 +88,7 @@ impl Widget for Table<'_> {
                 let row_name = ratatui::widgets::Cell::new(name.to_string());
 
                 let is_selected = should_highlight_current && (row_index == current);
-                widgets::Row::new(vec![row_name, status.into_cell()])
+                widgets::Row::new(vec![row_name, status.into()])
                     .style(Selection::from_is_selected(is_selected))
             });
 

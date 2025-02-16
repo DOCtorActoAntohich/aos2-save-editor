@@ -1,10 +1,6 @@
-use ratatui::{
-    style::{Color, Style},
-    text::Text,
-    widgets::Cell,
-};
+use ratatui::widgets::Cell;
 
-use crate::style::{IndexedColor, WithColor};
+use crate::widget::status_cell::StatusCell;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 pub struct Status(bool);
@@ -21,21 +17,9 @@ impl From<player_progress::Status> for Status {
     }
 }
 
-impl Status {
-    pub fn into_cell(self) -> Cell<'static> {
-        let Self(is_enabled) = self;
-        if is_enabled {
-            Cell::new(Text::from("+").centered()).style(
-                Style::new()
-                    .bg(IndexedColor::DarkGreen.into())
-                    .fg(Color::White),
-            )
-        } else {
-            Cell::new(Text::from("X").centered()).style(
-                Style::new()
-                    .with_bg(IndexedColor::DarkRed)
-                    .with_fg(Color::White),
-            )
-        }
+impl From<Status> for Cell<'_> {
+    fn from(Status(is_enabled): Status) -> Self {
+        let text = if is_enabled { "+" } else { "X" };
+        StatusCell::new(text).enabled(is_enabled).into()
     }
 }
