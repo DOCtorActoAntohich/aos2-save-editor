@@ -18,7 +18,7 @@ pub struct Table<'a> {
 
 struct Row<'a> {
     name: Cow<'a, str>,
-    value: Status,
+    status: Status,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -84,12 +84,11 @@ impl Widget for Table<'_> {
         let rows = items
             .into_iter()
             .enumerate()
-            .map(|(row_index, Row { name, value })| {
+            .map(|(row_index, Row { name, status })| {
                 let row_name = ratatui::widgets::Cell::new(name.to_string());
-                let status_toggle: Status = value.into();
 
                 let is_selected = should_highlight_current && (row_index == current);
-                widgets::Row::new(vec![row_name, status_toggle.into_cell()])
+                widgets::Row::new(vec![row_name, status.into_cell()])
                     .style(Selection::from_is_selected(is_selected))
             });
 
@@ -121,15 +120,15 @@ impl TableSlice {
     }
 }
 
-impl<'a, R, S> From<(R, S)> for Row<'a>
+impl<'a, N, S> From<(N, S)> for Row<'a>
 where
-    R: Into<Cow<'a, str>>,
+    N: Into<Cow<'a, str>>,
     S: Into<Status>,
 {
-    fn from((name, value): (R, S)) -> Self {
+    fn from((name, status): (N, S)) -> Self {
         Row {
             name: name.into(),
-            value: value.into(),
+            status: status.into(),
         }
     }
 }
