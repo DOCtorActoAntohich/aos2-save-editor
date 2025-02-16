@@ -1,10 +1,9 @@
-mod evenly_spaced_tabs;
+mod tabs;
 
 use player_progress::PlayerProgress;
 use ratatui::{
     crossterm::event::{Event, KeyCode},
     layout::{Constraint, Layout},
-    style::{Color, Style, Stylize},
     widgets::Widget,
 };
 use tokio::sync::watch;
@@ -17,7 +16,7 @@ use crate::{
     widget::black_box::BlackBox,
 };
 
-use self::evenly_spaced_tabs::EvenlySpacedTabs;
+use self::tabs::EvenTabs;
 
 pub struct ContentWidget {
     tabs: SelectibleArray<Box<dyn InteratibleTabComponent>, 2>,
@@ -53,11 +52,7 @@ impl VisualComponent for ContentWidget {
         let layout = Layout::vertical(constraints);
         let [tabs_area, content_area] = layout.areas::<2>(area);
 
-        let unselected_style = Style::new().fg(Color::White).bg(Color::Black);
-        EvenlySpacedTabs::new(self.tabs.iter().map(|tab| tab.name()))
-            .selected_style(Style::new().fg(Color::Black).bg(Color::White).bold())
-            .regular_style(unselected_style)
-            .divider_style(unselected_style)
+        EvenTabs::new(self.tabs.iter().map(|tab| tab.name()))
             .select(self.tabs.current_index())
             .render(tabs_area, buf);
 
