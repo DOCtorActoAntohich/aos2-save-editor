@@ -6,6 +6,7 @@ pub enum IndexedColor {
     DarkYellow,
     DarkGray,
     DarkBlue,
+    BrightRed,
 }
 
 impl From<IndexedColor> for Color {
@@ -17,6 +18,7 @@ impl From<IndexedColor> for Color {
             IndexedColor::DarkYellow => Color::Indexed(220),
             IndexedColor::DarkGray => Color::Indexed(236),
             IndexedColor::DarkBlue => Color::Indexed(17),
+            IndexedColor::BrightRed => Color::Indexed(196),
         }
     }
 }

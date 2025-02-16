@@ -79,7 +79,11 @@ impl Widget for InfoText {
         let lines: [Text<'_>; InfoText::N_LINES as usize] = [
             Text::from("!! Keep at least 2-3 options enabled in each category !!")
                 .centered()
-                .style(Style::new().bg(Color::Black).fg(Color::Red)),
+                .style(
+                    Style::new()
+                        .bg(Color::Black)
+                        .fg(IndexedColor::BrightRed.into()),
+                ),
             Text::from("Otherwise the game will just crash randomly.").centered(),
             Text::from("").centered(),
             Text::from("Yes, you CAN disable Iru and Sham :trol face:").centered(),
