@@ -8,7 +8,7 @@ use ratatui::{
 
 use crate::{
     keyboard::GetKeyCode,
-    style::IndexedColor,
+    style::{IndexedColor, WithColor},
     tui::{HandleEvent, InteractibleComponent, VisualComponent},
 };
 
@@ -42,8 +42,8 @@ impl Default for HelpStyle {
     fn default() -> Self {
         Self(
             Style::new()
-                .bg(IndexedColor::DarkGray.into())
-                .fg(Color::White),
+                .with_bg(IndexedColor::DarkGray)
+                .with_fg(Color::White),
         )
     }
 }

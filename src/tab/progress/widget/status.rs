@@ -4,7 +4,7 @@ use ratatui::{
     widgets::Cell,
 };
 
-use crate::style::IndexedColor;
+use crate::style::{IndexedColor, WithColor};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 pub struct Status(bool);
@@ -33,8 +33,8 @@ impl Status {
         } else {
             Cell::new(Text::from("X").centered()).style(
                 Style::new()
-                    .bg(IndexedColor::DarkRed.into())
-                    .fg(Color::White),
+                    .with_bg(IndexedColor::DarkRed)
+                    .with_fg(Color::White),
             )
         }
     }

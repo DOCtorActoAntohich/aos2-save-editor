@@ -1,4 +1,4 @@
-use ratatui::style::Color;
+use ratatui::style::{Color, Style};
 
 pub enum IndexedColor {
     DarkGreen,
@@ -7,6 +7,11 @@ pub enum IndexedColor {
     DarkGray,
     DarkBlue,
     BrightRed,
+}
+
+pub trait WithColor {
+    fn with_bg(self, color: impl Into<Color>) -> Self;
+    fn with_fg(self, color: impl Into<Color>) -> Self;
 }
 
 impl From<IndexedColor> for Color {
@@ -20,5 +25,17 @@ impl From<IndexedColor> for Color {
             IndexedColor::DarkBlue => Color::Indexed(17),
             IndexedColor::BrightRed => Color::Indexed(196),
         }
+    }
+}
+
+impl WithColor for Style {
+    #[inline(always)]
+    fn with_bg(self, color: impl Into<Color>) -> Self {
+        self.bg(color.into())
+    }
+
+    #[inline(always)]
+    fn with_fg(self, color: impl Into<Color>) -> Self {
+        self.fg(color.into())
     }
 }

@@ -13,7 +13,7 @@ use ratatui::{
 use tokio::sync::watch;
 
 use crate::{
-    style::IndexedColor,
+    style::{IndexedColor, WithColor},
     tui::{HandleEvent, VisualComponent},
     widget::separator,
 };
@@ -81,8 +81,8 @@ impl Widget for InfoText {
                 .centered()
                 .style(
                     Style::new()
-                        .bg(Color::Black)
-                        .fg(IndexedColor::BrightRed.into()),
+                        .with_bg(Color::Black)
+                        .with_fg(IndexedColor::BrightRed),
                 ),
             Text::from("Otherwise the game will just crash randomly.").centered(),
             Text::from("").centered(),
@@ -92,8 +92,8 @@ impl Widget for InfoText {
                 .centered()
                 .style(
                     Style::new()
-                        .bg(Color::Black)
-                        .fg(IndexedColor::DarkYellow.into()),
+                        .with_bg(Color::Black)
+                        .with_fg(IndexedColor::DarkYellow),
                 ),
         ];
 

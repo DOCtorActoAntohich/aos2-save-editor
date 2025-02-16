@@ -5,7 +5,10 @@ use ratatui::{
     widgets::{Paragraph, Widget},
 };
 
-use crate::{style::IndexedColor, tui::VisualComponent};
+use crate::{
+    style::{IndexedColor, WithColor},
+    tui::VisualComponent,
+};
 
 #[derive(Debug)]
 pub struct TitleHeader;
@@ -19,8 +22,8 @@ impl VisualComponent for TitleHeader {
         Paragraph::new("AoS2 Save Editor")
             .style(
                 Style::default()
-                    .bg(IndexedColor::DarkBlue.into())
-                    .fg(Color::White),
+                    .with_bg(IndexedColor::DarkBlue)
+                    .with_fg(Color::White),
             )
             .centered()
             .render(area, buf);
