@@ -1,15 +1,18 @@
 mod evenly_spaced_tabs;
 
+use player_progress::PlayerProgress;
 use ratatui::{
     crossterm::event::{Event, KeyCode},
     layout::{Constraint, Layout},
     style::{Color, Style, Stylize},
     widgets::Widget,
 };
+use tokio::sync::watch;
 
 use crate::{
+    collection::SelectibleArray,
     keyboard::GetKeyCode,
-    tab::InteratibleTabComponent,
+    tab::{progress, InteratibleTabComponent},
     tui::{HandleEvent, VisualComponent},
     widget::black_box::BlackBox,
 };
@@ -17,41 +20,26 @@ use crate::{
 use self::evenly_spaced_tabs::EvenlySpacedTabs;
 
 pub struct ContentWidget {
-    current_tab: usize,
-    tabs: Vec<Box<dyn InteratibleTabComponent>>,
+    tabs: SelectibleArray<Box<dyn InteratibleTabComponent>, 1>,
 }
 
 impl ContentWidget {
     pub const CONSTRAINT: Constraint = Constraint::Min(3);
 
-    pub fn new(tabs: impl IntoIterator<Item = Box<dyn InteratibleTabComponent>>) -> Self {
+    pub fn new(progress: watch::Sender<PlayerProgress>) -> Self {
+        let tabs: [Box<dyn InteratibleTabComponent>; 1] = [Box::new(progress::Tab::new(progress))];
         Self {
-            current_tab: 0,
-            tabs: tabs.into_iter().collect(),
+            tabs: SelectibleArray::new(tabs),
         }
-    }
-
-    pub fn next_tab(&mut self) {
-        self.current_tab = self
-            .current_tab
-            .saturating_add(1)
-            .clamp(0, self.tabs.len() - 1);
-    }
-
-    pub fn previous_tab(&mut self) {
-        self.current_tab = self
-            .current_tab
-            .saturating_sub(1)
-            .clamp(0, self.tabs.len() - 1);
     }
 }
 
 impl HandleEvent for ContentWidget {
     fn handle_event(&mut self, event: &Event) {
         match event.key_code() {
-            Some(KeyCode::PageDown) => self.next_tab(),
-            Some(KeyCode::PageUp) => self.previous_tab(),
-            _ => self.tabs[self.current_tab].handle_event(event),
+            Some(KeyCode::PageUp) => self.tabs.select_previous(),
+            Some(KeyCode::PageDown) => self.tabs.select_next(),
+            _ => self.tabs.mut_current().handle_event(event),
         }
     }
 }
@@ -67,11 +55,11 @@ impl VisualComponent for ContentWidget {
             .selected_style(Style::new().fg(Color::Black).bg(Color::White).bold())
             .regular_style(unselected_style)
             .divider_style(unselected_style)
-            .select(self.current_tab)
+            .select(self.tabs.current_index())
             .render(tabs_area, buf);
 
         BlackBox::with_content(|area, buf| {
-            self.tabs[self.current_tab].render(area, buf);
+            self.tabs.current().render(area, buf);
         })
         .render(content_area, buf);
     }

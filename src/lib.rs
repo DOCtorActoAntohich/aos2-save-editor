@@ -27,14 +27,10 @@ use tokio::sync::watch;
 use crate::{
     info::full_help_toggle::FullHelpToggle,
     keyboard::GetKeyCode,
-    tab::InteratibleTabComponent,
     tui::{HandleEvent, VisualComponent},
 };
 
-use self::{
-    info::{content_window::ContentWidget, title_header::TitleHeader},
-    tab::progress,
-};
+use self::info::{content_window::ContentWidget, title_header::TitleHeader};
 
 #[must_use]
 pub struct EditorApp {
@@ -47,11 +43,10 @@ pub struct EditorApp {
 impl EditorApp {
     pub fn new(aos2_env: AoS2Env, player_progress: PlayerProgress) -> Self {
         let (progress_tx, progress_rx) = watch::channel(player_progress);
-        let tabs: [Box<dyn InteratibleTabComponent>; 1] =
-            [Box::new(progress::Tab::new(progress_tx.clone()))];
+
         Self {
             should_run: true,
-            content: FullHelpToggle::new(ContentWidget::new(tabs)),
+            content: FullHelpToggle::new(ContentWidget::new(progress_tx)),
             aos2_env,
             progress_rx,
         }

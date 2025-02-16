@@ -47,6 +47,12 @@ impl<T, const LENGTH: usize> SelectibleArray<T, LENGTH> {
             .get_mut(self.current_index)
             .expect("Invariant: Index must be constrained to collection size")
     }
+
+    pub fn current(&self) -> &T {
+        self.items
+            .get(self.current_index)
+            .expect("Invariant: Index must be constrained to collection size")
+    }
 }
 
 impl<T: Clone, const LENGTH: usize> SelectibleArray<T, LENGTH> {
