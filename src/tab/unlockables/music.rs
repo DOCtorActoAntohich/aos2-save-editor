@@ -1,4 +1,4 @@
-use player_progress::{Music, PlayerProgress};
+use player_progress::{MusicTracks, PlayerProgress};
 use ratatui::{
     crossterm::event::{Event, KeyCode},
     text::Line,
@@ -20,14 +20,14 @@ impl Button {
 
     pub fn unlock_all(&mut self) {
         self.progress_tx.send_modify(|progress| {
-            progress.background_music = Music::ALL;
+            progress.background_music = MusicTracks::ALL;
         });
     }
 }
 
 impl CustomButton for Button {
     fn as_line(&self) -> Line<'_> {
-        let all_music_unlocked = self.progress_tx.borrow().background_music == Music::ALL;
+        let all_music_unlocked = self.progress_tx.borrow().background_music == MusicTracks::ALL;
 
         if all_music_unlocked {
             Line::from("Fully unlocked").style(style::Unlocked::default())

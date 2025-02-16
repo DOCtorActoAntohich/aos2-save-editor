@@ -13,7 +13,7 @@ mod runs;
 
 pub use self::arenas::Arenas;
 pub use self::lock::Status;
-pub use self::music::Music;
+pub use self::music::MusicTracks;
 pub use self::playable_characters::{Character, PlayableCharacters};
 pub use self::runs::{PerfectArcadeMode, PerfectStoryMode, Run};
 
@@ -73,7 +73,7 @@ pub struct PlayerProgress {
     /// Remembers if the background music is unlocked.
     ///
     /// Offset: 0x3e - 0x48.
-    pub background_music: Music,
+    pub background_music: MusicTracks,
     _0x49: UnknownU8,
     _0x4a: UnknownU8,
     _0x4b: UnknownU8,
