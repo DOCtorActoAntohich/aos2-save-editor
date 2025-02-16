@@ -12,7 +12,7 @@ use tokio::sync::watch;
 use crate::{
     collection::SelectibleArray,
     keyboard::GetKeyCode,
-    tab::{progress, InteratibleTabComponent},
+    tab::{progress, statistics, InteratibleTabComponent},
     tui::{HandleEvent, VisualComponent},
     widget::black_box::BlackBox,
 };
@@ -20,14 +20,17 @@ use crate::{
 use self::evenly_spaced_tabs::EvenlySpacedTabs;
 
 pub struct ContentWidget {
-    tabs: SelectibleArray<Box<dyn InteratibleTabComponent>, 1>,
+    tabs: SelectibleArray<Box<dyn InteratibleTabComponent>, 2>,
 }
 
 impl ContentWidget {
     pub const CONSTRAINT: Constraint = Constraint::Min(3);
 
     pub fn new(progress: watch::Sender<PlayerProgress>) -> Self {
-        let tabs: [Box<dyn InteratibleTabComponent>; 1] = [Box::new(progress::Tab::new(progress))];
+        let tabs: [Box<dyn InteratibleTabComponent>; 2] = [
+            Box::new(statistics::Tab::new(progress.subscribe())),
+            Box::new(progress::Tab::new(progress)),
+        ];
         Self {
             tabs: SelectibleArray::new(tabs),
         }
