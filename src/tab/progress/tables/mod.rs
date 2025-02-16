@@ -48,9 +48,7 @@ impl TablesCollection {
 }
 
 impl Table {
-    pub const fn constraint(&self) -> Constraint {
-        Constraint::Fill(1)
-    }
+    pub const CONSTRAINT: Constraint = Constraint::Fill(1);
 
     pub fn render(&self, area: Rect, buf: &mut Buffer, is_selected: bool) {
         let Self(table) = self;
@@ -123,7 +121,7 @@ impl VisualComponent for TablesCollection {
             .collect();
 
         let constraints = to_draw.iter().map(|thing| match thing {
-            ToDraw::Table(_, table) => table.constraint(),
+            ToDraw::Table(_, _) => Table::CONSTRAINT,
             ToDraw::Separator(_) => separator::Vertical::CONSTRAINT,
         });
 
