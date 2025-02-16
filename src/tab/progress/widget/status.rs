@@ -4,6 +4,8 @@ use ratatui::{
     widgets::Cell,
 };
 
+use crate::style::IndexedColor;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 pub struct Status(bool);
 
@@ -23,11 +25,17 @@ impl Status {
     pub fn into_cell(self) -> Cell<'static> {
         let Self(is_enabled) = self;
         if is_enabled {
-            Cell::new(Text::from("+").centered())
-                .style(Style::new().bg(Color::Green).fg(Color::Black))
+            Cell::new(Text::from("+").centered()).style(
+                Style::new()
+                    .bg(IndexedColor::DarkGreen.into())
+                    .fg(Color::White),
+            )
         } else {
-            Cell::new(Text::from("X").centered())
-                .style(Style::new().bg(Color::Red).fg(Color::White))
+            Cell::new(Text::from("X").centered()).style(
+                Style::new()
+                    .bg(IndexedColor::DarkRed.into())
+                    .fg(Color::White),
+            )
         }
     }
 }

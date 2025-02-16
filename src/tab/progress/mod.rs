@@ -13,6 +13,7 @@ use ratatui::{
 use tokio::sync::watch;
 
 use crate::{
+    style::IndexedColor,
     tui::{HandleEvent, VisualComponent},
     widget::separator,
 };
@@ -85,7 +86,11 @@ impl Widget for InfoText {
             Text::from("").centered(),
             Text::from("DLC music is not available - Steam controls it, not the savefile.")
                 .centered()
-                .style(Style::new().bg(Color::Black).fg(Color::Indexed(220))),
+                .style(
+                    Style::new()
+                        .bg(Color::Black)
+                        .fg(IndexedColor::DarkYellow.into()),
+                ),
         ];
 
         List::new(lines).render(area, buf);

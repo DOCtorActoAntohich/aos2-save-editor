@@ -8,6 +8,7 @@ use ratatui::{
 
 use crate::{
     keyboard::GetKeyCode,
+    style::IndexedColor,
     tui::{HandleEvent, InteractibleComponent, VisualComponent},
 };
 
@@ -39,8 +40,11 @@ impl<C> FullHelpToggle<C> {
 
 impl Default for HelpStyle {
     fn default() -> Self {
-        const DARK_GRAY: Color = Color::Indexed(236);
-        Self(Style::new().bg(DARK_GRAY).fg(Color::White))
+        Self(
+            Style::new()
+                .bg(IndexedColor::DarkGray.into())
+                .fg(Color::White),
+        )
     }
 }
 
