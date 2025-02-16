@@ -92,7 +92,7 @@ impl Widget for Table<'_> {
                     .style(Selection::from_is_selected(is_selected))
             });
 
-        let widths = [Constraint::Min(12), Constraint::Min(3)];
+        let widths = [Constraint::Fill(3), Constraint::Fill(2)];
         ratatui::widgets::Table::new(rows, widths)
             .style(Selection::Unselected)
             .render(area, buf);
