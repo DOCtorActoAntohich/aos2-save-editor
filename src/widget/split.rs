@@ -19,6 +19,11 @@ pub struct Horizontal<F1: RenderFn, F2: RenderFn> {
     pub bottom: Area<F2>,
 }
 
+pub struct Vertical<F1: RenderFn, F2: RenderFn> {
+    pub left: Area<F1>,
+    pub right: Area<F2>,
+}
+
 #[derive(Debug, Clone, Copy, derive_more::Into)]
 struct LineStyle(Style);
 
@@ -49,5 +54,29 @@ where
             .style(LineStyle::default())
             .render(separator_area, buf);
         (bottom.render)(bottom_area, buf);
+    }
+}
+
+impl<F1, F2> Widget for Vertical<F1, F2>
+where
+    F1: RenderFn,
+    F2: RenderFn,
+{
+    fn render(self, area: Rect, buf: &mut Buffer)
+    where
+        Self: Sized,
+    {
+        let Self { left, right } = self;
+
+        let constraints = [left.constraint, Constraint::Length(1), right.constraint];
+        let [left_area, separator_area, right_area] =
+            Layout::horizontal(constraints).areas::<3>(area);
+
+        (left.render)(left_area, buf);
+        (right.render)(right_area, buf);
+        Block::new()
+            .borders(Borders::LEFT)
+            .style(LineStyle::default())
+            .render(separator_area, buf);
     }
 }
