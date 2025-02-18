@@ -1,3 +1,4 @@
+mod games;
 mod table;
 
 use player_progress::PlayerProgress;
@@ -6,7 +7,7 @@ use ratatui::{
     crossterm::event::Event,
     layout::{Constraint, Rect},
     text::Text,
-    widgets::{List, Paragraph, Widget},
+    widgets::{List, Widget},
 };
 use tokio::sync::watch;
 
@@ -15,12 +16,13 @@ use crate::{
     widget::split,
 };
 
-use self::table::StatsTable;
+use self::{games::GameStats, table::StatsTable};
 
 use super::InteratibleTabComponent;
 
 pub struct Tab {
     stats: StatsTable,
+    game: GameStats,
 }
 
 struct InfoText;
@@ -28,7 +30,8 @@ struct InfoText;
 impl Tab {
     pub fn new(progress: watch::Receiver<PlayerProgress>) -> Self {
         Self {
-            stats: StatsTable::new(progress),
+            stats: StatsTable::new(progress.clone()),
+            game: GameStats::new(progress),
         }
     }
 }
@@ -54,7 +57,7 @@ impl VisualComponent for Tab {
         let left = split::Area {
             constraint: Constraint::Fill(3),
             render: |area: Rect, buf: &mut Buffer| {
-                Paragraph::new("amogus").centered().render(area, buf);
+                self.game.render(area, buf);
             },
         };
         let right = split::Area {

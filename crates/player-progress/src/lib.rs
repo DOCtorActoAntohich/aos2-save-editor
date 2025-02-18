@@ -86,19 +86,19 @@ pub struct PlayerProgress {
     /// A total number of Arcade 1CC's on Easy difficulty for any character.
     ///
     /// Offset: 0x50 - 0x53.
-    pub n_arcade_easy_1cc_completions: u32,
+    pub n_arcade_easy_1ccs: u32,
     /// A total number of Arcade 1CC's on Medium difficulty for any character.
     ///
     /// Offset: 0x54 - 0x57.
-    pub n_arcade_medium_1cc_completions: u32,
+    pub n_arcade_medium_1ccs: u32,
     /// A total number of Arcade 1CC's on Hard difficulty for any character.
     ///
     /// Offset: 0x58 - 0x5b.
-    pub n_arcade_hard_1cc_completions: u32,
+    pub n_arcade_hard_1ccs: u32,
     /// A total number of Story 1CC's on any difficulty for any character.
     ///
     /// Offset: 0x5c - 0x5f.
-    pub n_story_1cc_completions: u32,
+    pub n_story_1ccs: u32,
     _0x60: UnknownU8,
     _0x61: UnknownU8,
     _0x62: UnknownU8,
