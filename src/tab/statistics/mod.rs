@@ -6,7 +6,7 @@ use ratatui::{
     crossterm::event::Event,
     layout::{Constraint, Rect},
     text::Text,
-    widgets::{List, Widget},
+    widgets::{List, Paragraph, Widget},
 };
 use tokio::sync::watch;
 
@@ -51,10 +51,23 @@ impl VisualComponent for Tab {
             },
         };
 
+        let left = split::Area {
+            constraint: Constraint::Fill(3),
+            render: |area: Rect, buf: &mut Buffer| {
+                Paragraph::new("amogus").centered().render(area, buf);
+            },
+        };
+        let right = split::Area {
+            constraint: Constraint::Fill(7),
+            render: |area: Rect, buf: &mut Buffer| {
+                self.stats.render(area, buf);
+            },
+        };
+
         let bottom = split::Area {
             constraint: Constraint::Fill(1),
             render: |area: Rect, buf: &mut Buffer| {
-                self.stats.render(area, buf);
+                split::Vertical { left, right }.render(area, buf);
             },
         };
 
