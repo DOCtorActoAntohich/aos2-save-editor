@@ -1,5 +1,6 @@
 use ratatui::style::{Color, Style};
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum IndexedColor {
     DarkGreen,
     DarkRed,
@@ -7,6 +8,7 @@ pub enum IndexedColor {
     DarkGray,
     DarkBlue,
     BrightRed,
+    Gray,
 }
 
 pub trait WithColor {
@@ -24,6 +26,7 @@ impl From<IndexedColor> for Color {
             IndexedColor::DarkGray => Color::Indexed(236),
             IndexedColor::DarkBlue => Color::Indexed(17),
             IndexedColor::BrightRed => Color::Indexed(196),
+            IndexedColor::Gray => Color::Indexed(237),
         }
     }
 }

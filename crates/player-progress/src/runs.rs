@@ -57,7 +57,18 @@ pub enum Run {
     NotCompleted,
 }
 
+impl Run {
+    pub fn is_completed(&self) -> bool {
+        match self {
+            Run::Completed => true,
+            Run::NotCompleted => false,
+        }
+    }
+}
+
 impl PerfectStoryMode {
+    pub const N_CHARACTERS: usize = 14;
+
     pub const COMPLETED: Self = Self {
         sora: Run::Completed,
         alte: Run::Completed,
@@ -74,9 +85,16 @@ impl PerfectStoryMode {
         kyoko: Run::Completed,
         hime: Run::Completed,
     };
+
+    #[must_use]
+    pub fn to_array(&self) -> [Run; Self::N_CHARACTERS] {
+        self.clone().into()
+    }
 }
 
 impl PerfectArcadeMode {
+    pub const N_CHARACTERS: usize = 15;
+
     pub const COMPLETED: Self = Self {
         sora: Run::Completed,
         alte: Run::Completed,
@@ -94,4 +112,165 @@ impl PerfectArcadeMode {
         hime: Run::Completed,
         sumika: Run::Completed,
     };
+
+    #[must_use]
+    pub fn to_array(&self) -> [Run; Self::N_CHARACTERS] {
+        self.clone().into()
+    }
+}
+
+impl From<PerfectStoryMode> for [Run; PerfectStoryMode::N_CHARACTERS] {
+    fn from(
+        PerfectStoryMode {
+            sora,
+            alte,
+            tsih,
+            mira,
+            sham,
+            nath,
+            star_breaker,
+            suguri,
+            saki,
+            iru,
+            nanako,
+            kae,
+            kyoko,
+            hime,
+        }: PerfectStoryMode,
+    ) -> Self {
+        [
+            sora,
+            alte,
+            tsih,
+            mira,
+            sham,
+            nath,
+            star_breaker,
+            suguri,
+            saki,
+            iru,
+            nanako,
+            kae,
+            kyoko,
+            hime,
+        ]
+    }
+}
+
+impl From<[Run; PerfectStoryMode::N_CHARACTERS]> for PerfectStoryMode {
+    fn from(
+        [
+        sora,
+        alte,
+        tsih,
+        mira,
+        sham,
+        nath,
+        star_breaker,
+        suguri,
+        saki,
+        iru,
+        nanako,
+        kae,
+        kyoko,
+        hime,
+    ]: [Run; PerfectStoryMode::N_CHARACTERS],
+    ) -> Self {
+        Self {
+            sora,
+            alte,
+            tsih,
+            mira,
+            sham,
+            nath,
+            star_breaker,
+            suguri,
+            saki,
+            iru,
+            nanako,
+            kae,
+            kyoko,
+            hime,
+        }
+    }
+}
+
+impl From<PerfectArcadeMode> for [Run; PerfectArcadeMode::N_CHARACTERS] {
+    fn from(
+        PerfectArcadeMode {
+            sora,
+            alte,
+            tsih,
+            mira,
+            sham,
+            nath,
+            star_breaker,
+            suguri,
+            saki,
+            iru,
+            nanako,
+            kae,
+            kyoko,
+            hime,
+            sumika,
+        }: PerfectArcadeMode,
+    ) -> Self {
+        [
+            sora,
+            alte,
+            tsih,
+            mira,
+            sham,
+            nath,
+            star_breaker,
+            suguri,
+            saki,
+            iru,
+            nanako,
+            kae,
+            kyoko,
+            hime,
+            sumika,
+        ]
+    }
+}
+
+impl From<[Run; PerfectArcadeMode::N_CHARACTERS]> for PerfectArcadeMode {
+    fn from(
+        [
+        sora,
+        alte,
+        tsih,
+        mira,
+        sham,
+        nath,
+        star_breaker,
+        suguri,
+        saki,
+        iru,
+        nanako,
+        kae,
+        kyoko,
+        hime,
+        sumika,
+    ]: [Run; PerfectArcadeMode::N_CHARACTERS],
+    ) -> Self {
+        Self {
+            sora,
+            alte,
+            tsih,
+            mira,
+            sham,
+            nath,
+            star_breaker,
+            suguri,
+            saki,
+            iru,
+            nanako,
+            kae,
+            kyoko,
+            hime,
+            sumika,
+        }
+    }
 }
