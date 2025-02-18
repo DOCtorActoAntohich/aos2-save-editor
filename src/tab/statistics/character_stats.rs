@@ -1,4 +1,4 @@
-use player_progress::{Character, PerfectArcadeMode, PlayerProgress, Run};
+use player_progress::{Character, PlayerProgress, Run};
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
@@ -108,9 +108,7 @@ impl VisualComponent for CharacterStats {
     fn render(&self, area: Rect, buf: &mut Buffer) {
         let progress = self.progress.borrow();
         let arcade_easy = progress.arcade_easy_1ccs.to_array();
-        // TODO yes
-        // let arcade_medium = progress.arcade_medium_1ccs.to_array();
-        let arcade_medium = PerfectArcadeMode::COMPLETED.to_array();
+        let arcade_medium = progress.arcade_medium_1ccs.to_array();
         let arcade_hard = progress.arcade_hard_1ccs.to_array();
         let story = progress
             .story_1ccs
