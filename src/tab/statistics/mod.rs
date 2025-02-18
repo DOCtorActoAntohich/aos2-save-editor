@@ -1,5 +1,5 @@
-mod games;
-mod table;
+mod character_stats;
+mod match_stats;
 
 use player_progress::PlayerProgress;
 use ratatui::{
@@ -16,13 +16,13 @@ use crate::{
     widget::split,
 };
 
-use self::{games::GameStats, table::StatsTable};
+use self::{character_stats::CharacterStats, match_stats::SingleplayerMatchStats};
 
 use super::InteratibleTabComponent;
 
 pub struct Tab {
-    stats: StatsTable,
-    game: GameStats,
+    character_stats: CharacterStats,
+    match_stats: SingleplayerMatchStats,
 }
 
 struct InfoText;
@@ -30,8 +30,8 @@ struct InfoText;
 impl Tab {
     pub fn new(progress: watch::Receiver<PlayerProgress>) -> Self {
         Self {
-            stats: StatsTable::new(progress.clone()),
-            game: GameStats::new(progress),
+            character_stats: CharacterStats::new(progress.clone()),
+            match_stats: SingleplayerMatchStats::new(progress),
         }
     }
 }
@@ -57,13 +57,13 @@ impl VisualComponent for Tab {
         let left = split::Area {
             constraint: Constraint::Fill(3),
             render: |area: Rect, buf: &mut Buffer| {
-                self.game.render(area, buf);
+                self.match_stats.render(area, buf);
             },
         };
         let right = split::Area {
             constraint: Constraint::Fill(7),
             render: |area: Rect, buf: &mut Buffer| {
-                self.stats.render(area, buf);
+                self.character_stats.render(area, buf);
             },
         };
 

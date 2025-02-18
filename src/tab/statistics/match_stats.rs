@@ -9,17 +9,17 @@ use tokio::sync::watch;
 
 use crate::tui::VisualComponent;
 
-pub struct GameStats {
+pub struct SingleplayerMatchStats {
     progress: watch::Receiver<PlayerProgress>,
 }
 
-impl GameStats {
+impl SingleplayerMatchStats {
     pub fn new(progress: watch::Receiver<PlayerProgress>) -> Self {
         Self { progress }
     }
 }
 
-impl VisualComponent for GameStats {
+impl VisualComponent for SingleplayerMatchStats {
     fn render(&self, area: Rect, buf: &mut Buffer) {
         let progress = self.progress.borrow();
 

@@ -13,7 +13,7 @@ use crate::{
     tui::VisualComponent,
 };
 
-pub struct StatsTable {
+pub struct CharacterStats {
     progress: watch::Receiver<PlayerProgress>,
 }
 
@@ -28,9 +28,9 @@ struct ContentRow {
 struct RawRow<'a>([Cell<'a>; const { ContentRow::COLUMN_HEADERS.len() }]);
 
 #[derive(Debug, Clone, Copy, derive_more::From)]
-pub struct CompletionStatus(Option<Run>);
+struct CompletionStatus(Option<Run>);
 
-impl StatsTable {
+impl CharacterStats {
     pub fn new(progress: watch::Receiver<PlayerProgress>) -> Self {
         Self { progress }
     }
@@ -104,7 +104,7 @@ impl<'a> From<RawRow<'a>> for Row<'a> {
     }
 }
 
-impl VisualComponent for StatsTable {
+impl VisualComponent for CharacterStats {
     fn render(&self, area: Rect, buf: &mut Buffer) {
         let progress = self.progress.borrow();
         let arcade_easy = progress.arcade_easy_1ccs.to_array();
