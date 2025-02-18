@@ -3,10 +3,11 @@ use std::{borrow::Cow, ops::Range};
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
+    style::{Color, Style, Stylize},
     widgets::{self, Widget},
 };
 
-use crate::style::Selection;
+use crate::style::{IndexedColor, Selection, WithColor};
 
 use super::status::Status;
 
@@ -23,6 +24,26 @@ struct Row<'a> {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct TableSlice(Range<usize>);
+
+struct RowStyle {
+    default_bg: IndexedColor,
+    is_selected: bool,
+}
+
+impl From<RowStyle> for Style {
+    fn from(
+        RowStyle {
+            default_bg,
+            is_selected,
+        }: RowStyle,
+    ) -> Self {
+        if is_selected {
+            Style::new().bg(Color::White).fg(Color::Black).bold()
+        } else {
+            Style::new().with_bg(default_bg).fg(Color::White)
+        }
+    }
+}
 
 impl<'a> Table<'a> {
     pub fn new(
@@ -84,12 +105,20 @@ impl Widget for Table<'_> {
         let rows = items
             .into_iter()
             .enumerate()
-            .map(|(row_index, Row { name, status })| {
+            .zip(
+                [IndexedColor::DarkGray, IndexedColor::Gray]
+                    .into_iter()
+                    .cycle(),
+            )
+            .map(|((row_index, Row { name, status }), default_bg)| {
                 let row_name = ratatui::widgets::Cell::new(name.to_string());
 
                 let is_selected = should_highlight_current && (row_index == current);
-                widgets::Row::new(vec![row_name, status.into()])
-                    .style(Selection::from_is_selected(is_selected))
+                let style = RowStyle {
+                    default_bg,
+                    is_selected,
+                };
+                widgets::Row::new(vec![row_name, status.into()]).style(style)
             });
 
         let widths = [Constraint::Fill(3), Constraint::Fill(2)];
