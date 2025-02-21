@@ -8,7 +8,7 @@ use ratatui::{
 
 use crate::{
     style::{IndexedColor, WithColor},
-    tui::{keyboard::GetKeyCode, HandleEvent, InteractibleComponent, VisualComponent},
+    tui::{event::GetKeyCode, HandleEvent, InteractibleComponent, VisualComponent},
 };
 
 #[derive(Debug)]

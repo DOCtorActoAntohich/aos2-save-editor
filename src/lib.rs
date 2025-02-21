@@ -31,7 +31,7 @@ use crate::{
 
 use self::{
     info::{content_window::ContentWidget, title_header::TitleHeader},
-    tui::keyboard::GetKeyCode,
+    tui::event::GetKeyCode,
 };
 
 #[must_use]

@@ -1,4 +1,4 @@
-pub mod keyboard;
+pub mod event;
 
 use ratatui::{buffer::Buffer, crossterm::event::Event, layout::Rect};
 

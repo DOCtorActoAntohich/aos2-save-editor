@@ -5,7 +5,7 @@ use tokio::sync::watch;
 use crate::{
     collection::SelectibleArray,
     progress::widget,
-    tui::{keyboard::GetKeyCode, HandleEvent},
+    tui::{event::GetKeyCode, HandleEvent},
 };
 
 use super::InteractibleTable;

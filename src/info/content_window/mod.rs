@@ -11,7 +11,7 @@ use tokio::sync::watch;
 use crate::{
     collection::SelectibleArray,
     progress, statistics,
-    tui::{keyboard::GetKeyCode, HandleEvent, InteractibleComponent, VisualComponent},
+    tui::{event::GetKeyCode, HandleEvent, InteractibleComponent, VisualComponent},
     widget::black_box::BlackBox,
 };
 
