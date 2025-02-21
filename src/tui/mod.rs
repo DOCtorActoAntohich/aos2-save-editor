@@ -1,3 +1,5 @@
+pub mod keyboard;
+
 use ratatui::{buffer::Buffer, crossterm::event::Event, layout::Rect};
 
 pub trait HandleEvent {

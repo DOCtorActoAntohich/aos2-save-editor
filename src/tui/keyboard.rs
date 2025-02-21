@@ -24,7 +24,7 @@ mod tests {
         Event, KeyCode, KeyEvent, KeyEventKind, KeyEventState, KeyModifiers,
     };
 
-    use crate::keyboard::GetKeyCode;
+    use super::GetKeyCode;
 
     #[rstest::rstest]
     #[case::none_release(

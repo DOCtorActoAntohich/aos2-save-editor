@@ -14,9 +14,8 @@ use tokio::sync::watch;
 
 use crate::{
     collection::SelectibleArray,
-    keyboard::GetKeyCode,
     style,
-    tui::{HandleEvent, VisualComponent},
+    tui::{keyboard::GetKeyCode, HandleEvent, VisualComponent},
     widget::{separator, split},
 };
 

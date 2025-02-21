@@ -10,10 +10,9 @@ use tokio::sync::watch;
 
 use crate::{
     collection::SelectibleArray,
-    keyboard::GetKeyCode,
-    tui::{HandleEvent, InteractibleComponent, VisualComponent},
+    progress, statistics,
+    tui::{keyboard::GetKeyCode, HandleEvent, InteractibleComponent, VisualComponent},
     widget::black_box::BlackBox,
-    {progress, statistics},
 };
 
 use self::tabs::EvenTabs;

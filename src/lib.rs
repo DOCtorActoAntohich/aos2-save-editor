@@ -3,7 +3,6 @@
 
 mod collection;
 mod info;
-mod keyboard;
 mod progress;
 mod statistics;
 mod style;
@@ -27,11 +26,13 @@ use tokio::sync::watch;
 
 use crate::{
     info::full_help_toggle::FullHelpToggle,
-    keyboard::GetKeyCode,
     tui::{HandleEvent, VisualComponent},
 };
 
-use self::info::{content_window::ContentWidget, title_header::TitleHeader};
+use self::{
+    info::{content_window::ContentWidget, title_header::TitleHeader},
+    tui::keyboard::GetKeyCode,
+};
 
 #[must_use]
 pub struct EditorApp {
