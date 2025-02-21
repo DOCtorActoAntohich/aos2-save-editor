@@ -3,6 +3,7 @@
 
 mod collection;
 mod info;
+mod profile;
 mod progress;
 mod statistics;
 mod style;
@@ -11,6 +12,7 @@ mod widget;
 
 use anyhow::Context;
 use aos2_env::AoS2Env;
+use online_profile::PlayerOnlineProfile;
 use player_progress::PlayerProgress;
 use ratatui::{
     buffer::Buffer,
@@ -40,17 +42,20 @@ pub struct EditorApp {
     content: FullHelpToggle<ContentWidget>,
     aos2_env: AoS2Env,
     progress_rx: watch::Receiver<PlayerProgress>,
+    profile_rx: watch::Receiver<PlayerOnlineProfile>,
 }
 
 impl EditorApp {
-    pub fn new(aos2_env: AoS2Env, player_progress: PlayerProgress) -> Self {
-        let (progress_tx, progress_rx) = watch::channel(player_progress);
+    pub fn new(aos2_env: AoS2Env, progress: PlayerProgress, profile: PlayerOnlineProfile) -> Self {
+        let (progress_tx, progress_rx) = watch::channel(progress);
+        let (profile_tx, profile_rx) = watch::channel(profile);
 
         Self {
             should_run: true,
-            content: FullHelpToggle::new(ContentWidget::new(progress_tx)),
+            content: FullHelpToggle::new(ContentWidget::new(progress_tx, profile_tx)),
             aos2_env,
             progress_rx,
+            profile_rx,
         }
     }
 
@@ -86,6 +91,17 @@ impl EditorApp {
             progress
                 .save(&self.aos2_env)
                 .context("Failed to save player progress file")?;
+        }
+
+        if self
+            .profile_rx
+            .has_changed()
+            .context("Invariant Broken: Online Profile channel closed")?
+        {
+            let profile = self.profile_rx.borrow_and_update();
+            profile
+                .save(&self.aos2_env)
+                .context("Failed to save online profile to a file")?;
         }
 
         Ok(())

@@ -1,5 +1,6 @@
 mod tabs;
 
+use online_profile::PlayerOnlineProfile;
 use player_progress::PlayerProgress;
 use ratatui::{
     crossterm::event::{Event, KeyCode},
@@ -10,7 +11,7 @@ use tokio::sync::watch;
 
 use crate::{
     collection::SelectibleArray,
-    progress, statistics,
+    profile, progress, statistics,
     tui::{event::GetKeyCode, HandleEvent, InteractibleComponent, VisualComponent},
     widget::black_box::BlackBox,
 };
@@ -22,16 +23,20 @@ pub trait InteratibleTabComponent: InteractibleComponent {
 }
 
 pub struct ContentWidget {
-    tabs: SelectibleArray<Box<dyn InteratibleTabComponent>, 2>,
+    tabs: SelectibleArray<Box<dyn InteratibleTabComponent>, 3>,
 }
 
 impl ContentWidget {
     pub const CONSTRAINT: Constraint = Constraint::Min(3);
 
-    pub fn new(progress: watch::Sender<PlayerProgress>) -> Self {
-        let tabs: [Box<dyn InteratibleTabComponent>; 2] = [
+    pub fn new(
+        progress: watch::Sender<PlayerProgress>,
+        profile: watch::Sender<PlayerOnlineProfile>,
+    ) -> Self {
+        let tabs: [Box<dyn InteratibleTabComponent>; 3] = [
             Box::new(statistics::Tab::new(progress.subscribe())),
             Box::new(progress::Tab::new(progress)),
+            Box::new(profile::Tab::new(profile)),
         ];
         Self {
             tabs: SelectibleArray::new(tabs),
