@@ -13,14 +13,13 @@ use ratatui::{
 use tokio::sync::watch;
 
 use crate::{
+    info::content_window::InteratibleTabComponent,
     style::{IndexedColor, WithColor},
     tui::{HandleEvent, VisualComponent},
     widget::split,
 };
 
 use self::tables::TablesCollection;
-
-use super::InteratibleTabComponent;
 
 pub struct Tab {
     tables: TablesCollection,

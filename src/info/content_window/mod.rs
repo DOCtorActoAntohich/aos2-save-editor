@@ -11,12 +11,16 @@ use tokio::sync::watch;
 use crate::{
     collection::SelectibleArray,
     keyboard::GetKeyCode,
-    tab::{progress, statistics, InteratibleTabComponent},
-    tui::{HandleEvent, VisualComponent},
+    tui::{HandleEvent, InteractibleComponent, VisualComponent},
     widget::black_box::BlackBox,
+    {progress, statistics},
 };
 
 use self::tabs::EvenTabs;
+
+pub trait InteratibleTabComponent: InteractibleComponent {
+    fn name(&self) -> &'static str;
+}
 
 pub struct ContentWidget {
     tabs: SelectibleArray<Box<dyn InteratibleTabComponent>, 2>,

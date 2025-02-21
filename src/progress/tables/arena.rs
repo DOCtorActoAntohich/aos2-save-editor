@@ -3,7 +3,7 @@ use ratatui::crossterm::event::{Event, KeyCode};
 use tokio::sync::watch;
 
 use crate::{
-    collection::SelectibleArray, keyboard::GetKeyCode, tab::progress::widget, tui::HandleEvent,
+    collection::SelectibleArray, keyboard::GetKeyCode, progress::widget, tui::HandleEvent,
 };
 
 use super::InteractibleTable;

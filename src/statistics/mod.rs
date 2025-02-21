@@ -12,13 +12,12 @@ use ratatui::{
 use tokio::sync::watch;
 
 use crate::{
+    info::content_window::InteratibleTabComponent,
     tui::{HandleEvent, VisualComponent},
     widget::split,
 };
 
 use self::{character_stats::CharacterStats, match_stats::SingleplayerMatchStats};
-
-use super::InteratibleTabComponent;
 
 pub struct Tab {
     character_stats: CharacterStats,

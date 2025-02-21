@@ -4,8 +4,9 @@
 mod collection;
 mod info;
 mod keyboard;
+mod progress;
+mod statistics;
 mod style;
-mod tab;
 mod tui;
 mod widget;
 
