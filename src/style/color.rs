@@ -32,12 +32,10 @@ impl From<IndexedColor> for Color {
 }
 
 impl WithColor for Style {
-    #[inline(always)]
     fn with_bg(self, color: impl Into<Color>) -> Self {
         self.bg(color.into())
     }
 
-    #[inline(always)]
     fn with_fg(self, color: impl Into<Color>) -> Self {
         self.fg(color.into())
     }
