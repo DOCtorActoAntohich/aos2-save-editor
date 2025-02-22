@@ -58,7 +58,8 @@ pub enum Run {
 }
 
 impl Run {
-    pub fn is_completed(&self) -> bool {
+    #[must_use]
+    pub fn is_completed(self) -> bool {
         match self {
             Run::Completed => true,
             Run::NotCompleted => false,
