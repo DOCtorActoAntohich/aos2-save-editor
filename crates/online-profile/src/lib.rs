@@ -1,10 +1,9 @@
 #![warn(clippy::pedantic)]
 #![allow(clippy::missing_errors_doc)]
 
-pub mod ascii_text;
 pub mod avatar;
 pub mod sized_section;
-pub mod text_field;
+pub mod text;
 pub mod title;
 
 mod version;
@@ -14,7 +13,7 @@ use aos2_env::AoS2Env;
 
 use crate::sized_section::SizedBinarySection;
 
-use self::{text_field::Nickname, version::Version};
+use self::{text::Nickname, version::Version};
 
 pub type LobbyNameSection = SizedBinarySection<1, 24>;
 pub type LobbyPasswordSection = SizedBinarySection<0, 24>;
