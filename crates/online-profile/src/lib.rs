@@ -130,7 +130,7 @@ mod tests {
     }
 
     #[rstest::rstest]
-    fn it_parses(#[from(manually_constructed_player_file)] player_file: Vec<u8>) {
+    fn player_file_parses(#[from(manually_constructed_player_file)] player_file: Vec<u8>) {
         let mut cursor = Cursor::new(player_file);
         PlayerOnlineProfile::read(&mut cursor).expect("Must parse");
     }
