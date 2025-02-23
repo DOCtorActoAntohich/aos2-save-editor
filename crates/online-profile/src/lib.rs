@@ -2,18 +2,21 @@
 #![allow(clippy::missing_errors_doc)]
 
 pub mod avatar;
-pub mod sized_section;
-pub mod text;
 pub mod title;
 
+mod sized_section;
 mod version;
+
+// Re-export;
+mod text;
+
+pub use crate::text::nickname::Nickname;
 
 use anyhow::Context;
 use aos2_env::AoS2Env;
 
 use crate::sized_section::SizedBinarySection;
-
-use self::{text::Nickname, version::Version};
+use crate::version::Version;
 
 pub type LobbyNameSection = SizedBinarySection<1, 24>;
 pub type LobbyPasswordSection = SizedBinarySection<0, 24>;
