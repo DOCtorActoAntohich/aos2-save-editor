@@ -1,8 +1,10 @@
 #![warn(clippy::pedantic)]
 #![allow(clippy::missing_errors_doc)]
 
+pub mod ascii_text;
 pub mod avatar;
 pub mod sized_section;
+pub mod text_field;
 pub mod title;
 
 mod version;
@@ -12,9 +14,8 @@ use aos2_env::AoS2Env;
 
 use crate::sized_section::SizedBinarySection;
 
-use self::version::Version;
+use self::{text_field::Nickname, version::Version};
 
-pub type NicknameSection = SizedBinarySection<1, 16>;
 pub type LobbyNameSection = SizedBinarySection<1, 24>;
 pub type LobbyPasswordSection = SizedBinarySection<0, 24>;
 pub type UnlockableAvatarsSection = SizedBinarySection<33, 33>;
@@ -27,7 +28,7 @@ pub type TitlesSection = SizedBinarySection<285, 285>;
 pub struct PlayerOnlineProfile {
     pub version: Version,
     pub country: Visibility,
-    pub nickname: NicknameSection,
+    pub nickname: Nickname,
     pub lobby_name: LobbyNameSection,
     pub lobby_password: LobbyPasswordSection,
     pub avatar_character: avatar::Character,
