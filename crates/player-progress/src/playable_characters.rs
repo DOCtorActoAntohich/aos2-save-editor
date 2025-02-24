@@ -1,5 +1,7 @@
 use std::borrow::Cow;
 
+use strum::IntoEnumIterator;
+
 use crate::Status;
 
 /// Markers for full list of characters.
@@ -43,6 +45,7 @@ pub struct PlayableCharacters {
     Hash,
     derive_more::TryFrom,
     derive_more::Display,
+    strum::EnumIter,
 )]
 #[try_from(repr)]
 #[repr(usize)]
@@ -92,7 +95,7 @@ impl PlayableCharacters {
     }
 
     pub fn iter(&self) -> impl Iterator<Item = (Character, Status)> {
-        Character::list().into_iter().zip(self.to_array())
+        Character::iter().into_iter().zip(self.to_array())
     }
 }
 
@@ -196,29 +199,6 @@ impl From<[Status; PlayableCharacters::AMOUNT]> for PlayableCharacters {
             hime,
             sumika,
         }
-    }
-}
-
-impl Character {
-    #[must_use]
-    pub fn list() -> impl IntoIterator<Item = Character> {
-        [
-            Self::Sora,
-            Self::Alte,
-            Self::Tsih,
-            Self::Mira,
-            Self::Sham,
-            Self::Nath,
-            Self::StarBreaker,
-            Self::Suguri,
-            Self::Saki,
-            Self::Iru,
-            Self::Nanako,
-            Self::Kae,
-            Self::Kyoko,
-            Self::Hime,
-            Self::Sumika,
-        ]
     }
 }
 

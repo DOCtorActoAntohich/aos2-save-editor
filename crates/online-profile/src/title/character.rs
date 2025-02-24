@@ -7,7 +7,9 @@
 /// but it internally supports OJ variants too,
 /// and even allows setting one character's title and another character's eyes.
 #[binrw::binrw]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, derive_more::TryFrom, derive_more::Display)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, derive_more::TryFrom, derive_more::Display, strum::EnumIter,
+)]
 #[brw(little, repr(u32))]
 #[repr(u32)]
 pub enum Character {

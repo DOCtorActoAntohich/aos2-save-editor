@@ -6,6 +6,7 @@ use ratatui::{
     text::Text,
     widgets::{Cell, Row, Table, Widget},
 };
+use strum::IntoEnumIterator;
 use tokio::sync::watch;
 
 use crate::{
@@ -117,7 +118,7 @@ impl VisualComponent for CharacterStats {
             .map(Some)
             .chain(std::iter::once(None).cycle());
 
-        let content = Character::list()
+        let content = Character::iter()
             .into_iter()
             .zip(arcade_easy)
             .zip(arcade_medium)

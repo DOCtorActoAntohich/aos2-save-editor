@@ -1,5 +1,7 @@
 use std::borrow::Cow;
 
+use strum::IntoEnumIterator;
+
 use crate::lock::Status;
 
 /// Only stock non-DLC music.
@@ -42,7 +44,9 @@ impl Default for MusicTracks {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, derive_more::Display)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, derive_more::Display, strum::EnumIter,
+)]
 pub enum MusicTrack {
     #[display("Need for Speed")]
     NeedForSpeed,
@@ -86,7 +90,7 @@ impl MusicTracks {
     }
 
     pub fn iter(&self) -> impl Iterator<Item = (MusicTrack, Status)> {
-        MusicTrack::list().into_iter().zip(self.to_array())
+        MusicTrack::iter().into_iter().zip(self.to_array())
     }
 }
 
@@ -151,24 +155,6 @@ impl From<[Status; MusicTracks::AMOUNT]> for MusicTracks {
             remember_me,
             mgom,
         }
-    }
-}
-
-impl MusicTrack {
-    pub const fn list() -> impl IntoIterator<Item = Self> {
-        [
-            Self::NeedForSpeed,
-            Self::BlackHole,
-            Self::DistantThunder,
-            Self::Swordfish,
-            Self::Shine,
-            Self::Expendables,
-            Self::Ribbon,
-            Self::MovingOut,
-            Self::Accelerator,
-            Self::RememberMe,
-            Self::Mgom,
-        ]
     }
 }
 

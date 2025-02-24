@@ -1,5 +1,7 @@
 #[binrw::binrw]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, derive_more::TryFrom, derive_more::Display)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, derive_more::TryFrom, derive_more::Display, strum::EnumIter,
+)]
 #[try_from(repr)]
 #[repr(u32)]
 #[brw(little, repr(u32))]

@@ -1,5 +1,7 @@
 use std::borrow::Cow;
 
+use strum::IntoEnumIterator;
+
 use crate::{lock::Status, UnknownU8};
 
 /// List of Background Images aka Arena Backgrounds.
@@ -31,7 +33,9 @@ pub struct Arenas {
     pub sumika_hideout: Status,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, derive_more::Display)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, derive_more::Display, strum::EnumIter,
+)]
 pub enum Arena {
     #[display("Before the War")]
     BeforeTheWar,
@@ -90,7 +94,7 @@ impl Arenas {
     }
 
     pub fn iter(&self) -> impl Iterator<Item = (Arena, Status)> {
-        Arena::list().into_iter().zip(self.to_array())
+        Arena::iter().into_iter().zip(self.to_array())
     }
 }
 
@@ -216,28 +220,6 @@ impl From<[Status; Arenas::AMOUNT]> for Arenas {
             sumika_hideout,
             ..Default::default()
         }
-    }
-}
-
-impl Arena {
-    #[must_use]
-    pub const fn list() -> impl IntoIterator<Item = Self> {
-        [
-            Self::BeforeTheWar,
-            Self::War10kYearsAgo,
-            Self::CanyonOfWind,
-            Self::DustStorm,
-            Self::RainAndSunset,
-            Self::EquatorDoldrums,
-            Self::BigBridge,
-            Self::CapitalInFlames,
-            Self::WhirlpoolOfMalice,
-            Self::Nature10k,
-            Self::CrashedSpaceship,
-            Self::GuardiansChamber,
-            Self::MoonlightDanceHall,
-            Self::SumikaHideout,
-        ]
     }
 }
 

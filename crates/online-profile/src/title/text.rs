@@ -6,7 +6,9 @@
 ///
 /// "What a pain in the neck" (c) Kyoko, and me when writing all those down.
 #[binrw::binrw]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, derive_more::TryFrom, derive_more::Display)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, derive_more::TryFrom, derive_more::Display, strum::EnumIter,
+)]
 #[brw(little, repr(u32))]
 #[repr(u32)]
 pub enum Text {
@@ -285,7 +287,7 @@ pub enum Text {
     SumikaPlayer,
     SumikaWaifu,
     #[display("<no text>")]
-    Blank,
+    Blank = 273,
 }
 
 #[cfg(test)]
