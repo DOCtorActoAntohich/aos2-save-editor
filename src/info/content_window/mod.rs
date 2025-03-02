@@ -36,7 +36,7 @@ impl ContentWidget {
         let tabs: [Box<dyn InteratibleTabComponent>; 3] = [
             Box::new(statistics::Tab::new(progress.subscribe())),
             Box::new(progress::Tab::new(progress)),
-            Box::new(profile::Tab::new(profile)),
+            Box::new(profile::title::Tab::new(profile)),
         ];
         Self {
             tabs: SelectibleArray::new(tabs),
