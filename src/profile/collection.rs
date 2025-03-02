@@ -1,5 +1,5 @@
 #[derive(Debug, Clone)]
-struct RadioButtonArray<T, const LENGTH: usize> {
+pub struct RadioButtonArray<T, const LENGTH: usize> {
     items: [T; LENGTH],
     hover_index: usize,
     selected_index: usize,
@@ -8,26 +8,33 @@ struct RadioButtonArray<T, const LENGTH: usize> {
 impl<T, const LENGTH: usize> RadioButtonArray<T, LENGTH> {
     const MAX_INDEX: usize = LENGTH - 1;
 
-    pub fn new(items: [T; LENGTH], selected_index: usize) -> Option<Self> {
+    pub fn new(items: [T; LENGTH], selected_index: usize) -> Self {
         const { assert!(LENGTH > 0, "Zero-length array is not allowed") };
 
-        if selected_index < LENGTH {
-            Some(Self {
-                items,
-                hover_index: 0,
-                selected_index,
-            })
-        } else {
-            None
+        let selected_index = selected_index.clamp(0, Self::MAX_INDEX);
+        Self {
+            items,
+            hover_index: selected_index,
+            selected_index,
         }
     }
 
-    pub fn hover_index(&self) -> usize {
+    pub fn iter(&self) -> impl Iterator<Item = &T> {
+        self.items.iter()
+    }
+
+    pub fn hovered_index(&self) -> usize {
         self.hover_index
     }
 
     pub fn selected_index(&self) -> usize {
         self.selected_index
+    }
+
+    pub fn current(&self) -> &T {
+        self.items
+            .get(self.selected_index)
+            .expect("Invariant: Index is constrained to array size")
     }
 
     pub fn select_current(&mut self) {
