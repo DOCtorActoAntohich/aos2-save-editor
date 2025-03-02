@@ -39,7 +39,9 @@ impl From<UnitEnumMembers> for proc_macro2::TokenStream {
 
         let expanded = quote::quote! {
             impl #type_name {
-                pub fn members() -> [Self; #array_length] {
+                pub const MEMBERS_COUNT: usize = #array_length;
+
+                pub fn members() -> [Self; Self::MEMBERS_COUNT] {
                     [
                         #(Self::#variant_names),*
                     ]
