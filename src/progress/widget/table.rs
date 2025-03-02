@@ -14,6 +14,7 @@ use crate::{
 
 use super::status::Status;
 
+#[derive(Default)]
 pub struct Table<'a> {
     items: Vec<Row<'a>>,
     current: usize,
@@ -83,9 +84,8 @@ impl<'a> Table<'a> {
                 }
             }
             None => Self {
-                items: Vec::new(),
-                current: 0,
                 should_highlight_current,
+                ..Default::default()
             },
         }
     }
