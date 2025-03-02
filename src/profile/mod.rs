@@ -1,3 +1,5 @@
+mod collection;
+
 use online_profile::PlayerOnlineProfile;
 use ratatui::{
     buffer::Buffer,
