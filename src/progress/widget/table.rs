@@ -1,4 +1,4 @@
-use std::{borrow::Cow, ops::Range};
+use std::borrow::Cow;
 
 use ratatui::{
     buffer::Buffer,
@@ -7,7 +7,10 @@ use ratatui::{
     widgets::{self, Widget},
 };
 
-use crate::style::{IndexedColor, Selection, WithColor};
+use crate::{
+    collection::ListSlice,
+    style::{IndexedColor, Selection, WithColor},
+};
 
 use super::status::Status;
 
@@ -21,9 +24,6 @@ struct Row<'a> {
     name: Cow<'a, str>,
     status: Status,
 }
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-struct TableSlice(Range<usize>);
 
 struct RowStyle {
     default_bg: IndexedColor,
@@ -73,20 +73,20 @@ impl<'a> Table<'a> {
             should_highlight_current,
         } = self;
 
-        if let Some(TableSlice(range)) =
-            TableSlice::in_collection(items.len(), current, window_size)
-        {
-            Self {
-                current: current - range.start,
-                items: items.drain(range).collect(),
-                should_highlight_current,
+        match ListSlice::in_collection(items.len(), current, window_size) {
+            Some(slice) => {
+                let range = slice.into_range();
+                Self {
+                    current: current - range.start,
+                    items: items.drain(range).collect(),
+                    should_highlight_current,
+                }
             }
-        } else {
-            Self {
+            None => Self {
                 items: Vec::new(),
                 current: 0,
                 should_highlight_current,
-            }
+            },
         }
     }
 }
@@ -128,27 +128,6 @@ impl Widget for Table<'_> {
     }
 }
 
-impl TableSlice {
-    fn in_collection(length: usize, current: usize, window_size: usize) -> Option<Self> {
-        if length == 0 || window_size == 0 || current >= length {
-            None
-        } else {
-            let half_window = window_size / 2;
-            let n_items_after_current = (length - 1) - current;
-            let range = if n_items_after_current < half_window {
-                let end = length;
-                let start = length.saturating_sub(window_size);
-                start..end
-            } else {
-                let start = current.saturating_sub(half_window);
-                let end = start.saturating_add(window_size).min(length);
-                start..end
-            };
-            Some(Self(range))
-        }
-    }
-}
-
 impl<'a, N, S> From<(N, S)> for Row<'a>
 where
     N: Into<Cow<'a, str>>,
@@ -159,36 +138,5 @@ where
             name: name.into(),
             status: status.into(),
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::TableSlice;
-
-    #[rstest::rstest]
-    #[case::full_collection_exact(15, 0, 15, Some(TableSlice(0..15)))]
-    #[case::full_collection_bigger(15, 0, 30, Some(TableSlice(0..15)))]
-    #[case::at_start_odd(15, 0, 3, Some(TableSlice(0..3)))]
-    #[case::at_start_odd(15, 1, 3, Some(TableSlice(0..3)))]
-    #[case::at_start_odd(15, 2, 3, Some(TableSlice(1..4)))]
-    #[case::at_start_even(15, 1, 4, Some(TableSlice(0..4)))]
-    #[case::at_middle_odd(15, 7, 3, Some(TableSlice(6..9)))]
-    #[case::at_middle_odd(15, 7, 5, Some(TableSlice(5..10)))]
-    #[case::at_end_odd(15, 12, 3, Some(TableSlice(11..14)))]
-    #[case::at_end_odd(15, 13, 3, Some(TableSlice(12..15)))]
-    #[case::at_end_odd(15, 14, 3, Some(TableSlice(12..15)))]
-    #[case::impossible_current(15, 100, 3, None)]
-    #[case::no_items(0, 0, 3, None)]
-    #[case::no_window(15, 3, 0, None)]
-    fn range_works(
-        #[case] length: usize,
-        #[case] current_index: usize,
-        #[case] window_size: usize,
-        #[case] expected_slice: Option<TableSlice>,
-    ) {
-        let actual_slice = TableSlice::in_collection(length, current_index, window_size);
-
-        assert_eq!(expected_slice, actual_slice);
     }
 }
