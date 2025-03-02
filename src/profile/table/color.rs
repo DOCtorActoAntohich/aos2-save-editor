@@ -3,7 +3,7 @@ use ratatui::{
     buffer::Buffer,
     crossterm::event::{Event, KeyCode},
     layout::{Constraint, Rect},
-    widgets::{Cell, Row, Table, Widget},
+    widgets::{self, Cell, Row, Widget},
 };
 use tokio::sync::watch;
 
@@ -13,12 +13,14 @@ use crate::{
     tui::{event::GetKeyCode, HandleEvent, VisualComponent},
 };
 
-pub struct TitleColor {
+use super::InteractibleTable;
+
+pub struct Table {
     profile: watch::Sender<PlayerOnlineProfile>,
     colors: RadioButtonArray<title::Color, { title::Color::MEMBERS_COUNT }>,
 }
 
-impl TitleColor {
+impl Table {
     pub fn new(profile: watch::Sender<PlayerOnlineProfile>) -> Self {
         let colors = title::Color::members();
         let current_color = profile.borrow().title_color;
@@ -41,7 +43,7 @@ impl TitleColor {
     }
 }
 
-impl HandleEvent for TitleColor {
+impl HandleEvent for Table {
     fn handle_event(&mut self, event: &Event) {
         match event.key_code() {
             Some(KeyCode::Up) => self.colors.hover_previous(),
@@ -56,7 +58,7 @@ impl HandleEvent for TitleColor {
     }
 }
 
-impl VisualComponent for TitleColor {
+impl VisualComponent for Table {
     fn render(&self, area: Rect, buf: &mut Buffer) {
         let rows = self.colors.iter().enumerate().map(|(index, color)| {
             let is_selected = index == self.colors.selected_index();
@@ -67,6 +69,12 @@ impl VisualComponent for TitleColor {
             Row::new(cells).style(style::Selection::from_is_selected(is_hovered))
         });
         let widths = [Constraint::Fill(1), Constraint::Fill(1)];
-        Table::new(rows, widths).render(area, buf);
+        widgets::Table::new(rows, widths).render(area, buf);
+    }
+}
+
+impl InteractibleTable for Table {
+    fn name(&self) -> &str {
+        "Color"
     }
 }

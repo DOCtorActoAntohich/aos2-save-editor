@@ -10,14 +10,16 @@ use crate::{
     tui::{HandleEvent, VisualComponent},
 };
 
+use self::table::TablesCollection;
+
 pub struct Tab {
-    colors: self::table::TitleColor,
+    colors: TablesCollection,
 }
 
 impl Tab {
     pub fn new(profile: watch::Sender<PlayerOnlineProfile>) -> Self {
         Self {
-            colors: self::table::TitleColor::new(profile),
+            colors: TablesCollection::new(profile),
         }
     }
 }
