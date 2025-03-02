@@ -1,4 +1,5 @@
 mod table;
+mod widget;
 
 use online_profile::PlayerOnlineProfile;
 use ratatui::{buffer::Buffer, crossterm::event::Event, layout::Rect};

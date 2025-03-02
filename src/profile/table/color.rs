@@ -74,7 +74,18 @@ impl VisualComponent for Table {
 }
 
 impl InteractibleTable for Table {
-    fn name(&self) -> &str {
+    fn name(&self) -> &'static str {
         "Color"
+    }
+
+    fn as_widget(&self) -> crate::profile::widget::Table {
+        crate::profile::widget::Table::new(
+            self.colors
+                .to_array()
+                .into_iter()
+                .map(|color| color.to_string()),
+        )
+        .with_hovered(self.colors.hovered_index())
+        .with_selected(self.colors.selected_index())
     }
 }
