@@ -652,9 +652,9 @@ dependencies = [
  "aos2-env",
  "binrw",
  "derive_more",
+ "enum-array",
  "rstest",
  "rstest_reuse",
- "strum 0.27.1",
  "thiserror",
 ]
 

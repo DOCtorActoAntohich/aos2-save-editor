@@ -1,6 +1,13 @@
 #[binrw::binrw]
 #[derive(
-    Debug, Clone, Copy, PartialEq, Eq, derive_more::TryFrom, derive_more::Display, strum::EnumIter,
+    Debug,
+    Clone,
+    Copy,
+    PartialEq,
+    Eq,
+    derive_more::TryFrom,
+    derive_more::Display,
+    enum_array::EnumMembersArray,
 )]
 #[try_from(repr)]
 #[repr(u32)]

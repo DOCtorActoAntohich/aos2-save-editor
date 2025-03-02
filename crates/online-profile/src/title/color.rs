@@ -1,7 +1,14 @@
 /// Local-only background color for all titles in the lobby.
 #[binrw::binrw]
 #[derive(
-    Debug, Clone, Copy, PartialEq, Eq, derive_more::TryFrom, derive_more::Display, strum::EnumIter,
+    Debug,
+    Clone,
+    Copy,
+    PartialEq,
+    Eq,
+    derive_more::TryFrom,
+    derive_more::Display,
+    enum_array::EnumMembersArray,
 )]
 #[brw(little, repr(u32))]
 #[repr(u32)]
