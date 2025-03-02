@@ -21,7 +21,6 @@ rstest_reuse = "0.7"
 ratatui = "0.29"
 tokio = "1"
 winresource = "0.1"
-strum = "0.27"
 syn = "2"
 quote = "1"
 proc-macro2 = "1"
@@ -40,7 +39,6 @@ anyhow.workspace = true
 derive_more.workspace = true
 ratatui.workspace = true
 tokio = { workspace = true, features = ["sync"] }
-strum = { workspace = true }
 
 [dev-dependencies]
 rstest.workspace = true

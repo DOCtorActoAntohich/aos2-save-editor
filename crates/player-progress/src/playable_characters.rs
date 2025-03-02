@@ -1,7 +1,5 @@
 use std::borrow::Cow;
 
-use strum::IntoEnumIterator;
-
 use crate::Status;
 
 /// Markers for full list of characters.
@@ -45,7 +43,7 @@ pub struct PlayableCharacters {
     Hash,
     derive_more::TryFrom,
     derive_more::Display,
-    strum::EnumIter,
+    enum_array::EnumMembersArray,
 )]
 #[try_from(repr)]
 #[repr(usize)]
@@ -95,7 +93,7 @@ impl PlayableCharacters {
     }
 
     pub fn iter(&self) -> impl Iterator<Item = (Character, Status)> {
-        Character::iter().into_iter().zip(self.to_array())
+        Character::members().into_iter().zip(self.to_array())
     }
 }
 

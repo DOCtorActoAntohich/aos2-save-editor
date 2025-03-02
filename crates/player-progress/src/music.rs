@@ -1,7 +1,5 @@
 use std::borrow::Cow;
 
-use strum::IntoEnumIterator;
-
 use crate::lock::Status;
 
 /// Only stock non-DLC music.
@@ -45,7 +43,16 @@ impl Default for MusicTracks {
 }
 
 #[derive(
-    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, derive_more::Display, strum::EnumIter,
+    Debug,
+    Clone,
+    Copy,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+    derive_more::Display,
+    enum_array::EnumMembersArray,
 )]
 pub enum MusicTrack {
     #[display("Need for Speed")]
@@ -90,7 +97,7 @@ impl MusicTracks {
     }
 
     pub fn iter(&self) -> impl Iterator<Item = (MusicTrack, Status)> {
-        MusicTrack::iter().into_iter().zip(self.to_array())
+        MusicTrack::members().into_iter().zip(self.to_array())
     }
 }
 

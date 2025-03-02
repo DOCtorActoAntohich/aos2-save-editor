@@ -1,7 +1,5 @@
 use std::borrow::Cow;
 
-use strum::IntoEnumIterator;
-
 use crate::{lock::Status, UnknownU8};
 
 /// List of Background Images aka Arena Backgrounds.
@@ -34,7 +32,16 @@ pub struct Arenas {
 }
 
 #[derive(
-    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, derive_more::Display, strum::EnumIter,
+    Debug,
+    Clone,
+    Copy,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+    derive_more::Display,
+    enum_array::EnumMembersArray,
 )]
 pub enum Arena {
     #[display("Before the War")]
@@ -94,7 +101,7 @@ impl Arenas {
     }
 
     pub fn iter(&self) -> impl Iterator<Item = (Arena, Status)> {
-        Arena::iter().into_iter().zip(self.to_array())
+        Arena::members().into_iter().zip(self.to_array())
     }
 }
 
