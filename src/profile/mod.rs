@@ -1,4 +1,3 @@
-mod collection;
 mod table;
 
 use online_profile::PlayerOnlineProfile;

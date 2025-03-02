@@ -8,7 +8,7 @@ use ratatui::{
 use tokio::sync::watch;
 
 use crate::{
-    profile::collection::RadioButtonArray,
+    collection::RadioButtonArray,
     style,
     tui::{event::GetKeyCode, HandleEvent, VisualComponent},
 };
