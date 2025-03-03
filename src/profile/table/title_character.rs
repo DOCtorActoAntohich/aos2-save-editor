@@ -65,7 +65,7 @@ impl HandleEvent for Table {
 
 impl InteractibleTable for Table {
     fn name(&self) -> &'static str {
-        "Color"
+        "Background Character"
     }
 
     fn content_widget(&self) -> crate::profile::widget::Table {
