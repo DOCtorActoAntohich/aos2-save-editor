@@ -1,3 +1,4 @@
+pub mod title_character;
 pub mod title_color;
 
 use ratatui::{
