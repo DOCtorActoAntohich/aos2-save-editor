@@ -1,5 +1,6 @@
 use std::time::{Duration, Instant};
 
+use ratatui::crossterm::event::{Event as RatatuiEvent, KeyEvent};
 use ratatui::crossterm::event::{KeyCode, KeyEventKind};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -14,14 +15,14 @@ pub struct Event {
 struct AsciiInputBuffer(String);
 
 impl Event {
-    pub const MAX_TEXT_RETAIN_DELTA: Duration = Duration::from_millis(250);
+    pub const MAX_TEXT_AGE: Duration = Duration::from_millis(500);
 
     pub fn empty() -> Self {
-        let long_ago = Instant::now() - 2 * Self::MAX_TEXT_RETAIN_DELTA;
+        let too_long_ago = Instant::now() - 2 * Self::MAX_TEXT_AGE;
         Self {
             key_code: None,
             ascii_input: AsciiInputBuffer::empty(),
-            received_at: long_ago,
+            received_at: too_long_ago,
         }
     }
 
@@ -32,19 +33,22 @@ impl Event {
             received_at,
         } = self;
 
-        if now.duration_since(received_at) > Self::MAX_TEXT_RETAIN_DELTA {
+        if now.duration_since(received_at) > Self::MAX_TEXT_AGE {
             ascii_input.clear();
         }
 
-        let key_code = match event.key_code() {
-            code @ Some(KeyCode::Char(c)) => {
-                ascii_input.try_push(c);
-                code
+        let key_code = match event {
+            RatatuiEvent::Key(KeyEvent {
+                code,
+                kind: KeyEventKind::Press,
+                ..
+            }) => {
+                if let KeyCode::Char(c) = code {
+                    ascii_input.try_push(c);
+                }
+                Some(code)
             }
-            code => {
-                ascii_input.clear();
-                code
-            }
+            _ => None,
         };
 
         Self {
@@ -60,24 +64,6 @@ impl Event {
 
     pub fn accumulated_input(&self) -> &str {
         self.ascii_input.as_ref()
-    }
-}
-
-trait GetKeyCode {
-    fn key_code(&self) -> Option<KeyCode>;
-}
-
-impl GetKeyCode for ratatui::crossterm::event::Event {
-    fn key_code(&self) -> Option<KeyCode> {
-        match self {
-            Self::Key(key_event) if key_event.kind == KeyEventKind::Press => Some(key_event.code),
-            Self::Key(_)
-            | Self::FocusGained
-            | Self::FocusLost
-            | Self::Mouse(_)
-            | Self::Paste(_)
-            | Self::Resize(_, _) => None,
-        }
     }
 }
 
@@ -133,7 +119,7 @@ mod tests {
         #[case] expected: &str,
         #[values(Duration::from_millis(200))] step: Duration,
     ) {
-        assert!(step <= Event::MAX_TEXT_RETAIN_DELTA, "Test Precondition");
+        assert!(step <= Event::MAX_TEXT_AGE, "Test Precondition");
 
         let start_time = Instant::now();
         let instants = (0..input.len())
@@ -150,9 +136,10 @@ mod tests {
     }
 
     #[rstest::rstest]
-    #[case::too_old(KeyCode::Char('s'), Duration::from_secs(5), "s")]
-    #[case::not_a_char(KeyCode::Enter, Duration::from_millis(10), "")]
+    #[case::too_old("doesnt matter", KeyCode::Char('s'), Duration::from_secs(5), "s")]
+    #[case::not_a_char("remains", KeyCode::Enter, Duration::from_millis(10), "remains")]
     fn ascii_input_buffer_resets(
+        #[case] initial_value: &str,
         #[case] code: KeyCode,
         #[case] age: Duration,
         #[case] expected: &str,
@@ -162,7 +149,8 @@ mod tests {
 
         let event = Event {
             key_code: None,
-            ascii_input: AsciiInputBuffer("any contents".to_owned()),
+            // normally i do smth like integration tests with `pub` only but eh, lazy.
+            ascii_input: AsciiInputBuffer(initial_value.to_owned()),
             received_at,
         };
 
