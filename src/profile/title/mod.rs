@@ -16,7 +16,7 @@ use crate::{
 use super::table::{color, InteractibleTable, TablesCollection};
 
 pub struct Tab {
-    tables: TablesCollection<1>,
+    tables: TablesCollection<3>,
 }
 
 struct InfoText;
@@ -28,7 +28,11 @@ impl InfoText {
 
 impl Tab {
     pub fn new(profile: watch::Sender<PlayerOnlineProfile>) -> Self {
-        let tables: [Box<dyn InteractibleTable>; 1] = [Box::new(color::Table::new(profile))];
+        let tables: [Box<dyn InteractibleTable>; 3] = [
+            Box::new(color::Table::new(profile.clone())),
+            Box::new(color::Table::new(profile.clone())),
+            Box::new(color::Table::new(profile)),
+        ];
         Self {
             tables: TablesCollection::new(tables),
         }

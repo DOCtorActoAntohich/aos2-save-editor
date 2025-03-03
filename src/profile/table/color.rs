@@ -85,7 +85,7 @@ impl InteractibleTable for Table {
         "Color"
     }
 
-    fn as_widget(&self) -> crate::profile::widget::Table {
+    fn content_widget(&self) -> crate::profile::widget::Table {
         crate::profile::widget::Table::new(
             self.colors
                 .to_array()

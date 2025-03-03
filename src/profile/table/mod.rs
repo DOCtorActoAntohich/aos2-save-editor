@@ -11,13 +11,13 @@ use crate::{
     collection::SelectibleArray,
     style,
     tui::{Event, HandleEvent, InteractibleComponent, VisualComponent},
-    widget::split,
+    widget::{separated_sequence::VerticallySeparatedSequence, split},
 };
 
 pub trait InteractibleTable: InteractibleComponent {
     fn name(&self) -> &str;
 
-    fn as_widget(&self) -> super::widget::Table;
+    fn content_widget(&self) -> super::widget::Table;
 }
 
 pub struct TablesCollection<const LENGTH: usize> {
@@ -28,6 +28,11 @@ pub struct TablesCollection<const LENGTH: usize> {
 #[deref(forward)]
 struct Table(Box<dyn InteractibleTable>);
 
+struct TableWidget<'a> {
+    table: &'a dyn InteractibleTable,
+    is_selected: bool,
+}
+
 impl<const LENGTH: usize> TablesCollection<LENGTH> {
     pub fn new(tables: [Box<dyn InteractibleTable>; LENGTH]) -> Self {
         Self {
@@ -37,11 +42,25 @@ impl<const LENGTH: usize> TablesCollection<LENGTH> {
 }
 
 impl Table {
-    pub fn render(&self, area: Rect, buf: &mut Buffer, is_selected: bool) {
+    pub fn as_widget(&self, is_selected: bool) -> TableWidget<'_> {
+        let Self(table) = self;
+        TableWidget {
+            table: table.as_ref(),
+            is_selected,
+        }
+    }
+}
+
+impl Widget for TableWidget<'_> {
+    fn render(self, area: Rect, buf: &mut Buffer)
+    where
+        Self: Sized,
+    {
+        let Self { table, is_selected } = self;
         let top = split::Area {
             constraint: Constraint::Length(1),
             render: |area: Rect, buf: &mut Buffer| {
-                Paragraph::new(self.name())
+                Paragraph::new(table.name())
                     .centered()
                     .style(style::Selection::from_is_selected(is_selected))
                     .render(area, buf);
@@ -50,7 +69,8 @@ impl Table {
         let bottom = split::Area {
             constraint: Constraint::Fill(1),
             render: |area: Rect, buf: &mut Buffer| {
-                self.as_widget()
+                table
+                    .content_widget()
                     .highlight_hovered(is_selected)
                     .render(area, buf);
             },
@@ -78,6 +98,12 @@ impl HandleEvent for Table {
 
 impl<const N: usize> VisualComponent for TablesCollection<N> {
     fn render(&self, area: Rect, buf: &mut Buffer) {
-        self.tables.current().render(area, buf, true);
+        VerticallySeparatedSequence {
+            items: self.tables.iter().enumerate().map(|(index, table)| {
+                let is_selected = index == self.tables.current_index();
+                table.as_widget(is_selected)
+            }),
+        }
+        .render(area, buf);
     }
 }
