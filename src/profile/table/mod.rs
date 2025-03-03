@@ -11,7 +11,7 @@ use crate::{
     collection::SelectibleArray,
     style,
     tui::{Event, HandleEvent, InteractibleComponent, VisualComponent},
-    widget::{separated_sequence::VerticallySeparatedSequence, split},
+    widget::{sequence, split},
 };
 
 pub trait InteractibleTable: InteractibleComponent {
@@ -98,8 +98,8 @@ impl HandleEvent for Table {
 
 impl<const N: usize> VisualComponent for TablesCollection<N> {
     fn render(&self, area: Rect, buf: &mut Buffer) {
-        VerticallySeparatedSequence {
-            items: self.tables.iter().enumerate().map(|(index, table)| {
+        sequence::VerticallySeparated {
+            widgets: self.tables.iter().enumerate().map(|(index, table)| {
                 let is_selected = index == self.tables.current_index();
                 table.as_widget(is_selected)
             }),

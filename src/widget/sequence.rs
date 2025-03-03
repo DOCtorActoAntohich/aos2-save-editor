@@ -6,20 +6,20 @@ use ratatui::{
 
 use super::separator;
 
-pub struct VerticallySeparatedSequence<I, W>
+pub struct VerticallySeparated<I, W>
 where
     I: Iterator<Item = W>,
     W: Widget,
 {
-    pub items: I,
+    pub widgets: I,
 }
 
 enum ToDraw<W> {
-    Item(W),
+    Widget(W),
     Separator,
 }
 
-impl<I, W> Widget for VerticallySeparatedSequence<I, W>
+impl<I, W> Widget for VerticallySeparated<I, W>
 where
     I: Iterator<Item = W>,
     W: Widget,
@@ -28,15 +28,15 @@ where
     where
         Self: Sized,
     {
-        let Self { items } = self;
+        let Self { widgets } = self;
 
-        let to_draw: Vec<ToDraw<W>> = items
-            .flat_map(|item| [ToDraw::Separator, ToDraw::Item(item)])
+        let to_draw: Vec<ToDraw<W>> = widgets
+            .flat_map(|widget| [ToDraw::Separator, ToDraw::Widget(widget)])
             .skip(1)
             .collect();
 
-        let constraints = to_draw.iter().map(|thing| match thing {
-            ToDraw::Item(_) => Constraint::Fill(1),
+        let constraints = to_draw.iter().map(|to_draw| match to_draw {
+            ToDraw::Widget(_) => Constraint::Fill(1),
             ToDraw::Separator => separator::Vertical::CONSTRAINT,
         });
 
@@ -44,9 +44,9 @@ where
             .split(area)
             .iter()
             .zip(to_draw)
-            .for_each(|(&area, thing)| match thing {
-                ToDraw::Item(item) => {
-                    item.render(area, buf);
+            .for_each(|(&area, to_draw)| match to_draw {
+                ToDraw::Widget(widget) => {
+                    widget.render(area, buf);
                 }
                 ToDraw::Separator => separator::Vertical.render(area, buf),
             });

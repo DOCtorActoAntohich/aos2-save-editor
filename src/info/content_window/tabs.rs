@@ -1,6 +1,6 @@
 use ratatui::{buffer::Buffer, layout::Rect, text::Text, widgets::Widget};
 
-use crate::{style, widget::separated_sequence::VerticallySeparatedSequence};
+use crate::{style, widget::sequence};
 
 pub struct EvenTabs<'a> {
     tabs: Vec<Text<'a>>,
@@ -31,8 +31,8 @@ impl Widget for EvenTabs<'_> {
             selected_index,
         } = self;
 
-        VerticallySeparatedSequence {
-            items: tabs.into_iter().enumerate().map(|(index, tab_name)| {
+        sequence::VerticallySeparated {
+            widgets: tabs.into_iter().enumerate().map(|(index, tab_name)| {
                 let is_selected = Some(index) == selected_index;
                 tab_name
                     .centered()
