@@ -14,7 +14,7 @@ use crate::{
 #[derive(Default)]
 pub struct Table<'a> {
     items: Vec<Line<'a>>,
-    selected: usize,
+    selected: Option<usize>,
     hovered: usize,
     should_highlight_hovered: bool,
 }
@@ -23,14 +23,14 @@ impl<'a> Table<'a> {
     pub fn new(items: impl IntoIterator<Item = impl Into<Line<'a>>>) -> Self {
         Self {
             items: items.into_iter().map(Into::into).collect(),
-            selected: 0,
+            selected: None,
             hovered: 0,
             should_highlight_hovered: false,
         }
     }
 
     pub fn with_selected(mut self, selected: usize) -> Self {
-        self.selected = selected;
+        self.selected = Some(selected);
         self
     }
 
@@ -56,7 +56,7 @@ impl<'a> Table<'a> {
             Some(slice) => {
                 let range = slice.into_range();
                 Self {
-                    selected,
+                    selected: selected.and_then(|selected| selected.checked_sub(range.start)),
                     hovered: hovered - range.start,
                     items: items.drain(range).collect(),
                     should_highlight_hovered,
@@ -92,7 +92,7 @@ impl Widget for Table<'_> {
                     .cycle(),
             )
             .map(|((row_index, row_line), background_color)| {
-                let is_selected = row_index == selected;
+                let is_selected = Some(row_index) == selected;
                 let is_hovered = row_index == hovered;
 
                 let selection_text = if is_selected { "[X]" } else { "[ ]" };
