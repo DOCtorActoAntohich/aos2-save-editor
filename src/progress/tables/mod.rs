@@ -6,7 +6,7 @@ use player_progress::PlayerProgress;
 use ratatui::{
     buffer::Buffer,
     crossterm::event::KeyCode,
-    layout::{Constraint, Layout, Rect},
+    layout::{Constraint, Rect},
     text::Line,
     widgets::Widget,
 };
@@ -16,13 +16,13 @@ use crate::{
     collection::SelectibleArray,
     style,
     tui::{Event, HandleEvent, VisualComponent},
-    widget::{separator, split},
+    widget::{separated_sequence::VerticallySeparatedSequence, split},
 };
 
 trait InteractibleTable: HandleEvent + Send {
     fn name(&self) -> &str;
 
-    fn as_widget(&self) -> super::widget::Table;
+    fn content_widget(&self) -> super::widget::Table;
 }
 
 pub struct TablesCollection {
@@ -30,6 +30,11 @@ pub struct TablesCollection {
 }
 
 struct Table(Box<dyn InteractibleTable>);
+
+struct TableWidget<'a> {
+    table: &'a dyn InteractibleTable,
+    is_selected: bool,
+}
 
 impl TablesCollection {
     pub const CONSTRAINT: Constraint = Constraint::Fill(1);
@@ -47,32 +52,12 @@ impl TablesCollection {
 }
 
 impl Table {
-    pub const CONSTRAINT: Constraint = Constraint::Fill(1);
-
-    pub fn render(&self, area: Rect, buf: &mut Buffer, is_selected: bool) {
+    pub fn as_widget(&self, is_selected: bool) -> TableWidget<'_> {
         let Self(table) = self;
-
-        let top = split::Area {
-            constraint: Constraint::Length(1),
-            render: |area: Rect, buf: &mut Buffer| {
-                Line::from(table.name())
-                    .centered()
-                    .style(style::Selection::from_is_selected(is_selected))
-                    .render(area, buf);
-            },
-        };
-
-        let bottom = split::Area {
-            constraint: Constraint::Fill(1),
-            render: |area: Rect, buf: &mut Buffer| {
-                table
-                    .as_widget()
-                    .highlight_current(is_selected)
-                    .render(area, buf);
-            },
-        };
-
-        split::Horizontal { top, bottom }.render(area, buf);
+        TableWidget {
+            table: table.as_ref(),
+            is_selected,
+        }
     }
 }
 
@@ -95,41 +80,45 @@ impl HandleEvent for TablesCollection {
 
 impl VisualComponent for TablesCollection {
     fn render(&self, area: Rect, buf: &mut Buffer) {
-        enum ToDraw<'a> {
-            Table(usize, &'a Table),
-            Separator(&'a separator::Vertical),
+        let Self { tables } = self;
+
+        VerticallySeparatedSequence {
+            items: tables.iter().enumerate().map(|(index, table)| {
+                let is_selected = index == self.tables.current_index();
+                table.as_widget(is_selected)
+            }),
         }
+        .render(area, buf);
+    }
+}
 
-        let vertical_separator = separator::Vertical::default();
+impl Widget for TableWidget<'_> {
+    fn render(self, area: Rect, buf: &mut Buffer)
+    where
+        Self: Sized,
+    {
+        let Self { table, is_selected } = self;
 
-        let to_draw: Vec<ToDraw<'_>> = self
-            .tables
-            .iter()
-            .enumerate()
-            .flat_map(|(index, table)| {
-                [
-                    ToDraw::Separator(&vertical_separator),
-                    ToDraw::Table(index, table),
-                ]
-            })
-            .skip(1)
-            .collect();
+        let top = split::Area {
+            constraint: Constraint::Length(1),
+            render: |area: Rect, buf: &mut Buffer| {
+                Line::from(table.name())
+                    .centered()
+                    .style(style::Selection::from_is_selected(is_selected))
+                    .render(area, buf);
+            },
+        };
 
-        let constraints = to_draw.iter().map(|thing| match thing {
-            ToDraw::Table(_, _) => Table::CONSTRAINT,
-            ToDraw::Separator(_) => separator::Vertical::CONSTRAINT,
-        });
+        let bottom = split::Area {
+            constraint: Constraint::Fill(1),
+            render: |area: Rect, buf: &mut Buffer| {
+                table
+                    .content_widget()
+                    .highlight_current(is_selected)
+                    .render(area, buf);
+            },
+        };
 
-        Layout::horizontal(constraints)
-            .split(area)
-            .iter()
-            .zip(to_draw)
-            .for_each(|(&area, thing)| match thing {
-                ToDraw::Table(index, table) => {
-                    let is_selected = index == self.tables.current_index();
-                    table.render(area, buf, is_selected);
-                }
-                ToDraw::Separator(s) => s.render(area, buf),
-            });
+        split::Horizontal { top, bottom }.render(area, buf);
     }
 }

@@ -46,7 +46,7 @@ impl InteractibleTable for Table {
         "Characters"
     }
 
-    fn as_widget(&self) -> widget::Table {
+    fn content_widget(&self) -> widget::Table {
         widget::Table::new(self.progress.borrow().playable_characters.iter())
             .with_current(self.characters.current_index())
     }

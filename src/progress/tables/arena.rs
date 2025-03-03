@@ -45,7 +45,7 @@ impl InteractibleTable for Table {
         "Arenas"
     }
 
-    fn as_widget(&self) -> widget::Table {
+    fn content_widget(&self) -> widget::Table {
         widget::Table::new(self.progress.borrow().arenas.iter())
             .with_current(self.arenas.current_index())
     }

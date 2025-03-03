@@ -46,7 +46,7 @@ impl InteractibleTable for Table {
         "Music"
     }
 
-    fn as_widget(&self) -> widget::Table {
+    fn content_widget(&self) -> widget::Table {
         widget::Table::new(self.progress.borrow().background_music.iter())
             .with_current(self.music.current_index())
     }
