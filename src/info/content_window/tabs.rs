@@ -1,11 +1,6 @@
-use ratatui::{
-    buffer::Buffer,
-    layout::{Constraint, Layout, Rect},
-    text::Text,
-    widgets::Widget,
-};
+use ratatui::{buffer::Buffer, layout::Rect, text::Text, widgets::Widget};
 
-use crate::{style, widget::separator};
+use crate::{style, widget::separated_sequence::VerticallySeparatedSequence};
 
 pub struct EvenTabs<'a> {
     tabs: Vec<Text<'a>>,
@@ -31,38 +26,19 @@ impl Widget for EvenTabs<'_> {
     where
         Self: Sized,
     {
-        enum Thing<'a> {
-            Line(separator::Vertical),
-            Name(usize, Text<'a>),
-        }
-
         let Self {
-            tabs: widgets,
+            tabs,
             selected_index,
         } = self;
 
-        let to_draw: Vec<Thing<'_>> = std::iter::once(Thing::Line(separator::Vertical))
-            .chain(widgets.into_iter().enumerate().flat_map(|(index, widget)| {
-                [Thing::Name(index, widget), Thing::Line(separator::Vertical)]
-            }))
-            .collect();
-
-        let constraints = to_draw.iter().map(|to_draw| match to_draw {
-            Thing::Line(_) => separator::Vertical::CONSTRAINT,
-            Thing::Name(_, _) => Constraint::Fill(1),
-        });
-        Layout::horizontal(constraints)
-            .split(area)
-            .into_iter()
-            .zip(to_draw)
-            .for_each(|(&area, to_draw)| match to_draw {
-                Thing::Line(line) => line.render(area, buf),
-                Thing::Name(index, name) => {
-                    let is_selected = Some(index) == selected_index;
-                    name.centered()
-                        .style(style::Selection::from_is_selected(is_selected))
-                        .render(area, buf);
-                }
-            });
+        VerticallySeparatedSequence {
+            items: tabs.into_iter().enumerate().map(|(index, tab_name)| {
+                let is_selected = Some(index) == selected_index;
+                tab_name
+                    .centered()
+                    .style(style::Selection::from_is_selected(is_selected))
+            }),
+        }
+        .render(area, buf);
     }
 }
