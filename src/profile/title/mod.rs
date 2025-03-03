@@ -13,7 +13,7 @@ use crate::{
     widget::split,
 };
 
-use super::table::{color, InteractibleTable, TablesCollection};
+use super::table::{title_color, InteractibleTable, TablesCollection};
 
 pub struct Tab {
     tables: TablesCollection<3>,
@@ -29,9 +29,9 @@ impl InfoText {
 impl Tab {
     pub fn new(profile: watch::Sender<PlayerOnlineProfile>) -> Self {
         let tables: [Box<dyn InteractibleTable>; 3] = [
-            Box::new(color::Table::new(profile.clone())),
-            Box::new(color::Table::new(profile.clone())),
-            Box::new(color::Table::new(profile)),
+            Box::new(title_color::Table::new(profile.clone())),
+            Box::new(title_color::Table::new(profile.clone())),
+            Box::new(title_color::Table::new(profile)),
         ];
         Self {
             tables: TablesCollection::new(tables),

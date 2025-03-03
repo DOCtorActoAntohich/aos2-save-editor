@@ -1,4 +1,4 @@
-pub mod color;
+pub mod title_color;
 
 use ratatui::{
     buffer::Buffer,
