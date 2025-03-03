@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 #[derive(Debug, Clone)]
 pub struct RadioButtonArray<T, const LENGTH: usize> {
     items: [T; LENGTH],
@@ -48,10 +50,27 @@ impl<T, const LENGTH: usize> RadioButtonArray<T, LENGTH> {
     pub fn hover_previous(&mut self) {
         self.hover_index = self.hover_index.saturating_sub(1).clamp(0, Self::MAX_INDEX);
     }
+
+    pub fn hover_at(&mut self, index: usize) {
+        if (0..LENGTH).contains(&index) {
+            self.hover_index = index;
+        }
+    }
 }
 
 impl<T: Clone, const LENGTH: usize> RadioButtonArray<T, LENGTH> {
     pub fn to_array(&self) -> [T; LENGTH] {
         self.items.clone()
+    }
+}
+
+impl<T: Display, const N: usize> RadioButtonArray<T, N> {
+    pub fn find_by_text(&self, text: &str) -> Option<usize> {
+        let text = text.to_ascii_lowercase();
+        self.iter().enumerate().find_map(|(index, value)| {
+            let mut value = value.to_string();
+            value.make_ascii_lowercase();
+            value.contains(&text).then_some(index)
+        })
     }
 }

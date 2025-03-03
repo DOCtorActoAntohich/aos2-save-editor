@@ -53,6 +53,13 @@ impl HandleEvent for Table {
                 self.profile
                     .send_modify(|profile| profile.title_color = *self.colors.current());
             }
+            Some(KeyCode::Char(_)) => {
+                let jump_to = self
+                    .colors
+                    .find_by_text(event.accumulated_input())
+                    .unwrap_or(self.colors.hovered_index());
+                self.colors.hover_at(jump_to);
+            }
             _ => (),
         }
     }
