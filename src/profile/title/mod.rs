@@ -7,29 +7,30 @@ use crate::{
     tui::{HandleEvent, VisualComponent},
 };
 
-use super::table::TablesCollection;
+use super::table::{color, InteractibleTable, TablesCollection};
 
 pub struct Tab {
-    colors: TablesCollection,
+    tables: TablesCollection<1>,
 }
 
 impl Tab {
     pub fn new(profile: watch::Sender<PlayerOnlineProfile>) -> Self {
+        let tables: [Box<dyn InteractibleTable>; 1] = [Box::new(color::Table::new(profile))];
         Self {
-            colors: TablesCollection::new(profile),
+            tables: TablesCollection::new(tables),
         }
     }
 }
 
 impl HandleEvent for Tab {
     fn handle_event(&mut self, event: &Event) {
-        self.colors.handle_event(event);
+        self.tables.handle_event(event);
     }
 }
 
 impl VisualComponent for Tab {
     fn render(&self, area: Rect, buf: &mut Buffer) {
-        self.colors.render(area, buf);
+        self.tables.render(area, buf);
     }
 }
 

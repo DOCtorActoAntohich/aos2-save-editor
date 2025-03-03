@@ -1,13 +1,11 @@
-mod color;
+pub mod color;
 
-use online_profile::PlayerOnlineProfile;
 use ratatui::{
     buffer::Buffer,
     crossterm::event::{Event, KeyCode},
     layout::{Constraint, Rect},
     widgets::{Paragraph, Widget},
 };
-use tokio::sync::watch;
 
 use crate::{
     collection::SelectibleArray,
@@ -16,25 +14,24 @@ use crate::{
     widget::split,
 };
 
-trait InteractibleTable: InteractibleComponent {
+pub trait InteractibleTable: InteractibleComponent {
     fn name(&self) -> &str;
 
     fn as_widget(&self) -> super::widget::Table;
 }
 
-pub struct TablesCollection {
-    tables: SelectibleArray<Table, 1>,
+pub struct TablesCollection<const LENGTH: usize> {
+    tables: SelectibleArray<Table, LENGTH>,
 }
 
 #[derive(derive_more::Deref)]
 #[deref(forward)]
 struct Table(Box<dyn InteractibleTable>);
 
-impl TablesCollection {
-    pub fn new(profile: watch::Sender<PlayerOnlineProfile>) -> Self {
-        let tables: [Table; 1] = [Table(Box::new(self::color::Table::new(profile)))];
+impl<const LENGTH: usize> TablesCollection<LENGTH> {
+    pub fn new(tables: [Box<dyn InteractibleTable>; LENGTH]) -> Self {
         Self {
-            tables: SelectibleArray::new(tables),
+            tables: SelectibleArray::new(tables.map(Table)),
         }
     }
 }
@@ -62,7 +59,7 @@ impl Table {
     }
 }
 
-impl HandleEvent for TablesCollection {
+impl<const N: usize> HandleEvent for TablesCollection<N> {
     fn handle_event(&mut self, event: &Event) {
         match event.key_code() {
             Some(KeyCode::Left) => self.tables.select_previous(),
@@ -79,7 +76,7 @@ impl HandleEvent for Table {
     }
 }
 
-impl VisualComponent for TablesCollection {
+impl<const N: usize> VisualComponent for TablesCollection<N> {
     fn render(&self, area: Rect, buf: &mut Buffer) {
         self.tables.current().render(area, buf, true);
     }
