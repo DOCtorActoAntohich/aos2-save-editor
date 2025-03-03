@@ -5,7 +5,7 @@ mod music;
 use player_progress::PlayerProgress;
 use ratatui::{
     buffer::Buffer,
-    crossterm::event::{Event, KeyCode},
+    crossterm::event::KeyCode,
     layout::{Constraint, Layout, Rect},
     text::Line,
     widgets::Widget,
@@ -15,7 +15,7 @@ use tokio::sync::watch;
 use crate::{
     collection::SelectibleArray,
     style,
-    tui::{event::GetKeyCode, HandleEvent, VisualComponent},
+    tui::{Event, HandleEvent, VisualComponent},
     widget::{separator, split},
 };
 

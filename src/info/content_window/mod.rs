@@ -3,7 +3,7 @@ mod tabs;
 use online_profile::PlayerOnlineProfile;
 use player_progress::PlayerProgress;
 use ratatui::{
-    crossterm::event::{Event, KeyCode},
+    crossterm::event::KeyCode,
     layout::{Constraint, Layout},
     widgets::Widget,
 };
@@ -12,7 +12,7 @@ use tokio::sync::watch;
 use crate::{
     collection::SelectibleArray,
     profile, progress, statistics,
-    tui::{event::GetKeyCode, HandleEvent, InteractibleComponent, VisualComponent},
+    tui::{Event, HandleEvent, InteractibleComponent, VisualComponent},
     widget::black_box::BlackBox,
 };
 

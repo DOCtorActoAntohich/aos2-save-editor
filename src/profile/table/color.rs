@@ -1,7 +1,7 @@
 use online_profile::{title, PlayerOnlineProfile};
 use ratatui::{
     buffer::Buffer,
-    crossterm::event::{Event, KeyCode},
+    crossterm::event::KeyCode,
     layout::{Constraint, Rect},
     widgets::{self, Cell, Row, Widget},
 };
@@ -10,7 +10,7 @@ use tokio::sync::watch;
 use crate::{
     collection::RadioButtonArray,
     style,
-    tui::{event::GetKeyCode, HandleEvent, VisualComponent},
+    tui::{Event, HandleEvent, VisualComponent},
 };
 
 use super::InteractibleTable;

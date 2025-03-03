@@ -1,11 +1,11 @@
 use player_progress::{MusicTracks, PlayerProgress, Status};
-use ratatui::crossterm::event::{Event, KeyCode};
+use ratatui::crossterm::event::KeyCode;
 use tokio::sync::watch;
 
 use crate::{
     collection::SelectibleArray,
     progress::widget,
-    tui::{event::GetKeyCode, HandleEvent},
+    tui::{Event, HandleEvent},
 };
 
 use super::InteractibleTable;

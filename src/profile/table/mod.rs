@@ -2,7 +2,7 @@ pub mod color;
 
 use ratatui::{
     buffer::Buffer,
-    crossterm::event::{Event, KeyCode},
+    crossterm::event::KeyCode,
     layout::{Constraint, Rect},
     widgets::{Paragraph, Widget},
 };
@@ -10,7 +10,7 @@ use ratatui::{
 use crate::{
     collection::SelectibleArray,
     style,
-    tui::{event::GetKeyCode, HandleEvent, InteractibleComponent, VisualComponent},
+    tui::{Event, HandleEvent, InteractibleComponent, VisualComponent},
     widget::split,
 };
 

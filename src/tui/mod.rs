@@ -1,6 +1,8 @@
-pub mod event;
+mod event;
 
-use ratatui::{buffer::Buffer, crossterm::event::Event, layout::Rect};
+pub use self::event::Event;
+
+use ratatui::{buffer::Buffer, layout::Rect};
 
 pub trait HandleEvent {
     fn handle_event(&mut self, event: &Event);

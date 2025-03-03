@@ -1,7 +1,6 @@
 use online_profile::PlayerOnlineProfile;
 use ratatui::{
     buffer::Buffer,
-    crossterm::event::Event,
     layout::{Constraint, Rect},
     text::Line,
     widgets::{List, Widget},
@@ -10,7 +9,7 @@ use tokio::sync::watch;
 
 use crate::{
     info::content_window::InteratibleTabComponent,
-    tui::{HandleEvent, VisualComponent},
+    tui::{Event, HandleEvent, VisualComponent},
     widget::split,
 };
 

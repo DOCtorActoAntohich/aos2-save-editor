@@ -10,16 +10,15 @@ mod style;
 mod tui;
 mod widget;
 
+use std::time::Instant;
+
 use anyhow::Context;
 use aos2_env::AoS2Env;
 use online_profile::PlayerOnlineProfile;
 use player_progress::PlayerProgress;
 use ratatui::{
     buffer::Buffer,
-    crossterm::{
-        self,
-        event::{Event, KeyCode},
-    },
+    crossterm::{self, event::KeyCode},
     layout::{Constraint, Layout, Rect},
     widgets::Widget,
     DefaultTerminal, Frame,
@@ -33,7 +32,7 @@ use crate::{
 
 use self::{
     info::{content_window::ContentWidget, title_header::TitleHeader},
-    tui::event::GetKeyCode,
+    tui::Event,
 };
 
 #[must_use]
@@ -43,6 +42,7 @@ pub struct EditorApp {
     aos2_env: AoS2Env,
     progress_rx: watch::Receiver<PlayerProgress>,
     profile_rx: watch::Receiver<PlayerOnlineProfile>,
+    previous_event: Event,
 }
 
 impl EditorApp {
@@ -56,6 +56,7 @@ impl EditorApp {
             aos2_env,
             progress_rx,
             profile_rx,
+            previous_event: Event::empty(),
         }
     }
 
@@ -73,10 +74,16 @@ impl EditorApp {
     }
 
     fn handle_events(&mut self) -> anyhow::Result<()> {
-        let event = crossterm::event::read()?;
+        let event = self
+            .previous_event
+            .clone()
+            .follow_with(crossterm::event::read()?, Instant::now());
+
         self.handle_event(&event);
 
         self.handle_savefile_updates()?;
+
+        self.previous_event = event;
 
         Ok(())
     }

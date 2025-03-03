@@ -4,7 +4,6 @@ mod widget;
 use player_progress::PlayerProgress;
 use ratatui::{
     buffer::Buffer,
-    crossterm::event::Event,
     layout::{Constraint, Rect},
     style::{Color, Style},
     text::Text,
@@ -15,7 +14,7 @@ use tokio::sync::watch;
 use crate::{
     info::content_window::InteratibleTabComponent,
     style::{IndexedColor, WithColor},
-    tui::{HandleEvent, VisualComponent},
+    tui::{Event, HandleEvent, VisualComponent},
     widget::split,
 };
 

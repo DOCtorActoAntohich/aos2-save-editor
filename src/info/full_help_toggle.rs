@@ -1,6 +1,6 @@
 use ratatui::{
     buffer::Buffer,
-    crossterm::event::{Event, KeyCode},
+    crossterm::event::KeyCode,
     layout::{Alignment, Constraint, Layout, Rect},
     style::{Color, Style},
     widgets::{Block, Borders, Paragraph, Widget},
@@ -8,7 +8,7 @@ use ratatui::{
 
 use crate::{
     style::{IndexedColor, WithColor},
-    tui::{event::GetKeyCode, HandleEvent, InteractibleComponent, VisualComponent},
+    tui::{Event, HandleEvent, InteractibleComponent, VisualComponent},
 };
 
 #[derive(Debug)]

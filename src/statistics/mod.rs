@@ -4,7 +4,6 @@ mod match_stats;
 use player_progress::PlayerProgress;
 use ratatui::{
     buffer::Buffer,
-    crossterm::event::Event,
     layout::{Constraint, Rect},
     text::Text,
     widgets::{List, Widget},
@@ -13,7 +12,7 @@ use tokio::sync::watch;
 
 use crate::{
     info::content_window::InteratibleTabComponent,
-    tui::{HandleEvent, VisualComponent},
+    tui::{Event, HandleEvent, VisualComponent},
     widget::split,
 };
 
