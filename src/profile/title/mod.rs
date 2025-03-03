@@ -2,6 +2,7 @@ use online_profile::PlayerOnlineProfile;
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
+    style::{Color, Style},
     text::Line,
     widgets::{List, Widget},
 };
@@ -9,6 +10,7 @@ use tokio::sync::watch;
 
 use crate::{
     info::content_window::InteratibleTabComponent,
+    style::{IndexedColor, WithColor},
     tui::{Event, HandleEvent, VisualComponent},
     widget::split,
 };
@@ -70,7 +72,19 @@ impl InteratibleTabComponent for Tab {
 
 impl VisualComponent for InfoText {
     fn render(&self, area: Rect, buf: &mut Buffer) {
-        let lines: [Line<'_>; Self::N_LINES as usize] = ["a".into(), "b".into(), "c".into()];
+        let lines: [Line<'_>; Self::N_LINES as usize] = [
+            Line::from("Choose any multiplayer title - free of charge")
+                .style(Style::new().with_bg(Color::Black).with_fg(Color::White))
+                .centered(),
+            Line::from("").centered(),
+            Line::from("Start typing with your keyboard for easy search (lists are long)")
+                .style(
+                    Style::new()
+                        .with_bg(Color::Black)
+                        .with_fg(IndexedColor::DarkYellow),
+                )
+                .centered(),
+        ];
         List::new(lines).render(area, buf);
     }
 }
