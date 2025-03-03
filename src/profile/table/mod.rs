@@ -10,11 +10,11 @@ use ratatui::{
 use crate::{
     collection::SelectibleArray,
     style,
-    tui::{Event, HandleEvent, InteractibleComponent, VisualComponent},
+    tui::{Event, HandleEvent, VisualComponent},
     widget::{sequence, split},
 };
 
-pub trait InteractibleTable: InteractibleComponent {
+pub trait InteractibleTable: HandleEvent + Send {
     fn name(&self) -> &str;
 
     fn content_widget(&self) -> super::widget::Table;

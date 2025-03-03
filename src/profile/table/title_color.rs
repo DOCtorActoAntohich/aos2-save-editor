@@ -1,16 +1,10 @@
 use online_profile::{title, PlayerOnlineProfile};
-use ratatui::{
-    buffer::Buffer,
-    crossterm::event::KeyCode,
-    layout::{Constraint, Rect},
-    widgets::{self, Cell, Row, Widget},
-};
+use ratatui::crossterm::event::KeyCode;
 use tokio::sync::watch;
 
 use crate::{
     collection::RadioButtonArray,
-    style,
-    tui::{Event, HandleEvent, VisualComponent},
+    tui::{Event, HandleEvent},
 };
 
 use super::InteractibleTable;
@@ -62,21 +56,6 @@ impl HandleEvent for Table {
             }
             _ => (),
         }
-    }
-}
-
-impl VisualComponent for Table {
-    fn render(&self, area: Rect, buf: &mut Buffer) {
-        let rows = self.colors.iter().enumerate().map(|(index, color)| {
-            let is_selected = index == self.colors.selected_index();
-            let is_hovered = index == self.colors.hovered_index();
-            let selection = if is_selected { "[X]" } else { "[ ]" };
-            let cells = [Cell::new(selection), Cell::new(color.to_string())];
-
-            Row::new(cells).style(style::Selection::from_is_selected(is_hovered))
-        });
-        let widths = [Constraint::Fill(1), Constraint::Fill(1)];
-        widgets::Table::new(rows, widths).render(area, buf);
     }
 }
 
