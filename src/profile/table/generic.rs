@@ -87,6 +87,8 @@ where
         match event.key_code() {
             Some(KeyCode::Up) => self.items.hover_previous(),
             Some(KeyCode::Down) => self.items.hover_next(),
+            Some(KeyCode::Home) => self.items.hover_to_start(),
+            Some(KeyCode::End) => self.items.hover_to_end(),
             Some(KeyCode::Enter) => {
                 self.items.select_current();
                 self.profile.send_modify(|profile| {

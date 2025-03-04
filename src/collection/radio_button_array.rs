@@ -56,6 +56,14 @@ impl<T, const LENGTH: usize> RadioButtonArray<T, LENGTH> {
             self.hover_index = index;
         }
     }
+
+    pub fn hover_to_start(&mut self) {
+        self.hover_index = 0;
+    }
+
+    pub fn hover_to_end(&mut self) {
+        self.hover_index = Self::MAX_INDEX;
+    }
 }
 
 impl<T: Clone, const LENGTH: usize> RadioButtonArray<T, LENGTH> {
