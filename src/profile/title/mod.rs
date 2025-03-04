@@ -18,7 +18,7 @@ use crate::{
 use super::table::{generic, InteractibleTable, TablesCollection};
 
 pub struct Tab {
-    tables: TablesCollection<2>,
+    tables: TablesCollection<3>,
 }
 
 struct InfoText;
@@ -48,10 +48,20 @@ impl Tab {
             },
             name: "Background Character".to_owned(),
         };
+        let text_params = generic::TableParams {
+            profile: profile.clone(),
+            items: title::Text::members(),
+            current: profile.borrow().title_text_id,
+            on_selected: |profile: &mut PlayerOnlineProfile, text: &title::Text| {
+                profile.title_text_id = *text;
+            },
+            name: "Title Text".to_owned(),
+        };
 
-        let tables: [Box<dyn InteractibleTable>; 2] = [
+        let tables: [Box<dyn InteractibleTable>; 3] = [
             Box::new(generic::Table::new(color_params)),
             Box::new(generic::Table::new(character_params)),
+            Box::new(generic::Table::new(text_params)),
         ];
 
         Self {
