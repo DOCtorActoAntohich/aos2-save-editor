@@ -12,14 +12,14 @@ use crate::{
 };
 
 #[derive(Default)]
-pub struct Table<'a> {
+pub struct TableContent<'a> {
     items: Vec<Line<'a>>,
     selected: Option<usize>,
     hovered: usize,
     should_highlight_hovered: bool,
 }
 
-impl<'a> Table<'a> {
+impl<'a> TableContent<'a> {
     pub fn new(items: impl IntoIterator<Item = impl Into<Line<'a>>>) -> Self {
         Self {
             items: items.into_iter().map(Into::into).collect(),
@@ -71,7 +71,7 @@ impl<'a> Table<'a> {
     }
 }
 
-impl Widget for Table<'_> {
+impl Widget for TableContent<'_> {
     fn render(self, area: Rect, buf: &mut Buffer)
     where
         Self: Sized,

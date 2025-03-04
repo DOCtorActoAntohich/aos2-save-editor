@@ -15,10 +15,12 @@ use crate::{
     widget::{sequence, split},
 };
 
+use super::widget::TableContent;
+
 pub trait InteractibleTable: HandleEvent + Send {
     fn name(&self) -> &str;
 
-    fn content_widget(&self) -> super::widget::Table;
+    fn content_widget(&self) -> TableContent;
 }
 
 pub struct TablesCollection<const LENGTH: usize> {
