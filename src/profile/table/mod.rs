@@ -1,6 +1,4 @@
 pub mod generic;
-pub mod title_character;
-pub mod title_color;
 
 use ratatui::{buffer::Buffer, crossterm::event::KeyCode, layout::Rect, widgets::Widget};
 
