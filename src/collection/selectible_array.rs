@@ -38,6 +38,14 @@ impl<T, const LENGTH: usize> SelectibleArray<T, LENGTH> {
             .clamp(0, Self::MAX_INDEX);
     }
 
+    pub fn select_first(&mut self) {
+        self.current_index = 0;
+    }
+
+    pub fn select_last(&mut self) {
+        self.current_index = Self::MAX_INDEX;
+    }
+
     pub fn modify_current(&mut self, f: impl FnOnce(&mut T)) {
         f(self.mut_current());
     }

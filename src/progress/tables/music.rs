@@ -30,6 +30,8 @@ impl HandleEvent for Table {
         match event.key_code() {
             Some(KeyCode::Up) => self.music.select_previous(),
             Some(KeyCode::Down) => self.music.select_next(),
+            Some(KeyCode::Home) => self.music.select_first(),
+            Some(KeyCode::End) => self.music.select_last(),
             Some(KeyCode::Enter) => {
                 self.music.modify_current(|status| *status = !*status);
                 self.progress.send_modify(|progress| {

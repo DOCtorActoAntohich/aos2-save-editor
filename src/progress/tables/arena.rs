@@ -30,6 +30,8 @@ impl HandleEvent for Table {
         match event.key_code() {
             Some(KeyCode::Up) => self.arenas.select_previous(),
             Some(KeyCode::Down) => self.arenas.select_next(),
+            Some(KeyCode::Home) => self.arenas.select_first(),
+            Some(KeyCode::End) => self.arenas.select_last(),
             Some(KeyCode::Enter) => {
                 self.arenas.modify_current(|status| *status = !*status);
                 self.progress
