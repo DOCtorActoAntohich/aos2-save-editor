@@ -20,7 +20,7 @@
 #[brw(little, repr(u32))]
 #[repr(u32)]
 pub enum Character {
-    #[display("<None>")]
+    #[display("<No character>")]
     None = 0x00,
     Sora = 0x01,
     Alte = 0x02,
@@ -70,6 +70,6 @@ pub enum Character {
     OjIru = 0x1e,
     #[display("OJ Mira")]
     OjMira = 0x1f,
-    #[display("<Disable>")]
+    #[display("<Disable Title>")]
     DisableTitle = 0xff,
 }

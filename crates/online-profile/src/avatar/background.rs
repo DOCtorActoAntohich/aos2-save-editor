@@ -49,6 +49,8 @@ pub enum Background {
     Tropic = 0x22,
     QuarantinedRapport = 0x23,
     BulletOrange = 0x24,
-    #[display("<silhouette>")]
+    /// Looks similar to Character Silhouette but it's just an image.
+    /// It's slightly different.
+    #[display("<Default Silhouette>")]
     LightGrayBackgroundWithSilhouette = 0xff,
 }

@@ -92,7 +92,6 @@ pub enum Character {
     SuguriAnniversary = 0x2d,
     #[display("AoS2 10th Anniversary Sora")]
     SoraAnniversary = 0x2e,
-    /// Similar to `Silhouette`, but it's a different looking placeholder.
-    #[display("<no avatar>")]
-    Empty = 0xff,
+    #[display("<Invisible avatar>")]
+    Invisible = 0xff,
 }
