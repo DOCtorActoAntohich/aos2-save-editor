@@ -10,7 +10,7 @@ use crate::{
     tui::{Event, HandleEvent},
 };
 
-use super::InteractibleTable;
+use super::Table;
 
 pub trait OnSelectedFn<T>: Fn(&mut PlayerOnlineProfile, &T) + Send {}
 pub trait Item: Send + Display + PartialEq + Clone {}
@@ -19,7 +19,7 @@ impl<T, F> OnSelectedFn<T> for F where F: Fn(&mut PlayerOnlineProfile, &T) + Sen
 
 impl<T> Item for T where T: Send + Display + PartialEq + Clone {}
 
-pub struct TableParams<T, F, const LENGTH: usize> {
+pub struct Params<T, F, const LENGTH: usize> {
     pub profile: watch::Sender<PlayerOnlineProfile>,
     pub items: [T; LENGTH],
     pub current: T,
@@ -33,25 +33,25 @@ pub struct TableParams<T, F, const LENGTH: usize> {
 /// Now this is another useless abstraction,
 /// but it's contained and used in 5 (>3) different places,
 /// so this shit is justified. Hooray I guess.
-pub struct Table<T, const LENGTH: usize> {
+pub struct Generic<T, const LENGTH: usize> {
     profile: watch::Sender<PlayerOnlineProfile>,
     items: RadioButtonArray<T, LENGTH>,
     on_selected: Box<dyn OnSelectedFn<T>>,
     name: String,
 }
 
-impl<T, const N: usize> Table<T, N>
+impl<T, const N: usize> Generic<T, N>
 where
     T: Item,
 {
     pub fn new<F>(
-        TableParams {
+        Params {
             profile,
             items,
             current,
             on_selected,
             name,
-        }: TableParams<T, F, N>,
+        }: Params<T, F, N>,
     ) -> Self
     where
         F: OnSelectedFn<T> + 'static,
@@ -79,7 +79,7 @@ where
     }
 }
 
-impl<T, const N: usize> HandleEvent for Table<T, N>
+impl<T, const N: usize> HandleEvent for Generic<T, N>
 where
     T: Item,
 {
@@ -105,7 +105,7 @@ where
     }
 }
 
-impl<T, const N: usize> InteractibleTable for Table<T, N>
+impl<T, const N: usize> Table for Generic<T, N>
 where
     T: Item,
 {

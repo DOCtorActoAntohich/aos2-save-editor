@@ -15,10 +15,10 @@ use crate::{
     widget::split,
 };
 
-use super::table::{generic, InteractibleTable, TablesCollection};
+use super::table::{self, Table};
 
 pub struct Tab {
-    tables: TablesCollection<3>,
+    tables: table::Collection<3>,
 }
 
 struct InfoText;
@@ -30,7 +30,7 @@ impl InfoText {
 
 impl Tab {
     pub fn new(profile: watch::Sender<PlayerOnlineProfile>) -> Self {
-        let color_params = generic::TableParams {
+        let color_params = table::Params {
             profile: profile.clone(),
             items: title::Color::members(),
             current: profile.borrow().title_color,
@@ -39,7 +39,7 @@ impl Tab {
             },
             name: "Color".to_owned(),
         };
-        let character_params = generic::TableParams {
+        let character_params = table::Params {
             profile: profile.clone(),
             items: title::Character::members(),
             current: profile.borrow().title_character_in_background,
@@ -48,7 +48,7 @@ impl Tab {
             },
             name: "Background Character".to_owned(),
         };
-        let text_params = generic::TableParams {
+        let text_params = table::Params {
             profile: profile.clone(),
             items: title::Text::members(),
             current: profile.borrow().title_text_id,
@@ -58,14 +58,14 @@ impl Tab {
             name: "Title Text".to_owned(),
         };
 
-        let tables: [Box<dyn InteractibleTable>; 3] = [
-            Box::new(generic::Table::new(color_params)),
-            Box::new(generic::Table::new(character_params)),
-            Box::new(generic::Table::new(text_params)),
+        let tables: [Box<dyn Table>; 3] = [
+            Box::new(table::Generic::new(color_params)),
+            Box::new(table::Generic::new(character_params)),
+            Box::new(table::Generic::new(text_params)),
         ];
 
         Self {
-            tables: TablesCollection::new(tables),
+            tables: table::Collection::new(tables),
         }
     }
 }
