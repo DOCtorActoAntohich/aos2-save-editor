@@ -4,7 +4,7 @@ use tokio::sync::watch;
 
 use crate::{
     collection::RadioButtonArray,
-    profile::widget::TableContent,
+    profile::widget::{RadioButtonsContent, RadioButtonsTable},
     tui::{Event, HandleEvent},
 };
 
@@ -65,18 +65,18 @@ impl HandleEvent for Table {
 }
 
 impl InteractibleTable for Table {
-    fn name(&self) -> &'static str {
-        "Background Character"
-    }
-
-    fn content_widget(&self) -> TableContent {
-        TableContent::new(
-            self.characters
-                .to_array()
-                .into_iter()
-                .map(|character| character.to_string()),
-        )
-        .with_hovered(self.characters.hovered_index())
-        .with_selected(self.characters.selected_index())
+    fn as_widget(&self, is_active: bool) -> RadioButtonsTable<'_> {
+        RadioButtonsTable {
+            name: "Background Character".into(),
+            content: RadioButtonsContent::new(
+                self.characters
+                    .to_array()
+                    .into_iter()
+                    .map(|character| character.to_string()),
+            )
+            .with_hovered(self.characters.hovered_index())
+            .with_selected(self.characters.selected_index()),
+            is_active,
+        }
     }
 }
