@@ -1,4 +1,4 @@
-use online_profile::PlayerOnlineProfile;
+use online_profile::{title, PlayerOnlineProfile};
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
@@ -15,7 +15,7 @@ use crate::{
     widget::split,
 };
 
-use super::table::{title_character, title_color, InteractibleTable, TablesCollection};
+use super::table::{generic, InteractibleTable, TablesCollection};
 
 pub struct Tab {
     tables: TablesCollection<2>,
@@ -30,10 +30,30 @@ impl InfoText {
 
 impl Tab {
     pub fn new(profile: watch::Sender<PlayerOnlineProfile>) -> Self {
+        let color_params = generic::TableParams {
+            profile: profile.clone(),
+            items: title::Color::members(),
+            current: profile.borrow().title_color,
+            on_selected: |profile: &mut PlayerOnlineProfile, color: &title::Color| {
+                profile.title_color = *color;
+            },
+            name: "Color".to_owned(),
+        };
+        let character_params = generic::TableParams {
+            profile: profile.clone(),
+            items: title::Character::members(),
+            current: profile.borrow().title_character_in_background,
+            on_selected: |profile: &mut PlayerOnlineProfile, character: &title::Character| {
+                profile.title_character_in_background = *character;
+            },
+            name: "Background Character".to_owned(),
+        };
+
         let tables: [Box<dyn InteractibleTable>; 2] = [
-            Box::new(title_color::Table::new(profile.clone())),
-            Box::new(title_character::Table::new(profile)),
+            Box::new(generic::Table::new(color_params)),
+            Box::new(generic::Table::new(character_params)),
         ];
+
         Self {
             tables: TablesCollection::new(tables),
         }

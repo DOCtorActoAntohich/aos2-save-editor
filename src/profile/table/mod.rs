@@ -1,3 +1,4 @@
+pub mod generic;
 pub mod title_character;
 pub mod title_color;
 
