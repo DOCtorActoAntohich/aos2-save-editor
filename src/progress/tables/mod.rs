@@ -7,64 +7,38 @@ use ratatui::{
     buffer::Buffer,
     crossterm::event::KeyCode,
     layout::{Constraint, Rect},
-    text::Line,
     widgets::Widget,
 };
 use tokio::sync::watch;
 
 use crate::{
     collection::SelectibleArray,
-    style,
     tui::{Event, HandleEvent, VisualComponent},
-    widget::{sequence, split},
+    widget::sequence,
 };
 
-trait InteractibleTable: HandleEvent + Send {
-    fn name(&self) -> &str;
+use super::widget::TogglesTable;
 
-    fn content_widget(&self) -> super::widget::Table;
+trait InteractibleTable: HandleEvent + Send {
+    fn as_widget(&self, is_active: bool) -> TogglesTable<'_>;
 }
 
 pub struct TablesCollection {
-    tables: SelectibleArray<Table, 3>,
-}
-
-struct Table(Box<dyn InteractibleTable>);
-
-struct TableWidget<'a> {
-    table: &'a dyn InteractibleTable,
-    is_selected: bool,
+    tables: SelectibleArray<Box<dyn InteractibleTable>, 3>,
 }
 
 impl TablesCollection {
     pub const CONSTRAINT: Constraint = Constraint::Fill(1);
 
     pub fn new(progress: watch::Sender<PlayerProgress>) -> Self {
-        let tables: [Table; 3] = [
-            Table(Box::new(self::character::Table::new(progress.clone()))),
-            Table(Box::new(self::arena::Table::new(progress.clone()))),
-            Table(Box::new(self::music::Table::new(progress))),
+        let tables: [Box<dyn InteractibleTable>; 3] = [
+            Box::new(self::character::Table::new(progress.clone())),
+            Box::new(self::arena::Table::new(progress.clone())),
+            Box::new(self::music::Table::new(progress)),
         ];
         Self {
             tables: SelectibleArray::new(tables),
         }
-    }
-}
-
-impl Table {
-    pub fn as_widget(&self, is_selected: bool) -> TableWidget<'_> {
-        let Self(table) = self;
-        TableWidget {
-            table: table.as_ref(),
-            is_selected,
-        }
-    }
-}
-
-impl HandleEvent for Table {
-    fn handle_event(&mut self, event: &Event) {
-        let Self(table) = self;
-        table.handle_event(event);
     }
 }
 
@@ -89,36 +63,5 @@ impl VisualComponent for TablesCollection {
             }),
         }
         .render(area, buf);
-    }
-}
-
-impl Widget for TableWidget<'_> {
-    fn render(self, area: Rect, buf: &mut Buffer)
-    where
-        Self: Sized,
-    {
-        let Self { table, is_selected } = self;
-
-        let top = split::Area {
-            constraint: Constraint::Length(1),
-            render: |area: Rect, buf: &mut Buffer| {
-                Line::from(table.name())
-                    .centered()
-                    .style(style::Selection::from_is_selected(is_selected))
-                    .render(area, buf);
-            },
-        };
-
-        let bottom = split::Area {
-            constraint: Constraint::Fill(1),
-            render: |area: Rect, buf: &mut Buffer| {
-                table
-                    .content_widget()
-                    .highlight_current(is_selected)
-                    .render(area, buf);
-            },
-        };
-
-        split::Horizontal { top, bottom }.render(area, buf);
     }
 }

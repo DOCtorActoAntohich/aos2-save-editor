@@ -4,18 +4,26 @@ use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
     style::{Color, Style, Stylize},
+    text::Line,
     widgets::{self, Widget},
 };
 
 use crate::{
     collection::ListSlice,
-    style::{IndexedColor, Selection, WithColor},
+    style::{self, IndexedColor, Selection, WithColor},
+    widget::split,
 };
 
 use super::status::Status;
 
+pub struct TogglesTable<'a> {
+    pub name: Cow<'a, str>,
+    pub content: TogglesContent<'a>,
+    pub is_active: bool,
+}
+
 #[derive(Default)]
-pub struct Table<'a> {
+pub struct TogglesContent<'a> {
     items: Vec<Row<'a>>,
     current: usize,
     should_highlight_current: bool,
@@ -46,7 +54,7 @@ impl From<RowStyle> for Style {
     }
 }
 
-impl<'a> Table<'a> {
+impl<'a> TogglesContent<'a> {
     pub fn new(
         items: impl IntoIterator<Item = (impl Into<Cow<'a, str>>, impl Into<Status>)>,
     ) -> Self {
@@ -91,7 +99,39 @@ impl<'a> Table<'a> {
     }
 }
 
-impl Widget for Table<'_> {
+impl Widget for TogglesTable<'_> {
+    fn render(self, area: Rect, buf: &mut Buffer)
+    where
+        Self: Sized,
+    {
+        let Self {
+            name,
+            content,
+            is_active,
+        } = self;
+
+        let top = split::Area {
+            constraint: Constraint::Length(1),
+            render: |area: Rect, buf: &mut Buffer| {
+                Line::from(name)
+                    .centered()
+                    .style(style::Selection::from_is_selected(is_active))
+                    .render(area, buf);
+            },
+        };
+
+        let bottom = split::Area {
+            constraint: Constraint::Fill(1),
+            render: |area: Rect, buf: &mut Buffer| {
+                content.highlight_current(is_active).render(area, buf);
+            },
+        };
+
+        split::Horizontal { top, bottom }.render(area, buf);
+    }
+}
+
+impl Widget for TogglesContent<'_> {
     fn render(self, area: Rect, buf: &mut Buffer)
     where
         Self: Sized,

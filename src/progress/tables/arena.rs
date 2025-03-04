@@ -4,7 +4,7 @@ use tokio::sync::watch;
 
 use crate::{
     collection::SelectibleArray,
-    progress::widget,
+    progress::widget::{TogglesContent, TogglesTable},
     tui::{Event, HandleEvent},
 };
 
@@ -41,12 +41,12 @@ impl HandleEvent for Table {
 }
 
 impl InteractibleTable for Table {
-    fn name(&self) -> &'static str {
-        "Arenas"
-    }
-
-    fn content_widget(&self) -> widget::Table {
-        widget::Table::new(self.progress.borrow().arenas.iter())
-            .with_current(self.arenas.current_index())
+    fn as_widget(&self, is_active: bool) -> TogglesTable<'_> {
+        TogglesTable {
+            name: "Arenas".into(),
+            content: TogglesContent::new(self.progress.borrow().arenas.iter())
+                .with_current(self.arenas.current_index()),
+            is_active,
+        }
     }
 }
