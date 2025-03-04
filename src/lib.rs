@@ -56,7 +56,7 @@ impl EditorApp {
             aos2_env,
             progress_rx,
             profile_rx,
-            previous_event: Event::empty(),
+            previous_event: Event::empty(Instant::now()),
         }
     }
 
@@ -77,7 +77,7 @@ impl EditorApp {
         let event = self
             .previous_event
             .clone()
-            .follow_with(crossterm::event::read()?, Instant::now());
+            .follow_with(&crossterm::event::read()?, Instant::now());
 
         self.handle_event(&event);
 

@@ -49,7 +49,7 @@ impl HandleEvent for Table {
             Some(KeyCode::Enter) => {
                 self.characters.select_current();
                 self.profile.send_modify(|profile| {
-                    profile.title_character_in_background = *self.characters.current()
+                    profile.title_character_in_background = *self.characters.current();
                 });
             }
             Some(KeyCode::Char(_)) => {

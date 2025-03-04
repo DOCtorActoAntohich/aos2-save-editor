@@ -4,7 +4,7 @@ use std::ops::RangeInclusive;
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, derive_more::Display)]
 #[brw(little)]
 #[br(try_map = |encoded: EncodedText| encoded.try_into())]
-#[bw(map = |s| EncodedText::from(s))]
+#[bw(map = EncodedText::from)]
 pub struct AsciiText<const MIN_LENGTH: u8, const MAX_LENGTH: u8>(String);
 
 #[derive(Debug, thiserror::Error)]

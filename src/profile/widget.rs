@@ -72,8 +72,8 @@ impl<'a> RadioButtonsContent<'a> {
                 }
             }
             None => Self {
-                should_highlight_hovered,
                 selected,
+                should_highlight_hovered,
                 ..Default::default()
             },
         }

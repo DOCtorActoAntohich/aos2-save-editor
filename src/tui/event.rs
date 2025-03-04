@@ -17,16 +17,15 @@ struct AsciiInputBuffer(String);
 impl Event {
     pub const MAX_TEXT_AGE: Duration = Duration::from_millis(500);
 
-    pub fn empty() -> Self {
-        let too_long_ago = Instant::now() - 2 * Self::MAX_TEXT_AGE;
+    pub fn empty(received_at: Instant) -> Self {
         Self {
             key_code: None,
             ascii_input: AsciiInputBuffer::empty(),
-            received_at: too_long_ago,
+            received_at,
         }
     }
 
-    pub fn follow_with(self, event: ratatui::crossterm::event::Event, now: Instant) -> Self {
+    pub fn follow_with(self, event: &RatatuiEvent, now: Instant) -> Self {
         let Self {
             key_code: _,
             mut ascii_input,
@@ -38,7 +37,7 @@ impl Event {
         }
 
         let key_code = match event {
-            RatatuiEvent::Key(KeyEvent {
+            &RatatuiEvent::Key(KeyEvent {
                 code,
                 kind: KeyEventKind::Press,
                 ..
@@ -126,10 +125,10 @@ mod tests {
             .into_iter()
             .map(|i| start_time + i as u32 * step);
 
-        let mut current = Event::empty();
+        let mut current = Event::empty(start_time);
         for (instant, character) in instants.zip(input.chars()) {
             let ratatui_event = event_from_key(KeyCode::Char(character));
-            current = current.follow_with(ratatui_event, instant);
+            current = current.follow_with(&ratatui_event, instant);
         }
 
         assert_eq!(expected, current.accumulated_input());
@@ -154,7 +153,7 @@ mod tests {
             received_at,
         };
 
-        let event = event.follow_with(event_from_key(code), now);
+        let event = event.follow_with(&event_from_key(code), now);
 
         assert_eq!(expected, event.accumulated_input())
     }
