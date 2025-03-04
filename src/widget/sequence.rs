@@ -1,10 +1,9 @@
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Layout, Rect},
-    widgets::Widget,
+    style::{Color, Style},
+    widgets::{Block, Borders, Widget},
 };
-
-use super::separator;
 
 pub struct VerticallySeparated<I, W>
 where
@@ -37,7 +36,7 @@ where
 
         let constraints = to_draw.iter().map(|to_draw| match to_draw {
             ToDraw::Widget(_) => Constraint::Fill(1),
-            ToDraw::Separator => separator::Vertical::CONSTRAINT,
+            ToDraw::Separator => Constraint::Length(1),
         });
 
         Layout::horizontal(constraints)
@@ -48,7 +47,10 @@ where
                 ToDraw::Widget(widget) => {
                     widget.render(area, buf);
                 }
-                ToDraw::Separator => separator::Vertical.render(area, buf),
+                ToDraw::Separator => Block::new()
+                    .borders(Borders::LEFT)
+                    .style(Style::new().bg(Color::Black).fg(Color::White))
+                    .render(area, buf),
             });
     }
 }
