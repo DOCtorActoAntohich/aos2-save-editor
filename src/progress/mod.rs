@@ -84,7 +84,8 @@ impl Widget for InfoText {
                         .with_bg(Color::Black)
                         .with_fg(IndexedColor::BrightRed),
                 ),
-            Text::from("Otherwise the game will just crash randomly.").centered(),
+            Text::from("Otherwise the game will just crash at character select regularly.")
+                .centered(),
             Text::from("").centered(),
             Text::from("Yes, you CAN disable Iru and Sham :trol face:").centered(),
             Text::from("").centered(),
