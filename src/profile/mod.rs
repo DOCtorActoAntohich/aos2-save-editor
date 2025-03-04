@@ -1,3 +1,4 @@
+pub mod avatar;
 pub mod title;
 
 mod table;

@@ -23,7 +23,7 @@ pub trait InteratibleTabComponent: InteractibleComponent {
 }
 
 pub struct ContentWidget {
-    tabs: SelectibleArray<Box<dyn InteratibleTabComponent>, 3>,
+    tabs: SelectibleArray<Box<dyn InteratibleTabComponent>, 4>,
 }
 
 impl ContentWidget {
@@ -33,9 +33,10 @@ impl ContentWidget {
         progress: watch::Sender<PlayerProgress>,
         profile: watch::Sender<PlayerOnlineProfile>,
     ) -> Self {
-        let tabs: [Box<dyn InteratibleTabComponent>; 3] = [
+        let tabs: [Box<dyn InteratibleTabComponent>; 4] = [
             Box::new(statistics::Tab::new(progress.subscribe())),
             Box::new(progress::Tab::new(progress)),
+            Box::new(profile::avatar::Tab::new(profile.clone())),
             Box::new(profile::title::Tab::new(profile)),
         ];
         Self {
