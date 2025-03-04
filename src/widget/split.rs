@@ -5,6 +5,8 @@ use ratatui::{
     widgets::{Block, Borders, Widget},
 };
 
+const LINE_STYLE: Style = Style::new().bg(Color::Black).fg(Color::White);
+
 pub trait RenderFn: FnOnce(Rect, &mut Buffer) {}
 
 impl<F> RenderFn for F where F: FnOnce(Rect, &mut Buffer) {}
@@ -22,15 +24,6 @@ pub struct Horizontal<F1: RenderFn, F2: RenderFn> {
 pub struct Vertical<F1: RenderFn, F2: RenderFn> {
     pub left: Area<F1>,
     pub right: Area<F2>,
-}
-
-#[derive(Debug, Clone, Copy, derive_more::Into)]
-struct LineStyle(Style);
-
-impl Default for LineStyle {
-    fn default() -> Self {
-        Self(Style::new().bg(Color::Black).fg(Color::White))
-    }
 }
 
 impl<F1, F2> Widget for Horizontal<F1, F2>
@@ -51,7 +44,7 @@ where
         (top.render)(top_area, buf);
         Block::new()
             .borders(Borders::TOP)
-            .style(LineStyle::default())
+            .style(LINE_STYLE)
             .render(separator_area, buf);
         (bottom.render)(bottom_area, buf);
     }
@@ -76,7 +69,7 @@ where
         (right.render)(right_area, buf);
         Block::new()
             .borders(Borders::LEFT)
-            .style(LineStyle::default())
+            .style(LINE_STYLE)
             .render(separator_area, buf);
     }
 }
