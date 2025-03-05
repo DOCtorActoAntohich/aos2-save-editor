@@ -19,19 +19,19 @@ use crate::{
 
 use super::widget::TogglesTable;
 
-trait InteractibleTable: HandleEvent + Send {
+trait Table: HandleEvent + Send {
     fn as_widget(&self, is_active: bool) -> TogglesTable<'_>;
 }
 
 pub struct TablesCollection {
-    tables: SelectibleArray<Box<dyn InteractibleTable>, 3>,
+    tables: SelectibleArray<Box<dyn Table>, 3>,
 }
 
 impl TablesCollection {
     pub const CONSTRAINT: Constraint = Constraint::Fill(1);
 
     pub fn new(progress: watch::Sender<PlayerProgress>) -> Self {
-        let tables: [Box<dyn InteractibleTable>; 3] = [
+        let tables: [Box<dyn Table>; 3] = [
             Box::new(self::character::Table::new(progress.clone())),
             Box::new(self::arena::Table::new(progress.clone())),
             Box::new(self::music::Table::new(progress)),

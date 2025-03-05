@@ -8,8 +8,6 @@ use crate::{
     tui::{Event, HandleEvent},
 };
 
-use super::InteractibleTable;
-
 pub struct Table {
     progress: watch::Sender<PlayerProgress>,
     arenas: SelectibleArray<Status, { Arenas::AMOUNT }>,
@@ -42,7 +40,7 @@ impl HandleEvent for Table {
     }
 }
 
-impl InteractibleTable for Table {
+impl super::Table for Table {
     fn as_widget(&self, is_active: bool) -> TogglesTable<'_> {
         TogglesTable {
             name: "Arenas".into(),
