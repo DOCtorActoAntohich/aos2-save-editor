@@ -24,7 +24,7 @@ pub struct Tab {
 struct InfoText;
 
 impl InfoText {
-    const N_LINES: u16 = 3;
+    const N_LINES: u16 = 6;
     const CONSTRAINT: Constraint = Constraint::Length(Self::N_LINES);
 }
 
@@ -114,6 +114,10 @@ impl VisualComponent for InfoText {
                         .with_fg(IndexedColor::DarkYellow),
                 )
                 .centered(),
+            Line::from("").centered(),
+            Line::from("\"Background character\" changes character eyes in the title background")
+                .centered(),
+            Line::from("For some reason, this setting can turn Titles On/Off...").centered(),
         ];
         List::new(lines).render(area, buf);
     }
