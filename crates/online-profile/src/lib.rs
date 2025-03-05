@@ -3,8 +3,8 @@
 
 pub mod avatar;
 pub mod title;
+pub mod unlocks;
 
-mod sized_section;
 mod version;
 
 // Re-export;
@@ -16,12 +16,7 @@ pub use crate::text::nickname::Nickname;
 
 use aos2_env::AoS2Env;
 
-use crate::sized_section::SizedBinarySection;
 use crate::version::Version;
-
-pub type UnlockableAvatarsSection = SizedBinarySection<33, 33>;
-pub type UnlockableBackbroundsSection = SizedBinarySection<19, 19>;
-pub type TitlesSection = SizedBinarySection<285, 285>;
 
 #[binrw::binrw]
 #[derive(Debug, Clone, Default)]
@@ -34,11 +29,11 @@ pub struct PlayerOnlineProfile {
     pub lobby_password: LobbyPassword,
     pub avatar_character: avatar::Character,
     pub avatar_background: avatar::Background,
-    pub unlockable_avatars: UnlockableAvatarsSection,
-    pub unlockable_backgrounds: UnlockableBackbroundsSection,
+    pub unlockable_avatars: unlocks::AvatarsSection,
+    pub unlockable_backgrounds: unlocks::BackgroundsSection,
     pub title_character_in_background: title::Character,
     pub title_text_id: title::Text,
-    pub titles: TitlesSection,
+    pub titles: unlocks::TitlesSection,
     pub ingame_title: Visibility,
     pub hitstun_meter: Visibility,
     pub spectators: Visibility,
