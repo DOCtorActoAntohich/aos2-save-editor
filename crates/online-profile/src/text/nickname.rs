@@ -23,3 +23,9 @@ impl TryFrom<&str> for Nickname {
         Text::new(value).map(Self)
     }
 }
+
+impl Default for Nickname {
+    fn default() -> Self {
+        Self(Text::new("Suguri").expect("Invariant: Valie nickname"))
+    }
+}

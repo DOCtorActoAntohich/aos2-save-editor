@@ -24,7 +24,7 @@ pub type UnlockableBackbroundsSection = SizedBinarySection<19, 19>;
 pub type TitlesSection = SizedBinarySection<285, 285>;
 
 #[binrw::binrw]
-#[derive(Debug)]
+#[derive(Debug, Clone, Default)]
 #[brw(little)]
 pub struct PlayerOnlineProfile {
     pub version: Version,

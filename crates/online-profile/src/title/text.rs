@@ -12,6 +12,7 @@
     Copy,
     PartialEq,
     Eq,
+    Default,
     derive_more::TryFrom,
     derive_more::Display,
     enum_array::EnumMembersArray,
@@ -19,6 +20,7 @@
 #[brw(little, repr(u32))]
 #[repr(u32)]
 pub enum Text {
+    #[default]
     None = 0x00,
     HelloWorld = 1,
     Aos2Player,
@@ -293,7 +295,7 @@ pub enum Text {
     SumikaSpecialist,
     SumikaPlayer,
     SumikaWaifu,
-    #[display("<no text>")]
+    #[display("<Blank>")]
     Blank = 273,
 }
 

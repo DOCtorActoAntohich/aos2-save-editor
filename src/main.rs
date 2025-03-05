@@ -1,4 +1,3 @@
-use anyhow::Context;
 use aos2_env::AoS2Env;
 use aos2_save_editor::EditorApp;
 use online_profile::PlayerOnlineProfile;
@@ -7,7 +6,7 @@ use player_progress::PlayerProgress;
 fn main() -> anyhow::Result<()> {
     let aos2_env = AoS2Env::from_env()?;
     let progress = PlayerProgress::load(&aos2_env)?.unwrap_or_default();
-    let profile = PlayerOnlineProfile::load(&aos2_env)?.context("no file")?;
+    let profile = PlayerOnlineProfile::load(&aos2_env)?.unwrap_or_default();
     let app = EditorApp::new(aos2_env, progress, profile);
     run_tui(app)
 }

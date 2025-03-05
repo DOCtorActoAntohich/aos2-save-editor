@@ -13,6 +13,7 @@
     Copy,
     PartialEq,
     Eq,
+    Default,
     derive_more::TryFrom,
     derive_more::Display,
     enum_array::EnumMembersArray,
@@ -20,6 +21,7 @@
 #[brw(little, repr(u32))]
 #[repr(u32)]
 pub enum Character {
+    #[default]
     #[display("<No character>")]
     None = 0x00,
     Sora = 0x01,

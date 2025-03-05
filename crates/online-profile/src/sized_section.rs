@@ -54,6 +54,14 @@ impl<const MIN: usize, const MAX: usize> From<SectionSize<MIN, MAX>> for usize {
     }
 }
 
+impl<const MIN: usize, const MAX: usize> Default for SizedBinarySection<MIN, MAX> {
+    fn default() -> Self {
+        Self {
+            bytes: vec![0; MIN],
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use std::io::Cursor;

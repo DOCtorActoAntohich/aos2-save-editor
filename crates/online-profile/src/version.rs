@@ -1,6 +1,8 @@
 use binrw::{BinRead, BinWrite};
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash, BinRead, BinWrite, derive_more::Display)]
+#[derive(
+    Debug, Clone, Copy, Default, PartialEq, Eq, Hash, BinRead, BinWrite, derive_more::Display,
+)]
 #[brw(magic = b"\xA1\x05\x00\x00")]
 #[display("0xA1_05_00_00")]
 pub struct Version;

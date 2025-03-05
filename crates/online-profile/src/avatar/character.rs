@@ -5,6 +5,7 @@
     Copy,
     PartialEq,
     Eq,
+    Default,
     derive_more::TryFrom,
     derive_more::Display,
     enum_array::EnumMembersArray,
@@ -22,6 +23,7 @@ pub enum Character {
     Nath = 0x06,
     #[display("Star Breaker")]
     StarBreaker = 0x07,
+    #[default]
     Suguri = 0x08,
     Saki = 0x09,
     Iru = 0x0a,

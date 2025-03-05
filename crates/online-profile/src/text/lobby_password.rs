@@ -23,3 +23,9 @@ impl TryFrom<&str> for LobbyPassword {
         Text::new(value).map(Self)
     }
 }
+
+impl Default for LobbyPassword {
+    fn default() -> Self {
+        Self(Text::new("").expect("Invariant: Valie lobby password"))
+    }
+}

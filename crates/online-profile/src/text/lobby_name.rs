@@ -23,3 +23,9 @@ impl TryFrom<&str> for LobbyName {
         Text::new(value).map(Self)
     }
 }
+
+impl Default for LobbyName {
+    fn default() -> Self {
+        Self(Text::new("Lobby").expect("Invariant: Valid lobby name"))
+    }
+}
