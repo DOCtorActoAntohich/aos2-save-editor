@@ -14,7 +14,6 @@ pub use crate::text::lobby_name::LobbyName;
 pub use crate::text::lobby_password::LobbyPassword;
 pub use crate::text::nickname::Nickname;
 
-use anyhow::Context;
 use aos2_env::AoS2Env;
 
 use crate::sized_section::SizedBinarySection;
@@ -57,40 +56,66 @@ pub enum Visibility {
     Hide,
 }
 
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    #[error("Failed to open file for reading")]
+    FileRead,
+    #[error("Failed to open file for writing")]
+    FileWrite,
+    #[error("No permission to write to a file")]
+    WritePermission,
+    #[error("Failed to write binary stream")]
+    BinWrite(#[source] binrw::Error),
+    #[error("Failed to read binary stream")]
+    BinRead(#[source] binrw::Error),
+}
+
 impl PlayerOnlineProfile {
     const FILE_NAME: &'static str = "player.rkg";
 
-    pub fn load(env: &AoS2Env) -> anyhow::Result<Self> {
+    pub fn load(env: &AoS2Env) -> Result<Option<Self>, Error> {
         Self::from_file(env.saves_folder.join(Self::FILE_NAME))
     }
 
-    pub fn save(&self, env: &AoS2Env) -> anyhow::Result<()> {
+    pub fn save(&self, env: &AoS2Env) -> Result<(), Error> {
         self.save_to_file(env.saves_folder.join(Self::FILE_NAME))
     }
 
-    pub fn from_file<P>(path: P) -> anyhow::Result<Self>
+    pub fn from_file<P>(path: P) -> Result<Option<Self>, Error>
     where
         P: AsRef<std::path::Path>,
         for<'a> <Self as binrw::BinRead>::Args<'a>: Default,
     {
-        let mut reader = std::fs::File::open(path).context("Failed to open file")?;
+        let reader = match std::fs::File::open(path) {
+            Ok(reader) => Ok(Some(reader)),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+            Err(_) => return Err(Error::FileRead),
+        }?;
 
-        binrw::BinRead::read(&mut reader).context("Failed to parse file")
+        reader
+            .map(|mut reader| <Self as binrw::BinRead>::read(&mut reader).map_err(Error::BinRead))
+            .transpose()
     }
 
-    pub fn save_to_file<P>(&self, path: P) -> anyhow::Result<()>
+    pub fn save_to_file<P>(&self, path: P) -> Result<(), Error>
     where
         P: AsRef<std::path::Path>,
         for<'a> <Self as binrw::BinWrite>::Args<'a>: Default,
     {
-        let mut writer = std::fs::OpenOptions::new()
+        let mut writer = match std::fs::File::options()
             .create(true)
-            .truncate(true)
             .write(true)
+            .truncate(true)
             .open(path)
-            .context("Failed to create or open the file for writing")?;
+        {
+            Ok(writer) => Ok(writer),
+            Err(error) if error.kind() == std::io::ErrorKind::PermissionDenied => {
+                Err(Error::WritePermission)
+            }
+            Err(_) => Err(Error::FileWrite),
+        }?;
 
-        binrw::BinWrite::write(self, &mut writer).context("Failed to overwrite file contents")
+        <Self as binrw::BinWrite>::write(self, &mut writer).map_err(Error::BinWrite)
     }
 }
 

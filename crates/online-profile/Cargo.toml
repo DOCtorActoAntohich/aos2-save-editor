@@ -7,7 +7,6 @@ authors.workspace = true
 [dependencies]
 aos2-env.path = "../aos2-env"
 enum-array.path = "../enum-array"
-anyhow.workspace = true
 thiserror.workspace = true
 binrw.workspace = true
 derive_more.workspace = true
