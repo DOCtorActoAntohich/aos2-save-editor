@@ -3,12 +3,17 @@
 
 use std::path::PathBuf;
 
-use anyhow::Context;
 use serde::Deserialize;
 
 #[derive(Debug, Clone)]
 pub struct AoS2Env {
     pub saves_folder: PathBuf,
+}
+
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    #[error("Failed to open AoS2 saves directory")]
+    DirectoryPath,
 }
 
 #[derive(Debug, Deserialize)]
@@ -29,9 +34,8 @@ impl From<EnvVars> for AoS2Env {
 }
 
 impl AoS2Env {
-    pub fn from_env() -> anyhow::Result<Self> {
-        let env_vars: EnvVars =
-            envy::from_env().context("Failed to get AoS2 savefile directory")?;
+    pub fn from_env() -> Result<Self, Error> {
+        let env_vars: EnvVars = envy::from_env().map_err(|_| Error::DirectoryPath)?;
         Ok(env_vars.into())
     }
 }

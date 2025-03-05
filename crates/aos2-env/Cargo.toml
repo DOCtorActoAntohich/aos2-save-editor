@@ -5,6 +5,6 @@ edition.workspace = true
 authors.workspace = true
 
 [dependencies]
-anyhow.workspace = true
+thiserror.workspace = true
 envy.workspace = true
 serde = { workspace = true, features = ["derive"] }
