@@ -11,7 +11,7 @@ fn main() -> anyhow::Result<()> {
         aos2_env.saves_folder.display()
     );
 
-    let mut progress = PlayerProgress::load(&aos2_env)?;
+    let mut progress = PlayerProgress::load(&aos2_env)?.unwrap_or_default();
 
     progress.playable_characters = PlayableCharacters::ALL;
     progress.arenas = Arenas::ALL;

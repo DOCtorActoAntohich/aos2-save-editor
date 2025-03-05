@@ -7,11 +7,11 @@ authors.workspace = true
 [dependencies]
 aos2-env.path = "../aos2-env"
 enum-array.path = "../enum-array"
-anyhow.workspace = true
 thiserror.workspace = true
 derive_more.workspace = true
 binrw.workspace = true
 
 [dev-dependencies]
+anyhow.workspace = true
 rstest.workspace = true
 rstest_reuse.workspace = true

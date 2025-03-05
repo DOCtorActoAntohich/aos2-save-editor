@@ -19,7 +19,6 @@ pub use self::runs::{PerfectArcadeMode, PerfectStoryMode, Run};
 
 use std::{io::Cursor, path::Path};
 
-use anyhow::Context;
 use aos2_env::AoS2Env;
 use binrw::{BinRead, BinWrite};
 
@@ -142,6 +141,26 @@ pub struct PlayerProgress {
     _0xab: UnknownU8,
 }
 
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    #[error("Failed to open file for reading")]
+    FileRead,
+    #[error("Failed to open file for writing")]
+    FileWrite,
+    #[error("No permission to write to a file")]
+    WritePermission,
+    #[error("Failed to write a raw encoded stream")]
+    EncodedWrite(#[source] binrw::Error),
+    #[error("Failed to read a raw encoded stream")]
+    EncodedRead(#[source] binrw::Error),
+    #[error("Failed to write intermediate decoded stream")]
+    DecodedWrite(#[source] binrw::Error),
+    #[error("Failed to read intermediate decoded stream")]
+    DecodedRead(#[source] binrw::Error),
+    #[error("Failed to write binary stream")]
+    BinWrite(#[source] binrw::Error),
+}
+
 /// Means the purpose of the field is unknown.
 ///
 /// "Explicit is better than implicit".
@@ -194,21 +213,23 @@ struct EncodedProgress {
 }
 
 impl PlayerProgress {
-    const FILE_NAME: &'static str = "game.sys";
+    pub const FILE_NAME: &'static str = "game.sys";
 
-    pub fn from_file(path: impl AsRef<Path>) -> anyhow::Result<Self> {
-        EncodedProgress::from_file(path)?.try_into()
+    pub fn from_file(path: impl AsRef<Path>) -> Result<Option<Self>, Error> {
+        EncodedProgress::from_file(path)?
+            .map(TryInto::try_into)
+            .transpose()
     }
 
-    pub fn save_to_file(&self, path: impl AsRef<Path>) -> anyhow::Result<()> {
+    pub fn save_to_file(&self, path: impl AsRef<Path>) -> Result<(), Error> {
         EncodedProgress::try_from(self.clone())?.save_to_file(path)
     }
 
-    pub fn save(&self, env: &AoS2Env) -> anyhow::Result<()> {
+    pub fn save(&self, env: &AoS2Env) -> Result<(), Error> {
         self.save_to_file(env.saves_folder.join(Self::FILE_NAME))
     }
 
-    pub fn load(env: &AoS2Env) -> anyhow::Result<Self> {
+    pub fn load(env: &AoS2Env) -> Result<Option<Self>, Error> {
         Self::from_file(env.saves_folder.join(Self::FILE_NAME))
     }
 }
@@ -219,24 +240,38 @@ impl EncodedProgress {
     pub const BODY_SIZE: usize = Self::TOTAL_SIZE - Self::HEADER_SIZE;
     pub const ENCODING_START_KEY: KeyU8 = KeyU8::new(0x4A);
 
-    pub fn from_file(path: impl AsRef<Path>) -> anyhow::Result<Self> {
-        let mut reader = std::fs::File::open(path).context("Couldn't open file")?;
-        BinRead::read(&mut reader).context("Failed to read the encoded file")
+    pub fn from_file(path: impl AsRef<Path>) -> Result<Option<Self>, Error> {
+        let reader = match std::fs::File::open(path) {
+            Ok(reader) => Ok(Some(reader)),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+            Err(_) => return Err(Error::FileRead),
+        }?;
+
+        reader
+            .map(|mut reader| <Self as BinRead>::read(&mut reader).map_err(Error::EncodedRead))
+            .transpose()
     }
 
-    pub fn save_to_file(&self, path: impl AsRef<Path>) -> anyhow::Result<()> {
-        let mut writer = std::fs::File::options()
+    pub fn save_to_file(&self, path: impl AsRef<Path>) -> Result<(), Error> {
+        let mut writer = match std::fs::File::options()
             .create(true)
             .write(true)
             .truncate(true)
             .open(path)
-            .context("Failed to open file for writing")?;
-        BinWrite::write(self, &mut writer).context("Failed to overwrite the file")
+        {
+            Ok(writer) => Ok(writer),
+            Err(error) if error.kind() == std::io::ErrorKind::PermissionDenied => {
+                Err(Error::WritePermission)
+            }
+            Err(_) => Err(Error::FileWrite),
+        }?;
+
+        BinWrite::write(self, &mut writer).map_err(Error::BinWrite)
     }
 }
 
 impl TryFrom<EncodedProgress> for PlayerProgress {
-    type Error = anyhow::Error;
+    type Error = Error;
 
     fn try_from(EncodedProgress { header, body }: EncodedProgress) -> Result<Self, Self::Error> {
         let decoded_body = body.into_iter().enumerate().map(|(index, byte)| {
@@ -246,50 +281,35 @@ impl TryFrom<EncodedProgress> for PlayerProgress {
         let raw_decoded: Vec<u8> = header.into_iter().chain(decoded_body).collect();
 
         let mut reader = Cursor::new(raw_decoded);
-        BinRead::read(&mut reader).context("Failed to parse a decoded file")
+        BinRead::read(&mut reader).map_err(Error::DecodedRead)
     }
 }
 
 impl TryFrom<PlayerProgress> for EncodedProgress {
-    type Error = anyhow::Error;
+    type Error = Error;
 
     fn try_from(value: PlayerProgress) -> Result<Self, Self::Error> {
-        let buffer = {
-            let mut writer = Cursor::new(Vec::new());
-            BinWrite::write(&value, &mut writer)
-                .context("Failed to write the savefile to a binary buffer")?;
+        let buffer: [u8; Self::TOTAL_SIZE] = {
+            let mut writer = Cursor::new([0u8; Self::TOTAL_SIZE]);
+            BinWrite::write(&value, &mut writer).map_err(Error::DecodedWrite)?;
             writer.into_inner()
         };
 
-        if buffer.len() != Self::TOTAL_SIZE {
-            return Err(anyhow::anyhow!(
-                "Buffer size must be {}, not {}",
-                Self::TOTAL_SIZE,
-                buffer.len()
-            ));
-        }
+        let header: [u8; Self::HEADER_SIZE] =
+            TryInto::<&[u8; Self::HEADER_SIZE]>::try_into(&buffer[..Self::HEADER_SIZE])
+                .expect("Invariant: Arrays of fixed and known size must match")
+                .clone();
 
-        let mut iter = buffer.into_iter();
-        let header: [u8; Self::HEADER_SIZE] = iter
-            .by_ref()
-            .take(Self::HEADER_SIZE)
-            .collect::<Vec<_>>()
-            .try_into()
-            .map_err(|_| {
-                anyhow::anyhow!("Failed to convert a header into a buffer of fixed size")
-            })?;
-
-        let body: [u8; Self::BODY_SIZE] = iter
+        let body: [u8; Self::BODY_SIZE] = buffer[Self::HEADER_SIZE..]
+            .into_iter()
             .enumerate()
-            .map(|(index, byte)| {
+            .map(|(index, &byte)| {
                 let key = Self::ENCODING_START_KEY.wrapping_add_usize(index);
                 EncodedU8::from_raw(byte, key).get()
             })
-            .collect::<Vec<_>>()
+            .collect::<Vec<u8>>()
             .try_into()
-            .map_err(|_| {
-                anyhow::anyhow!("Failed to convert an encoded body into a buffer of fixed size")
-            })?;
+            .expect("Invariant: Arrays of fixed and known size must match");
 
         Ok(Self { header, body })
     }
