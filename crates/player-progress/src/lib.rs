@@ -157,8 +157,6 @@ pub enum Error {
     DecodedWrite(#[source] binrw::Error),
     #[error("Failed to read intermediate decoded stream")]
     DecodedRead(#[source] binrw::Error),
-    #[error("Failed to write binary stream")]
-    BinWrite(#[source] binrw::Error),
 }
 
 /// Means the purpose of the field is unknown.
@@ -266,7 +264,7 @@ impl EncodedProgress {
             Err(_) => Err(Error::FileWrite),
         }?;
 
-        BinWrite::write(self, &mut writer).map_err(Error::BinWrite)
+        BinWrite::write(self, &mut writer).map_err(Error::EncodedWrite)
     }
 }
 
