@@ -10,7 +10,7 @@ use ratatui::{
 
 use crate::{
     collection::ListSlice,
-    style::{self, IndexedColor, WithColor as _},
+    style::{self, IndexedColor, WithColor},
     widget::split,
 };
 
