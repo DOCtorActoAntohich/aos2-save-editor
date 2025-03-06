@@ -3,13 +3,14 @@ use ratatui::{
     crossterm::event::KeyCode,
     layout::{Constraint, Layout, Rect},
     style::{Color, Style},
-    widgets::{Paragraph, Widget},
+    text::{Line, Span},
+    widgets::{List, Paragraph, Widget},
 };
 
 use crate::{
     style::{IndexedColor, WithColor},
     tui::{Event, HandleEvent, InteractibleComponent, VisualComponent},
-    widget::content_box::ContentBox,
+    widget::{content_box::ContentBox, split},
 };
 
 #[derive(Debug)]
@@ -25,14 +26,17 @@ enum Mode {
     ShowContent,
 }
 
-#[derive(Debug)]
-struct HelpTextWindow;
-
-#[derive(Debug)]
-struct Footer;
-
 #[derive(Debug, derive_more::Into)]
 struct HelpStyle(Style);
+
+impl Mode {
+    pub fn toggle(self) -> Self {
+        match self {
+            Mode::ShowHelp => Mode::ShowContent,
+            Mode::ShowContent => Mode::ShowHelp,
+        }
+    }
+}
 
 impl<C> FullHelpToggle<C> {
     pub const KEY: KeyCode = KeyCode::F(12);
@@ -84,43 +88,79 @@ where
         let [content_area, footer_area] = Layout::vertical(constraints).areas::<2>(area);
 
         match self.mode {
-            Mode::ShowHelp => HelpTextWindow.render(content_area, buf),
+            Mode::ShowHelp => draw_help_window(content_area, buf),
             Mode::ShowContent => self.content.render(content_area, buf),
         }
 
-        Footer.render(footer_area, buf);
+        draw_footer(footer_area, buf);
     }
 }
 
-impl VisualComponent for HelpTextWindow {
-    fn render(&self, area: Rect, buf: &mut Buffer) {
-        ContentBox::gray()
-            .with_title("[HELP]")
-            .with_content(|area: Rect, buf: &mut Buffer| {
-                Paragraph::new("TODO: write this help lol")
-                    .centered()
-                    .style(HelpStyle::default())
-                    .render(area, buf);
-            })
-            .render(area, buf);
-    }
+fn draw_help_window(area: Rect, buf: &mut Buffer) {
+    let left = split::Area {
+        constraint: Constraint::Fill(1),
+        render: draw_controls,
+    };
+
+    let right = split::Area {
+        constraint: Constraint::Fill(1),
+        render: draw_extra_info,
+    };
+
+    ContentBox::gray()
+        .with_title("[HELP]")
+        .with_content(move |area: Rect, buf: &mut Buffer| {
+            split::Vertical { left, right }.render(area, buf);
+        })
+        .render(area, buf);
 }
 
-impl VisualComponent for Footer {
-    fn render(&self, area: Rect, buf: &mut Buffer) {
-        let text = format!("Press `{}` to toggle help", FullHelpToggle::<()>::KEY);
-
-        Paragraph::new(text)
-            .style(HelpStyle::default())
-            .render(area, buf);
+fn draw_controls(area: Rect, buf: &mut Buffer) {
+    fn line<'a>(controls: &'a str, description: &'a str) -> Line<'a> {
+        Line::from(vec![
+            Span::raw(">> "),
+            Span::raw(controls).style(Style::new().with_fg(IndexedColor::DarkYellow)),
+            Span::raw(" - "),
+            Span::raw(description),
+        ])
     }
+
+    let lines = vec![
+        Line::from("General controls:"),
+        Line::from(""),
+        line("Arrow Keys", "Navigate tables"),
+        line("Enter", "Interact with selected item"),
+        line("PgUp / PgDown", "Switch tabs"),
+        line("Home / End", "Go to start/end of the list"),
+        line("Escape", "Exit"),
+    ];
+    Paragraph::new(lines).render(area, buf);
 }
 
-impl Mode {
-    pub fn toggle(self) -> Self {
-        match self {
-            Mode::ShowHelp => Mode::ShowContent,
-            Mode::ShowContent => Mode::ShowHelp,
-        }
-    }
+fn draw_extra_info(area: Rect, buf: &mut Buffer) {
+    let lines = [
+        Line::from(vec![
+            Span::raw("All "),
+            Span::raw("changes are saved automatically")
+                .style(Style::new().with_fg(IndexedColor::DarkYellow)),
+            Span::raw(" when you make them"),
+        ]),
+        Line::from(""),
+        Line::from("Close the game before editing"),
+        Line::from("Otherwise, it will ignore your changes"),
+        Line::from(""),
+        Line::from("If any issues occur, report them on GitHub"),
+    ];
+    List::new(lines).render(area, buf);
+}
+
+fn draw_footer(area: Rect, buf: &mut Buffer) {
+    Line::from(vec![
+        Span::raw("Press `"),
+        Span::raw(FullHelpToggle::<()>::KEY.to_string())
+            .style(Style::new().with_fg(IndexedColor::DarkYellow)),
+        Span::raw("` to toggle help"),
+    ])
+    .style(HelpStyle::default())
+    .render(area, buf);
 }
