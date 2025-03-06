@@ -1,14 +1,15 @@
 use ratatui::{
     buffer::Buffer,
     crossterm::event::KeyCode,
-    layout::{Alignment, Constraint, Layout, Rect},
+    layout::{Constraint, Layout, Rect},
     style::{Color, Style},
-    widgets::{Block, Borders, Paragraph, Widget},
+    widgets::{Paragraph, Widget},
 };
 
 use crate::{
     style::{IndexedColor, WithColor},
     tui::{Event, HandleEvent, InteractibleComponent, VisualComponent},
+    widget::content_box::ContentBox,
 };
 
 #[derive(Debug)]
@@ -93,16 +94,14 @@ where
 
 impl VisualComponent for HelpTextWindow {
     fn render(&self, area: Rect, buf: &mut Buffer) {
-        let block = Block::new()
-            .borders(Borders::TOP | Borders::BOTTOM)
-            .style(HelpStyle::default())
-            .title("[HELP]")
-            .title_alignment(Alignment::Center);
-
-        Paragraph::new("TODO: write this help lol")
-            .centered()
-            .block(block)
-            .style(HelpStyle::default())
+        ContentBox::gray()
+            .with_title("[HELP]")
+            .with_content(|area: Rect, buf: &mut Buffer| {
+                Paragraph::new("TODO: write this help lol")
+                    .centered()
+                    .style(HelpStyle::default())
+                    .render(area, buf);
+            })
             .render(area, buf);
     }
 }

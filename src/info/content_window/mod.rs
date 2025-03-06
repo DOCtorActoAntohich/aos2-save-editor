@@ -13,7 +13,7 @@ use crate::{
     collection::SelectibleArray,
     profile, progress, statistics,
     tui::{Event, HandleEvent, InteractibleComponent, VisualComponent},
-    widget::black_box::BlackBox,
+    widget::content_box::ContentBox,
 };
 
 use self::tabs::EvenTabs;
@@ -65,9 +65,10 @@ impl VisualComponent for ContentWidget {
             .select(self.tabs.current_index())
             .render(tabs_area, buf);
 
-        BlackBox::with_content(|area, buf| {
-            self.tabs.current().render(area, buf);
-        })
-        .render(content_area, buf);
+        ContentBox::black()
+            .with_content(|area, buf| {
+                self.tabs.current().render(area, buf);
+            })
+            .render(content_area, buf);
     }
 }
