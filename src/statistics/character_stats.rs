@@ -115,7 +115,7 @@ impl VisualComponent for CharacterStats {
             .to_array()
             .into_iter()
             .map(Some)
-            .chain(std::iter::once(None).cycle());
+            .chain(std::iter::once(None));
 
         let content = Character::members()
             .into_iter()
