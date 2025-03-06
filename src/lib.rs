@@ -122,7 +122,7 @@ impl EditorApp {
 impl HandleEvent for EditorApp {
     fn handle_event(&mut self, event: &Event) {
         match event.key_code() {
-            Some(KeyCode::Char('q')) => self.exit(),
+            Some(KeyCode::Esc) => self.exit(),
             _ => self.content.handle_event(event),
         }
     }
