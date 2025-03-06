@@ -27,8 +27,6 @@ pub struct ContentWidget {
 }
 
 impl ContentWidget {
-    pub const CONSTRAINT: Constraint = Constraint::Min(3);
-
     pub fn new(
         progress: watch::Sender<PlayerProgress>,
         profile: watch::Sender<PlayerOnlineProfile>,

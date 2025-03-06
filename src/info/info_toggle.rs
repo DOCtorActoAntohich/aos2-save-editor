@@ -84,8 +84,15 @@ where
     C: InteractibleComponent,
 {
     fn render(&self, area: Rect, buf: &mut Buffer) {
-        let constraints = [Constraint::Fill(1), Constraint::Length(1)];
-        let [content_area, footer_area] = Layout::vertical(constraints).areas::<2>(area);
+        let constraints = [
+            Constraint::Length(1),
+            Constraint::Fill(1),
+            Constraint::Length(1),
+        ];
+        let [title_area, content_area, footer_area] =
+            Layout::vertical(constraints).areas::<3>(area);
+
+        draw_title(title_area, buf);
 
         match self.mode {
             Mode::ShowHelp => draw_help_window(content_area, buf),
@@ -94,6 +101,17 @@ where
 
         draw_footer(footer_area, buf);
     }
+}
+
+fn draw_title(area: Rect, buf: &mut Buffer) {
+    Paragraph::new("AoS2 Save Editor")
+        .style(
+            Style::default()
+                .with_bg(IndexedColor::DarkBlue)
+                .with_fg(Color::White),
+        )
+        .centered()
+        .render(area, buf);
 }
 
 fn draw_help_window(area: Rect, buf: &mut Buffer) {

@@ -19,21 +19,18 @@ use player_progress::PlayerProgress;
 use ratatui::{
     buffer::Buffer,
     crossterm::{self, event::KeyCode},
-    layout::{Constraint, Layout, Rect},
+    layout::Rect,
     widgets::Widget,
     DefaultTerminal, Frame,
 };
 use tokio::sync::watch;
 
 use crate::{
-    info::full_help_toggle::FullHelpToggle,
+    info::info_toggle::FullHelpToggle,
     tui::{HandleEvent, VisualComponent},
 };
 
-use self::{
-    info::{content_window::ContentWidget, title_header::TitleHeader},
-    tui::Event,
-};
+use self::{info::content_window::ContentWidget, tui::Event};
 
 #[must_use]
 pub struct EditorApp {
@@ -133,11 +130,6 @@ impl Widget for &EditorApp {
     where
         Self: Sized,
     {
-        const CONSTRAINTS: [Constraint; 2] = [TitleHeader::CONSTRAINT, ContentWidget::CONSTRAINT];
-
-        let [header_area, central_area] = Layout::vertical(CONSTRAINTS).areas(area);
-
-        TitleHeader.render(header_area, buf);
-        self.content.render(central_area, buf);
+        self.content.render(area, buf);
     }
 }
