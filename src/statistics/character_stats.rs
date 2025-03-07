@@ -77,7 +77,7 @@ impl From<ContentRow> for RawRow<'_> {
         }: ContentRow,
     ) -> Self {
         let cells = [
-            Cell::from(Text::raw(character)),
+            Cell::from(Text::raw(character.to_string())),
             Cell::from(CompletionStatus::from(arcade_easy)),
             Cell::from(CompletionStatus::from(arcade_medium)),
             Cell::from(CompletionStatus::from(arcade_hard)),

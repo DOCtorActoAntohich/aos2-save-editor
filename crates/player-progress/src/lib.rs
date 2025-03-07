@@ -24,6 +24,11 @@ use binrw::{BinRead, BinWrite};
 
 use crate::xor_encoding::{EncodedU8, KeyU8};
 
+pub trait StatusSequence {
+    fn toggle_at(&mut self, index: usize);
+    fn list(&self) -> Vec<(String, Status)>;
+}
+
 /// Player progress file, aka `game.sys`.
 ///
 /// Order of fields MATTERS. Do NOT reorder.
@@ -72,7 +77,7 @@ pub struct PlayerProgress {
     /// Remembers if the background music is unlocked.
     ///
     /// Offset: 0x3e - 0x48.
-    pub background_music: MusicTracks,
+    pub music_tracks: MusicTracks,
     _0x49: UnknownU8,
     _0x4a: UnknownU8,
     _0x4b: UnknownU8,

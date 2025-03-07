@@ -1,6 +1,6 @@
 use aos2_env::AoS2Env;
 use online_profile::PlayerOnlineProfile;
-use player_progress::{PlayableCharacters, PlayerProgress};
+use player_progress::{Arenas, MusicTracks, PlayableCharacters, PlayerProgress};
 use tokio::sync::watch;
 
 #[derive(Debug, Clone)]
@@ -14,6 +14,8 @@ pub struct Progress {
     env: AoS2Env,
     progress: PlayerProgress,
     playable_characters: Channel<PlayableCharacters>,
+    arenas: Channel<Arenas>,
+    music_tracks: Channel<MusicTracks>,
 }
 
 #[derive(Debug, Clone)]
@@ -100,10 +102,14 @@ impl Progress {
     pub fn load(env: AoS2Env) -> Result<Self, Error> {
         let progress = PlayerProgress::load(&env)?.ok_or(Error::MissingProgress)?;
         let playable_characters = Channel::new(progress.playable_characters.clone());
+        let arenas = Channel::new(progress.arenas.clone());
+        let music_tracks = Channel::new(progress.music_tracks.clone());
         Ok(Self {
             env,
             progress,
             playable_characters,
+            arenas,
+            music_tracks,
         })
     }
 
@@ -124,6 +130,14 @@ impl Progress {
 
     pub fn write_playable_characters(&self) -> watch::Sender<PlayableCharacters> {
         self.playable_characters.sender.clone()
+    }
+
+    pub fn write_arenas(&self) -> watch::Sender<Arenas> {
+        self.arenas.sender.clone()
+    }
+
+    pub fn write_music_tracks(&self) -> watch::Sender<MusicTracks> {
+        self.music_tracks.sender.clone()
     }
 }
 

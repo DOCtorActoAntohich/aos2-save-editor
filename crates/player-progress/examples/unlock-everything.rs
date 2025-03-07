@@ -15,7 +15,7 @@ fn main() -> anyhow::Result<()> {
 
     progress.playable_characters = PlayableCharacters::ALL;
     progress.arenas = Arenas::ALL;
-    progress.background_music = MusicTracks::ALL;
+    progress.music_tracks = MusicTracks::ALL;
 
     progress.arcade_easy_1ccs = PerfectArcadeMode::COMPLETED;
     progress.arcade_medium_1ccs = PerfectArcadeMode::COMPLETED;

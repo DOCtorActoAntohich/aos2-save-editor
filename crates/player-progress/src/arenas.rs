@@ -1,21 +1,32 @@
-use std::borrow::Cow;
+use std::ops::{Index, IndexMut};
 
-use crate::{lock::Status, UnknownU8};
+use crate::{lock::Status, StatusSequence, UnknownU8};
 
 /// List of Background Images aka Arena Backgrounds.
 ///
+
+#[binrw::binrw]
+#[derive(Debug, Clone, derive_more::Deref, derive_more::AsRef)]
+#[brw(little)]
+#[br(map = From::<RawArenas>::from)]
+#[bw(map = RawArenas::from)]
+pub struct Arenas {
+    #[deref]
+    #[as_ref(forward)]
+    arenas: [Status; Arenas::AMOUNT],
+    _0x2d: UnknownU8,
+}
+
 /// IMPORTANT: ORDER MATTERS. Do not reorder.
 #[binrw::binrw]
 #[derive(Debug, Clone)]
 #[brw(little)]
-pub struct Arenas {
+struct RawArenas {
     pub before_the_war: Status,
     pub war_10k_years_ago: Status,
     pub canyon_of_wind: Status,
     pub dust_storm: Status,
     pub rain_and_sunset: Status,
-    /// Some placeholder that looks like Rain and Sunset but has a buggy icon.
-    /// Disabled by default.
     pub equator_doldrums: Status,
     pub big_bridge: Status,
     pub capital_in_flames: Status,
@@ -40,92 +51,105 @@ pub struct Arenas {
     PartialOrd,
     Ord,
     Hash,
+    derive_more::TryFrom,
     derive_more::Display,
     enum_array::EnumMembersArray,
 )]
+#[try_from(repr)]
+#[repr(usize)]
 pub enum Arena {
     #[display("Before the War")]
-    BeforeTheWar,
+    BeforeTheWar = 0,
     #[display("War 10k years ago")]
-    War10kYearsAgo,
+    War10kYearsAgo = 1,
     #[display("Canyon of Wind")]
-    CanyonOfWind,
+    CanyonOfWind = 2,
     #[display("Dust Storm")]
-    DustStorm,
+    DustStorm = 3,
     #[display("Rain and Sunset")]
-    RainAndSunset,
+    RainAndSunset = 4,
+    /// Some placeholder that looks like Rain and Sunset but has a buggy icon.
+    /// Disabled by default.
     #[display("Equator Doldrums")]
-    EquatorDoldrums,
+    EquatorDoldrums = 5,
     #[display("Big Bridge")]
-    BigBridge,
+    BigBridge = 6,
     #[display("Capital in Flames")]
-    CapitalInFlames,
+    CapitalInFlames = 7,
     #[display("Whirlpool of Malice")]
-    WhirlpoolOfMalice,
+    WhirlpoolOfMalice = 8,
     #[display("Nature 10k")]
-    Nature10k,
+    Nature10k = 9,
     #[display("Crashed Spaceship")]
-    CrashedSpaceship,
+    CrashedSpaceship = 10,
     #[display("Guardian's Chamber")]
-    GuardiansChamber,
+    GuardiansChamber = 11,
     #[display("Moonlight Dance Hall")]
-    MoonlightDanceHall,
+    MoonlightDanceHall = 12,
     #[display("Sumika's Hideout")]
-    SumikaHideout,
+    SumikaHideout = 13,
 }
 
 impl Arenas {
     pub const AMOUNT: usize = 14;
 
     pub const ALL: Self = Self {
-        before_the_war: Status::Enabled,
-        war_10k_years_ago: Status::Enabled,
-        canyon_of_wind: Status::Enabled,
-        dust_storm: Status::Enabled,
-        rain_and_sunset: Status::Enabled,
-        equator_doldrums: Status::Enabled,
-        big_bridge: Status::Enabled,
-        capital_in_flames: Status::Enabled,
-        whirlpool_of_malice: Status::Enabled,
+        arenas: [Status::Enabled; Self::AMOUNT],
         _0x2d: UnknownU8(0),
-        nature_10k: Status::Enabled,
-        crashed_spaceship: Status::Enabled,
-        guardians_chamber: Status::Enabled,
-        moonlight_dance_hall: Status::Enabled,
-        sumika_hideout: Status::Enabled,
     };
 
-    #[must_use]
-    pub fn to_array(&self) -> [Status; Self::AMOUNT] {
-        self.clone().into()
+    pub fn toggle(&mut self, arena: Arena) {
+        self[arena] = !self[arena];
+    }
+}
+
+impl StatusSequence for Arenas {
+    fn toggle_at(&mut self, index: usize) {
+        if let Ok(arena) = Arena::try_from(index) {
+            self.toggle(arena);
+        }
     }
 
-    pub fn iter(&self) -> impl Iterator<Item = (Arena, Status)> {
-        Arena::members().into_iter().zip(self.to_array())
+    fn list(&self) -> Vec<(String, Status)> {
+        let Self { arenas, _0x2d: _ } = self;
+        Arena::members()
+            .into_iter()
+            .zip(arenas.iter().copied())
+            .map(|(name, status)| (name.to_string(), status))
+            .collect()
+    }
+}
+
+impl Index<Arena> for Arenas {
+    type Output = Status;
+
+    fn index(&self, index: Arena) -> &Self::Output {
+        let Self { arenas, _0x2d: _ } = self;
+        &arenas[index as usize]
+    }
+}
+
+impl IndexMut<Arena> for Arenas {
+    fn index_mut(&mut self, index: Arena) -> &mut Self::Output {
+        let Self { arenas, _0x2d: _ } = self;
+        &mut arenas[index as usize]
     }
 }
 
 impl Default for Arenas {
     fn default() -> Self {
-        Self {
-            before_the_war: Status::Enabled,
-            war_10k_years_ago: Status::Enabled,
-            canyon_of_wind: Status::Enabled,
-            dust_storm: Status::Enabled,
-            rain_and_sunset: Status::Enabled,
-            big_bridge: Status::Enabled,
-            nature_10k: Status::Enabled,
+        let mut arenas = Self::ALL;
 
-            capital_in_flames: Status::Disabled,
-            whirlpool_of_malice: Status::Disabled,
-            crashed_spaceship: Status::Disabled,
-            guardians_chamber: Status::Disabled,
-            moonlight_dance_hall: Status::Disabled,
-            sumika_hideout: Status::Disabled,
+        arenas[Arena::CapitalInFlames] = Status::Disabled;
+        arenas[Arena::WhirlpoolOfMalice] = Status::Disabled;
+        arenas[Arena::CrashedSpaceship] = Status::Disabled;
+        arenas[Arena::GuardiansChamber] = Status::Disabled;
+        arenas[Arena::MoonlightDanceHall] = Status::Disabled;
+        arenas[Arena::SumikaHideout] = Status::Disabled;
 
-            equator_doldrums: Status::Disabled,
-            _0x2d: UnknownU8(0),
-        }
+        arenas[Arena::EquatorDoldrums] = Status::Disabled;
+
+        arenas
     }
 }
 
@@ -133,28 +157,15 @@ impl Default for Arenas {
 /// Otherwise must be derived.
 impl PartialEq for Arenas {
     fn eq(&self, other: &Self) -> bool {
-        self.before_the_war == other.before_the_war
-            && self.war_10k_years_ago == other.war_10k_years_ago
-            && self.canyon_of_wind == other.canyon_of_wind
-            && self.dust_storm == other.dust_storm
-            && self.rain_and_sunset == other.rain_and_sunset
-            && self.equator_doldrums == other.equator_doldrums
-            && self.big_bridge == other.big_bridge
-            && self.capital_in_flames == other.capital_in_flames
-            && self.whirlpool_of_malice == other.whirlpool_of_malice
-            && self.nature_10k == other.nature_10k
-            && self.crashed_spaceship == other.crashed_spaceship
-            && self.guardians_chamber == other.guardians_chamber
-            && self.moonlight_dance_hall == other.moonlight_dance_hall
-            && self.sumika_hideout == other.sumika_hideout
+        self.arenas == other.arenas
     }
 }
 
 impl Eq for Arenas {}
 
-impl From<Arenas> for [Status; Arenas::AMOUNT] {
+impl From<RawArenas> for Arenas {
     fn from(
-        Arenas {
+        RawArenas {
             before_the_war,
             war_10k_years_ago,
             canyon_of_wind,
@@ -170,9 +181,9 @@ impl From<Arenas> for [Status; Arenas::AMOUNT] {
             guardians_chamber,
             moonlight_dance_hall,
             sumika_hideout,
-        }: Arenas,
+        }: RawArenas,
     ) -> Self {
-        [
+        let arenas = [
             before_the_war,
             war_10k_years_ago,
             canyon_of_wind,
@@ -187,29 +198,16 @@ impl From<Arenas> for [Status; Arenas::AMOUNT] {
             guardians_chamber,
             moonlight_dance_hall,
             sumika_hideout,
-        ]
+        ];
+        Self { arenas, _0x2d }
     }
 }
 
-impl From<[Status; Arenas::AMOUNT]> for Arenas {
-    fn from(
-        [
-        before_the_war,
-        war_10k_years_ago,
-        canyon_of_wind,
-        dust_storm,
-        rain_and_sunset,
-        equator_doldrums,
-        big_bridge,
-        capital_in_flames,
-        whirlpool_of_malice,
-        nature_10k,
-        crashed_spaceship,
-        guardians_chamber,
-        moonlight_dance_hall,
-        sumika_hideout,
-    ]: [Status; Arenas::AMOUNT],
-    ) -> Self {
+impl From<&Arenas> for RawArenas {
+    fn from(arenas: &Arenas) -> Self {
+        let Arenas { arenas, _0x2d } = arenas.clone();
+        let [before_the_war, war_10k_years_ago, canyon_of_wind, dust_storm, rain_and_sunset, equator_doldrums, big_bridge, capital_in_flames, whirlpool_of_malice, nature_10k, crashed_spaceship, guardians_chamber, moonlight_dance_hall, sumika_hideout] =
+            arenas;
         Self {
             before_the_war,
             war_10k_years_ago,
@@ -220,18 +218,12 @@ impl From<[Status; Arenas::AMOUNT]> for Arenas {
             big_bridge,
             capital_in_flames,
             whirlpool_of_malice,
+            _0x2d,
             nature_10k,
             crashed_spaceship,
             guardians_chamber,
             moonlight_dance_hall,
             sumika_hideout,
-            ..Default::default()
         }
-    }
-}
-
-impl From<Arena> for Cow<'_, str> {
-    fn from(value: Arena) -> Self {
-        value.to_string().into()
     }
 }

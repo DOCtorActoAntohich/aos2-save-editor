@@ -39,7 +39,9 @@ pub struct EditorApp {
     should_run: bool,
     content: FullHelpToggle<ContentWidget>,
     aos2_env: AoS2Env,
+    progress_tx: watch::Sender<PlayerProgress>,
     progress_rx: watch::Receiver<PlayerProgress>,
+    profile_tx: watch::Sender<PlayerOnlineProfile>,
     profile_rx: watch::Receiver<PlayerOnlineProfile>,
     previous_event: Event,
     savefile: Savefile,
@@ -57,9 +59,15 @@ impl EditorApp {
 
         Self {
             should_run: true,
-            content: FullHelpToggle::new(ContentWidget::new(progress_tx, profile_tx, &savefile)),
+            content: FullHelpToggle::new(ContentWidget::new(
+                progress_tx.clone(),
+                profile_tx.clone(),
+                &savefile,
+            )),
             aos2_env,
+            progress_tx,
             progress_rx,
+            profile_tx,
             profile_rx,
             previous_event: Event::empty(Instant::now()),
             savefile,

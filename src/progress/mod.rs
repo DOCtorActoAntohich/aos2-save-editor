@@ -1,7 +1,6 @@
 mod tables;
 mod widget;
 
-use player_progress::PlayerProgress;
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
@@ -9,7 +8,6 @@ use ratatui::{
     text::Text,
     widgets::{List, Widget},
 };
-use tokio::sync::watch;
 
 use crate::{
     info::content_window::InteratibleTabComponent,
@@ -33,9 +31,9 @@ impl InfoText {
 }
 
 impl Tab {
-    pub fn new(progress: watch::Sender<PlayerProgress>, savefile: &Savefile) -> Self {
+    pub fn new(savefile: &Savefile) -> Self {
         Self {
-            tables: TablesCollection::new(progress, savefile),
+            tables: TablesCollection::new(savefile),
         }
     }
 }

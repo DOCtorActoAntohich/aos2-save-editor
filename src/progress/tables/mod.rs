@@ -1,15 +1,11 @@
-mod arena;
-mod character;
-mod music;
+mod generic;
 
-use player_progress::PlayerProgress;
 use ratatui::{
     buffer::Buffer,
     crossterm::event::KeyCode,
     layout::{Constraint, Rect},
     widgets::Widget,
 };
-use tokio::sync::watch;
 
 use crate::{
     collection::SelectibleArray,
@@ -31,12 +27,15 @@ pub struct TablesCollection {
 impl TablesCollection {
     pub const CONSTRAINT: Constraint = Constraint::Fill(1);
 
-    pub fn new(progress: watch::Sender<PlayerProgress>, savefile: &Savefile) -> Self {
+    pub fn new(savefile: &Savefile) -> Self {
         let playable_characters = savefile.progress().write_playable_characters();
+        let arenas = savefile.progress().write_arenas();
+        let music_tracks = savefile.progress().write_music_tracks();
+
         let tables: [Box<dyn Table>; 3] = [
-            Box::new(self::character::Table::new(playable_characters)),
-            Box::new(self::arena::Table::new(progress.clone())),
-            Box::new(self::music::Table::new(progress)),
+            Box::new(self::generic::Table::new("Characters", playable_characters)),
+            Box::new(self::generic::Table::new("Arenas", arenas)),
+            Box::new(self::generic::Table::new("Music", music_tracks)),
         ];
         Self {
             tables: SelectibleArray::new(tables),

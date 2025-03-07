@@ -1,46 +1,16 @@
-use std::borrow::Cow;
+use std::ops::{Index, IndexMut};
 
-use crate::lock::Status;
+use crate::{lock::Status, StatusSequence};
 
 /// Only stock non-DLC music.
 ///
 /// DLC music is not available in the savefile
 /// cos the Steam client is supposed to track it.
 #[binrw::binrw]
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, derive_more::Deref, derive_more::AsRef)]
 #[brw(little)]
-pub struct MusicTracks {
-    pub need_for_speed: Status,
-    pub black_hole: Status,
-    pub distant_thunder: Status,
-    pub swordfish: Status,
-    pub shine: Status,
-    pub expendables: Status,
-    pub ribbon: Status,
-    pub moving_out: Status,
-    pub accelerator: Status,
-    pub remember_me: Status,
-    pub mgom: Status,
-}
-
-impl Default for MusicTracks {
-    fn default() -> Self {
-        Self {
-            need_for_speed: Status::Enabled,
-            black_hole: Status::Enabled,
-            distant_thunder: Status::Enabled,
-            shine: Status::Enabled,
-            expendables: Status::Enabled,
-            ribbon: Status::Enabled,
-            moving_out: Status::Enabled,
-
-            swordfish: Status::Disabled,
-            accelerator: Status::Disabled,
-            remember_me: Status::Disabled,
-            mgom: Status::Disabled,
-        }
-    }
-}
+#[as_ref(forward)]
+pub struct MusicTracks([Status; MusicTracks::AMOUNT]);
 
 #[derive(
     Debug,
@@ -51,122 +21,84 @@ impl Default for MusicTracks {
     PartialOrd,
     Ord,
     Hash,
+    derive_more::TryFrom,
     derive_more::Display,
     enum_array::EnumMembersArray,
 )]
+#[try_from(repr)]
+#[repr(usize)]
 pub enum MusicTrack {
     #[display("Need for Speed")]
-    NeedForSpeed,
+    NeedForSpeed = 0,
     #[display("Black Hole")]
-    BlackHole,
+    BlackHole = 1,
     #[display("Distant Thunder")]
-    DistantThunder,
-    Swordfish,
-    Shine,
-    Expendables,
-    Ribbon,
+    DistantThunder = 2,
+    Swordfish = 3,
+    Shine = 4,
+    Expendables = 5,
+    Ribbon = 6,
     #[display("Moving Out")]
-    MovingOut,
-    Accelerator,
+    MovingOut = 7,
+    Accelerator = 8,
     #[display("Remember Me")]
-    RememberMe,
+    RememberMe = 9,
     #[display("MGOM")]
-    Mgom,
+    Mgom = 10,
 }
 
 impl MusicTracks {
     pub const AMOUNT: usize = 11;
 
-    pub const ALL: Self = Self {
-        need_for_speed: Status::Enabled,
-        black_hole: Status::Enabled,
-        distant_thunder: Status::Enabled,
-        swordfish: Status::Enabled,
-        shine: Status::Enabled,
-        expendables: Status::Enabled,
-        ribbon: Status::Enabled,
-        moving_out: Status::Enabled,
-        accelerator: Status::Enabled,
-        remember_me: Status::Enabled,
-        mgom: Status::Enabled,
-    };
+    pub const ALL: Self = Self([Status::Enabled; Self::AMOUNT]);
 
-    #[must_use]
-    pub fn to_array(&self) -> [Status; Self::AMOUNT] {
-        self.clone().into()
-    }
-
-    pub fn iter(&self) -> impl Iterator<Item = (MusicTrack, Status)> {
-        MusicTrack::members().into_iter().zip(self.to_array())
+    pub fn toggle(&mut self, music: MusicTrack) {
+        self[music] = !self[music]
     }
 }
 
-impl From<MusicTracks> for [Status; MusicTracks::AMOUNT] {
-    fn from(
-        MusicTracks {
-            need_for_speed,
-            black_hole,
-            distant_thunder,
-            swordfish,
-            shine,
-            expendables,
-            ribbon,
-            moving_out,
-            accelerator,
-            remember_me,
-            mgom,
-        }: MusicTracks,
-    ) -> Self {
-        [
-            need_for_speed,
-            black_hole,
-            distant_thunder,
-            swordfish,
-            shine,
-            expendables,
-            ribbon,
-            moving_out,
-            accelerator,
-            remember_me,
-            mgom,
-        ]
+impl Default for MusicTracks {
+    fn default() -> Self {
+        let mut music = Self::ALL;
+
+        music[MusicTrack::Swordfish] = Status::Disabled;
+        music[MusicTrack::Accelerator] = Status::Disabled;
+        music[MusicTrack::RememberMe] = Status::Disabled;
+        music[MusicTrack::Mgom] = Status::Disabled;
+
+        music
     }
 }
 
-impl From<[Status; MusicTracks::AMOUNT]> for MusicTracks {
-    fn from(
-        [
-        need_for_speed,
-        black_hole,
-        distant_thunder,
-        swordfish,
-        shine,
-        expendables,
-        ribbon,
-        moving_out,
-        accelerator,
-        remember_me,
-        mgom,
-    ]: [Status; MusicTracks::AMOUNT],
-    ) -> Self {
-        Self {
-            need_for_speed,
-            black_hole,
-            distant_thunder,
-            swordfish,
-            shine,
-            expendables,
-            ribbon,
-            moving_out,
-            accelerator,
-            remember_me,
-            mgom,
+impl StatusSequence for MusicTracks {
+    fn toggle_at(&mut self, index: usize) {
+        if let Ok(music) = MusicTrack::try_from(index) {
+            self.toggle(music);
         }
     }
+
+    fn list(&self) -> Vec<(String, Status)> {
+        let Self(music) = self;
+        MusicTrack::members()
+            .into_iter()
+            .zip(music.iter().copied())
+            .map(|(name, status)| (name.to_string(), status))
+            .collect()
+    }
 }
 
-impl From<MusicTrack> for Cow<'_, str> {
-    fn from(value: MusicTrack) -> Self {
-        value.to_string().into()
+impl Index<MusicTrack> for MusicTracks {
+    type Output = Status;
+
+    fn index(&self, index: MusicTrack) -> &Self::Output {
+        let Self(music) = self;
+        &music[index as usize]
+    }
+}
+
+impl IndexMut<MusicTrack> for MusicTracks {
+    fn index_mut(&mut self, index: MusicTrack) -> &mut Self::Output {
+        let Self(music) = self;
+        &mut music[index as usize]
     }
 }

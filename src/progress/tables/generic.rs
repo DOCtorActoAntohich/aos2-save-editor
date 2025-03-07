@@ -1,4 +1,4 @@
-use player_progress::PlayableCharacters;
+use player_progress::{Status, StatusSequence};
 use ratatui::crossterm::event::KeyCode;
 use tokio::sync::watch;
 
@@ -8,23 +8,29 @@ use crate::{
     tui::{Event, HandleEvent},
 };
 
-pub struct Table {
-    playable_characters: watch::Sender<PlayableCharacters>,
+pub trait Item: Send + Sync + AsRef<[Status]> + StatusSequence {}
+
+impl<T> Item for T where T: Send + Sync + AsRef<[Status]> + StatusSequence {}
+
+pub struct Table<T: Item> {
+    items: watch::Sender<T>,
     current_index: usize,
+    name: String,
 }
 
-impl Table {
-    pub fn new(playable_characters: watch::Sender<PlayableCharacters>) -> Self {
+impl<T: Item> Table<T> {
+    pub fn new(name: impl Into<String>, items: watch::Sender<T>) -> Self {
         Self {
-            playable_characters,
+            name: name.into(),
+            items,
             current_index: 0,
         }
     }
 }
 
-impl HandleEvent for Table {
+impl<T: Item> HandleEvent for Table<T> {
     fn handle_event(&mut self, event: &Event) {
-        let hover = HoveringIndex::from_collection(self.playable_characters.borrow().as_ref())
+        let hover = HoveringIndex::from_collection(&self.items.borrow().as_ref())
             .with_current(self.current_index);
         match event.key_code() {
             Some(KeyCode::Up) => {
@@ -40,19 +46,19 @@ impl HandleEvent for Table {
                 self.current_index = hover.last().into_index().unwrap_or_default()
             }
             Some(KeyCode::Enter) => {
-                self.playable_characters
-                    .send_modify(|characters| characters.toggle_at(self.current_index));
+                self.items
+                    .send_modify(|sequence| sequence.toggle_at(self.current_index));
             }
             _ => (),
         }
     }
 }
 
-impl super::Table for Table {
+impl<T: Item> super::Table for Table<T> {
     fn as_widget(&self, is_active: bool) -> TogglesTable<'_> {
         TogglesTable {
-            name: "Characters".into(),
-            content: TogglesContent::new(self.playable_characters.borrow().list())
+            name: self.name.as_str().into(),
+            content: TogglesContent::new(self.items.borrow().list())
                 .with_current(self.current_index),
             is_active,
         }

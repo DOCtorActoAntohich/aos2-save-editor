@@ -1,23 +1,11 @@
-use std::{
-    borrow::Cow,
-    ops::{Index, IndexMut},
-};
+use std::ops::{Index, IndexMut};
 
-use crate::Status;
+use crate::{Status, StatusSequence};
 
 #[binrw::binrw]
-#[derive(
-    Debug,
-    Clone,
-    PartialEq,
-    Eq,
-    Hash,
-    derive_more::From,
-    derive_more::Into,
-    derive_more::Deref,
-    derive_more::AsRef,
-)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, derive_more::Deref, derive_more::AsRef)]
 #[brw(little)]
+#[as_ref(forward)]
 pub struct PlayableCharacters([Status; PlayableCharacters::AMOUNT]);
 
 /// IMPORTANT: ORDER AND INDEX VALUES MATTER.
@@ -64,16 +52,22 @@ impl PlayableCharacters {
     pub fn toggle(&mut self, character: Character) {
         self[character] = !self[character];
     }
+}
 
-    pub fn toggle_at(&mut self, index: usize) {
+impl StatusSequence for PlayableCharacters {
+    fn toggle_at(&mut self, index: usize) {
         if let Ok(character) = Character::try_from(index) {
             self.toggle(character);
         }
     }
 
-    pub fn list(&self) -> impl Iterator<Item = (Character, Status)> {
+    fn list(&self) -> Vec<(String, Status)> {
         let Self(statuses) = self;
-        Character::members().into_iter().zip(statuses.to_owned())
+        Character::members()
+            .into_iter()
+            .zip(statuses.iter().copied())
+            .map(|(name, status)| (name.to_string(), status))
+            .collect()
     }
 }
 
@@ -102,11 +96,5 @@ impl Default for PlayableCharacters {
         characters[Character::Sumika] = Status::Disabled;
 
         characters
-    }
-}
-
-impl From<Character> for Cow<'_, str> {
-    fn from(value: Character) -> Self {
-        value.to_string().into()
     }
 }
