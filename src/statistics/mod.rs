@@ -12,6 +12,7 @@ use tokio::sync::watch;
 
 use crate::{
     info::content_window::InteratibleTabComponent,
+    savefile::Savefile,
     tui::{Event, HandleEvent, VisualComponent},
     widget::split,
 };
@@ -26,10 +27,11 @@ pub struct Tab {
 struct InfoText;
 
 impl Tab {
-    pub fn new(progress: watch::Receiver<PlayerProgress>) -> Self {
+    pub fn new(progress: watch::Receiver<PlayerProgress>, savefile: &Savefile) -> Self {
+        let wins = savefile.progress().read_wins();
         Self {
             character_stats: CharacterStats::new(progress.clone()),
-            match_stats: SingleplayerMatchStats::new(progress),
+            match_stats: SingleplayerMatchStats::new(wins),
         }
     }
 }

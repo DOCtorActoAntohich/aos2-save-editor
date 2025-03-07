@@ -35,7 +35,7 @@ impl ContentWidget {
         savefile: &Savefile,
     ) -> Self {
         let tabs: [Box<dyn InteratibleTabComponent>; 4] = [
-            Box::new(statistics::Tab::new(progress.subscribe())),
+            Box::new(statistics::Tab::new(progress.subscribe(), savefile)),
             Box::new(progress::Tab::new(savefile)),
             Box::new(profile::avatar::Tab::new(profile.clone())),
             Box::new(profile::title::Tab::new(profile)),

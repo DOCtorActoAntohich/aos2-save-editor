@@ -10,12 +10,14 @@ mod lock;
 mod music;
 mod playable_characters;
 mod runs;
+mod wins;
 
 pub use self::arenas::Arenas;
 pub use self::lock::Status;
 pub use self::music::MusicTracks;
 pub use self::playable_characters::{Character, PlayableCharacters};
 pub use self::runs::{PerfectArcadeMode, PerfectStoryMode, Run};
+pub use self::wins::SingleplayerWins;
 
 use std::{io::Cursor, path::Path};
 
@@ -81,28 +83,8 @@ pub struct PlayerProgress {
     _0x49: UnknownU8,
     _0x4a: UnknownU8,
     _0x4b: UnknownU8,
-    /// A total number of singleplayer wins for any character on any difficulty.
-    ///
-    /// Simply winning one match in story/arcade mode is enough to increase the counter.
-    ///
-    /// Offset: 0x4c - 0x4f.
-    pub n_singleplayer_match_wins: u32,
-    /// A total number of Arcade 1CC's on Easy difficulty for any character.
-    ///
-    /// Offset: 0x50 - 0x53.
-    pub n_arcade_easy_1ccs: u32,
-    /// A total number of Arcade 1CC's on Medium difficulty for any character.
-    ///
-    /// Offset: 0x54 - 0x57.
-    pub n_arcade_medium_1ccs: u32,
-    /// A total number of Arcade 1CC's on Hard difficulty for any character.
-    ///
-    /// Offset: 0x58 - 0x5b.
-    pub n_arcade_hard_1ccs: u32,
-    /// A total number of Story 1CC's on any difficulty for any character.
-    ///
-    /// Offset: 0x5c - 0x5f.
-    pub n_story_1ccs: u32,
+    /// Offset: 0x4c - 0x5f.
+    pub wins: SingleplayerWins,
     _0x60: UnknownU8,
     _0x61: UnknownU8,
     _0x62: UnknownU8,
