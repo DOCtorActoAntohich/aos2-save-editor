@@ -38,18 +38,6 @@ impl<T, const LENGTH: usize> SelectibleArray<T, LENGTH> {
             .clamp(0, Self::MAX_INDEX);
     }
 
-    pub fn select_first(&mut self) {
-        self.current_index = 0;
-    }
-
-    pub fn select_last(&mut self) {
-        self.current_index = Self::MAX_INDEX;
-    }
-
-    pub fn modify_current(&mut self, f: impl FnOnce(&mut T)) {
-        f(self.mut_current());
-    }
-
     pub fn mut_current(&mut self) -> &mut T {
         self.items
             .get_mut(self.current_index)
@@ -60,12 +48,6 @@ impl<T, const LENGTH: usize> SelectibleArray<T, LENGTH> {
         self.items
             .get(self.current_index)
             .expect("Invariant: Index must be constrained to collection size")
-    }
-}
-
-impl<T: Clone, const LENGTH: usize> SelectibleArray<T, LENGTH> {
-    pub fn to_array(&self) -> [T; LENGTH] {
-        self.items.clone()
     }
 }
 
