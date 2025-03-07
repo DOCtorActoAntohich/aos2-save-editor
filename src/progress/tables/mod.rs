@@ -8,7 +8,7 @@ use ratatui::{
 };
 
 use crate::{
-    collection::SelectibleArray,
+    collection::SelectableArray,
     savefile::Savefile,
     tui::{Event, HandleEvent, VisualComponent},
     widget::sequence,
@@ -21,7 +21,7 @@ trait Table: HandleEvent + Send {
 }
 
 pub struct TablesCollection {
-    tables: SelectibleArray<Box<dyn Table>, 3>,
+    tables: SelectableArray<Box<dyn Table>, 3>,
 }
 
 impl TablesCollection {
@@ -38,7 +38,7 @@ impl TablesCollection {
             Box::new(self::generic::Table::new("Music", music_tracks)),
         ];
         Self {
-            tables: SelectibleArray::new(tables),
+            tables: SelectableArray::new(tables),
         }
     }
 }

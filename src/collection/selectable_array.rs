@@ -1,10 +1,10 @@
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct SelectibleArray<T, const LENGTH: usize> {
+pub struct SelectableArray<T, const LENGTH: usize> {
     items: [T; LENGTH],
     current_index: usize,
 }
 
-impl<T, const LENGTH: usize> SelectibleArray<T, LENGTH> {
+impl<T, const LENGTH: usize> SelectableArray<T, LENGTH> {
     const MAX_INDEX: usize = LENGTH - 1;
 
     pub fn new(array: [T; LENGTH]) -> Self {
@@ -53,15 +53,15 @@ impl<T, const LENGTH: usize> SelectibleArray<T, LENGTH> {
 
 #[cfg(test)]
 mod tests {
-    use super::SelectibleArray;
+    use super::SelectableArray;
 
     #[rstest::fixture]
-    fn selectible_array<const LENGTH: usize>() -> SelectibleArray<usize, LENGTH> {
+    fn selectible_array<const LENGTH: usize>() -> SelectableArray<usize, LENGTH> {
         let mut array = [0; LENGTH];
         array.iter_mut().enumerate().for_each(|(index, value)| {
             *value = index;
         });
-        SelectibleArray::new(array)
+        SelectableArray::new(array)
     }
 
     #[rstest::rstest]
@@ -69,14 +69,14 @@ mod tests {
     #[case(selectible_array::<5>())]
     #[case(selectible_array::<100>())]
     fn proper_max_index_constraint<const LENGTH: usize>(
-        #[case] mut array: SelectibleArray<usize, LENGTH>,
+        #[case] mut array: SelectableArray<usize, LENGTH>,
     ) {
         for _ in 0..LENGTH * 2 {
             array.select_next();
         }
 
         assert_eq!(
-            SelectibleArray::<usize, LENGTH>::MAX_INDEX,
+            SelectableArray::<usize, LENGTH>::MAX_INDEX,
             array.current_index()
         );
     }

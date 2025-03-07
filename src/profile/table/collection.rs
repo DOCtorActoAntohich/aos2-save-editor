@@ -1,7 +1,7 @@
 use ratatui::{buffer::Buffer, crossterm::event::KeyCode, layout::Rect, widgets::Widget};
 
 use crate::{
-    collection::SelectibleArray,
+    collection::SelectableArray,
     tui::{Event, HandleEvent, VisualComponent},
     widget::sequence,
 };
@@ -9,13 +9,13 @@ use crate::{
 use super::Table;
 
 pub struct Collection<const LENGTH: usize> {
-    tables: SelectibleArray<Box<dyn Table>, LENGTH>,
+    tables: SelectableArray<Box<dyn Table>, LENGTH>,
 }
 
 impl<const LENGTH: usize> Collection<LENGTH> {
     pub fn new(tables: [Box<dyn Table>; LENGTH]) -> Self {
         Self {
-            tables: SelectibleArray::new(tables),
+            tables: SelectableArray::new(tables),
         }
     }
 }

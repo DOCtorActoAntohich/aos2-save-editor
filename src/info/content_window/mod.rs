@@ -10,7 +10,7 @@ use ratatui::{
 use tokio::sync::watch;
 
 use crate::{
-    collection::SelectibleArray,
+    collection::SelectableArray,
     profile, progress,
     savefile::Savefile,
     statistics,
@@ -25,7 +25,7 @@ pub trait InteratibleTabComponent: InteractibleComponent {
 }
 
 pub struct ContentWidget {
-    tabs: SelectibleArray<Box<dyn InteratibleTabComponent>, 4>,
+    tabs: SelectableArray<Box<dyn InteratibleTabComponent>, 4>,
 }
 
 impl ContentWidget {
@@ -41,7 +41,7 @@ impl ContentWidget {
             Box::new(profile::title::Tab::new(profile)),
         ];
         Self {
-            tabs: SelectibleArray::new(tabs),
+            tabs: SelectableArray::new(tabs),
         }
     }
 }
