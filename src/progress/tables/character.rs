@@ -15,7 +15,7 @@ pub struct Table {
 
 impl Table {
     pub fn new(progress: watch::Sender<PlayerProgress>) -> Self {
-        let characters = progress.borrow().playable_characters.to_array();
+        let characters = progress.borrow().playable_characters.clone().into();
         Self {
             progress,
             characters: SelectibleArray::new(characters),

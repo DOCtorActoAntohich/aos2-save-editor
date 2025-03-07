@@ -1,37 +1,19 @@
-use std::borrow::Cow;
+use std::{
+    borrow::Cow,
+    ops::{Index, IndexMut},
+};
 
 use crate::Status;
 
-/// Markers for full list of characters.
-///
-/// IMPORTANT: ORDER MATTERS.
-/// That's how they are coded in game.
-///
-/// The games uses it to mark characters as follows:
-///
-/// - Locked/Unlocked in the character selection screen.
-/// - Arcade Mode 1CC (no deaths) is completed or not.
 #[binrw::binrw]
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(
+    Debug, Clone, PartialEq, Eq, Hash, derive_more::From, derive_more::Into, derive_more::Deref,
+)]
 #[brw(little)]
-pub struct PlayableCharacters {
-    pub sora: Status,
-    pub alte: Status,
-    pub tsih: Status,
-    pub mira: Status,
-    pub sham: Status,
-    pub nath: Status,
-    pub star_breaker: Status,
-    pub suguri: Status,
-    pub saki: Status,
-    pub iru: Status,
-    pub nanako: Status,
-    pub kae: Status,
-    pub kyoko: Status,
-    pub hime: Status,
-    pub sumika: Status,
-}
+pub struct PlayableCharacters([Status; PlayableCharacters::AMOUNT]);
 
+/// IMPORTANT: ORDER AND INDEX VALUES MATTER.
+/// That's how they are coded in game.
 #[derive(
     Debug,
     Clone,
@@ -69,134 +51,39 @@ pub enum Character {
 impl PlayableCharacters {
     pub const AMOUNT: usize = 15;
 
-    pub const ALL: Self = Self {
-        sora: Status::Enabled,
-        alte: Status::Enabled,
-        tsih: Status::Enabled,
-        mira: Status::Enabled,
-        sham: Status::Enabled,
-        nath: Status::Enabled,
-        star_breaker: Status::Enabled,
-        suguri: Status::Enabled,
-        saki: Status::Enabled,
-        iru: Status::Enabled,
-        nanako: Status::Enabled,
-        kae: Status::Enabled,
-        kyoko: Status::Enabled,
-        hime: Status::Enabled,
-        sumika: Status::Enabled,
-    };
-
-    #[must_use]
-    pub fn to_array(&self) -> [Status; PlayableCharacters::AMOUNT] {
-        self.clone().into()
-    }
+    pub const ALL: Self = Self([Status::Enabled; Self::AMOUNT]);
 
     pub fn iter(&self) -> impl Iterator<Item = (Character, Status)> {
-        Character::members().into_iter().zip(self.to_array())
+        let Self(statuses) = self;
+        Character::members().into_iter().zip(statuses.to_owned())
+    }
+}
+
+impl Index<Character> for PlayableCharacters {
+    type Output = Status;
+
+    fn index(&self, index: Character) -> &Self::Output {
+        let Self(characters) = self;
+        &characters[index as usize]
+    }
+}
+
+impl IndexMut<Character> for PlayableCharacters {
+    fn index_mut(&mut self, index: Character) -> &mut Self::Output {
+        let Self(characters) = self;
+        &mut characters[index as usize]
     }
 }
 
 impl Default for PlayableCharacters {
     fn default() -> Self {
-        Self {
-            sora: Status::Enabled,
-            alte: Status::Enabled,
-            tsih: Status::Enabled,
-            mira: Status::Enabled,
-            sham: Status::Enabled,
-            nath: Status::Enabled,
-            suguri: Status::Enabled,
-            saki: Status::Enabled,
-            iru: Status::Enabled,
-            nanako: Status::Enabled,
-            kae: Status::Enabled,
-            kyoko: Status::Enabled,
+        let mut characters = Self::ALL;
 
-            star_breaker: Status::Disabled,
-            hime: Status::Disabled,
-            sumika: Status::Disabled,
-        }
-    }
-}
+        characters[Character::StarBreaker] = Status::Disabled;
+        characters[Character::Hime] = Status::Disabled;
+        characters[Character::Sumika] = Status::Disabled;
 
-impl From<PlayableCharacters> for [Status; PlayableCharacters::AMOUNT] {
-    fn from(
-        PlayableCharacters {
-            sora,
-            alte,
-            tsih,
-            mira,
-            sham,
-            nath,
-            star_breaker,
-            suguri,
-            saki,
-            iru,
-            nanako,
-            kae,
-            kyoko,
-            hime,
-            sumika,
-        }: PlayableCharacters,
-    ) -> Self {
-        [
-            sora,
-            alte,
-            tsih,
-            mira,
-            sham,
-            nath,
-            star_breaker,
-            suguri,
-            saki,
-            iru,
-            nanako,
-            kae,
-            kyoko,
-            hime,
-            sumika,
-        ]
-    }
-}
-
-impl From<[Status; PlayableCharacters::AMOUNT]> for PlayableCharacters {
-    fn from(
-        [
-        sora,
-        alte,
-        tsih,
-        mira,
-        sham,
-        nath,
-        star_breaker,
-        suguri,
-        saki,
-        iru,
-        nanako,
-        kae,
-        kyoko,
-        hime,
-        sumika,
-    ]: [Status; PlayableCharacters::AMOUNT],
-    ) -> Self {
-        Self {
-            sora,
-            alte,
-            tsih,
-            mira,
-            sham,
-            nath,
-            star_breaker,
-            suguri,
-            saki,
-            iru,
-            nanako,
-            kae,
-            kyoko,
-            hime,
-            sumika,
-        }
+        characters
     }
 }
 
