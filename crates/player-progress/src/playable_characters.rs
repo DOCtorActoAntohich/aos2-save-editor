@@ -71,7 +71,7 @@ impl PlayableCharacters {
         }
     }
 
-    pub fn iter(&self) -> impl Iterator<Item = (Character, Status)> {
+    pub fn list(&self) -> impl Iterator<Item = (Character, Status)> {
         let Self(statuses) = self;
         Character::members().into_iter().zip(statuses.to_owned())
     }

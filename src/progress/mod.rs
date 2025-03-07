@@ -13,6 +13,7 @@ use tokio::sync::watch;
 
 use crate::{
     info::content_window::InteratibleTabComponent,
+    savefile::Savefile,
     style::{IndexedColor, WithColor},
     tui::{Event, HandleEvent, VisualComponent},
     widget::split,
@@ -32,9 +33,9 @@ impl InfoText {
 }
 
 impl Tab {
-    pub fn new(progress: watch::Sender<PlayerProgress>) -> Self {
+    pub fn new(progress: watch::Sender<PlayerProgress>, savefile: &Savefile) -> Self {
         Self {
-            tables: TablesCollection::new(progress),
+            tables: TablesCollection::new(progress, savefile),
         }
     }
 }

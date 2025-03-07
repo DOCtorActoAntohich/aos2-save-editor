@@ -13,6 +13,7 @@ use tokio::sync::watch;
 
 use crate::{
     collection::SelectibleArray,
+    savefile::Savefile,
     tui::{Event, HandleEvent, VisualComponent},
     widget::sequence,
 };
@@ -30,9 +31,10 @@ pub struct TablesCollection {
 impl TablesCollection {
     pub const CONSTRAINT: Constraint = Constraint::Fill(1);
 
-    pub fn new(progress: watch::Sender<PlayerProgress>) -> Self {
+    pub fn new(progress: watch::Sender<PlayerProgress>, savefile: &Savefile) -> Self {
+        let playable_characters = savefile.progress().write_playable_characters();
         let tables: [Box<dyn Table>; 3] = [
-            Box::new(self::character::Table::new(progress.clone())),
+            Box::new(self::character::Table::new(playable_characters)),
             Box::new(self::arena::Table::new(progress.clone())),
             Box::new(self::music::Table::new(progress)),
         ];

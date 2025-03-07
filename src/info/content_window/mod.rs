@@ -11,7 +11,9 @@ use tokio::sync::watch;
 
 use crate::{
     collection::SelectibleArray,
-    profile, progress, statistics,
+    profile, progress,
+    savefile::Savefile,
+    statistics,
     tui::{Event, HandleEvent, InteractibleComponent, VisualComponent},
     widget::content_box::ContentBox,
 };
@@ -30,10 +32,11 @@ impl ContentWidget {
     pub fn new(
         progress: watch::Sender<PlayerProgress>,
         profile: watch::Sender<PlayerOnlineProfile>,
+        savefile: &Savefile,
     ) -> Self {
         let tabs: [Box<dyn InteratibleTabComponent>; 4] = [
             Box::new(statistics::Tab::new(progress.subscribe())),
-            Box::new(progress::Tab::new(progress)),
+            Box::new(progress::Tab::new(progress, savefile)),
             Box::new(profile::avatar::Tab::new(profile.clone())),
             Box::new(profile::title::Tab::new(profile)),
         ];

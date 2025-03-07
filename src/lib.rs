@@ -57,7 +57,7 @@ impl EditorApp {
 
         Self {
             should_run: true,
-            content: FullHelpToggle::new(ContentWidget::new(progress_tx, profile_tx)),
+            content: FullHelpToggle::new(ContentWidget::new(progress_tx, profile_tx, &savefile)),
             aos2_env,
             progress_rx,
             profile_rx,
