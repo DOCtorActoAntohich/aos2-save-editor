@@ -7,7 +7,15 @@ use crate::Status;
 
 #[binrw::binrw]
 #[derive(
-    Debug, Clone, PartialEq, Eq, Hash, derive_more::From, derive_more::Into, derive_more::Deref,
+    Debug,
+    Clone,
+    PartialEq,
+    Eq,
+    Hash,
+    derive_more::From,
+    derive_more::Into,
+    derive_more::Deref,
+    derive_more::AsRef,
 )]
 #[brw(little)]
 pub struct PlayableCharacters([Status; PlayableCharacters::AMOUNT]);
@@ -52,6 +60,16 @@ impl PlayableCharacters {
     pub const AMOUNT: usize = 15;
 
     pub const ALL: Self = Self([Status::Enabled; Self::AMOUNT]);
+
+    pub fn toggle(&mut self, character: Character) {
+        self[character] = !self[character];
+    }
+
+    pub fn toggle_at(&mut self, index: usize) {
+        if let Ok(character) = Character::try_from(index) {
+            self.toggle(character);
+        }
+    }
 
     pub fn iter(&self) -> impl Iterator<Item = (Character, Status)> {
         let Self(statuses) = self;
