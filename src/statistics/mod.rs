@@ -1,14 +1,12 @@
 mod character_stats;
 mod match_stats;
 
-use player_progress::PlayerProgress;
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
     text::Text,
     widgets::{List, Widget},
 };
-use tokio::sync::watch;
 
 use crate::{
     info::content_window::InteratibleTabComponent,
@@ -27,10 +25,11 @@ pub struct Tab {
 struct InfoText;
 
 impl Tab {
-    pub fn new(progress: watch::Receiver<PlayerProgress>, savefile: &Savefile) -> Self {
+    pub fn new(savefile: &Savefile) -> Self {
+        let full_progress = savefile.progress().read_all();
         let wins = savefile.progress().read_wins();
         Self {
-            character_stats: CharacterStats::new(progress.clone()),
+            character_stats: CharacterStats::new(full_progress),
             match_stats: SingleplayerMatchStats::new(wins),
         }
     }

@@ -1,7 +1,6 @@
 mod tabs;
 
 use online_profile::PlayerOnlineProfile;
-use player_progress::PlayerProgress;
 use ratatui::{
     crossterm::event::KeyCode,
     layout::{Constraint, Layout},
@@ -29,13 +28,9 @@ pub struct ContentWidget {
 }
 
 impl ContentWidget {
-    pub fn new(
-        progress: watch::Sender<PlayerProgress>,
-        profile: watch::Sender<PlayerOnlineProfile>,
-        savefile: &Savefile,
-    ) -> Self {
+    pub fn new(profile: watch::Sender<PlayerOnlineProfile>, savefile: &Savefile) -> Self {
         let tabs: [Box<dyn InteratibleTabComponent>; 4] = [
-            Box::new(statistics::Tab::new(progress.subscribe(), savefile)),
+            Box::new(statistics::Tab::new(savefile)),
             Box::new(progress::Tab::new(savefile)),
             Box::new(profile::avatar::Tab::new(profile.clone())),
             Box::new(profile::title::Tab::new(profile)),

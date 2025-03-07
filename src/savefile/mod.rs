@@ -12,7 +12,7 @@ pub struct Savefile {
 #[derive(Debug, Clone)]
 pub struct Progress {
     env: AoS2Env,
-    progress: PlayerProgress,
+    progress: Channel<PlayerProgress>,
     wins: Channel<SingleplayerWins>,
     playable_characters: Channel<PlayableCharacters>,
     arenas: Channel<Arenas>,
@@ -111,7 +111,7 @@ impl Progress {
 
         Ok(Self {
             env,
-            progress,
+            progress: Channel::new(progress),
             wins,
             playable_characters,
             arenas,
@@ -120,18 +120,45 @@ impl Progress {
     }
 
     pub fn save(&mut self) -> Result<(), Error> {
-        self.progress.save(&self.env).map_err(Error::Progress)
+        self.progress
+            .receiver
+            .borrow()
+            .save(&self.env)
+            .map_err(Error::Progress)
     }
 
     pub fn update(&mut self) -> bool {
         let mut has_changed = false;
+
         if self.playable_characters.has_changed() {
             let value = self.playable_characters.borrow_and_update().clone();
-            self.progress.playable_characters = value;
+            self.progress
+                .sender
+                .send_modify(|progress| progress.playable_characters = value);
             has_changed = true;
         }
 
+        if self.arenas.has_changed() {
+            let value = self.arenas.borrow_and_update().clone();
+            self.progress
+                .sender
+                .send_modify(|progress| progress.arenas = value);
+            has_changed = true
+        }
+
+        if self.music_tracks.has_changed() {
+            let value = self.music_tracks.borrow_and_update().clone();
+            self.progress
+                .sender
+                .send_modify(|progress| progress.music_tracks = value);
+            has_changed = true
+        }
+
         has_changed
+    }
+
+    pub fn read_all(&self) -> watch::Receiver<PlayerProgress> {
+        self.progress.receiver.clone()
     }
 
     pub fn read_wins(&self) -> watch::Receiver<SingleplayerWins> {

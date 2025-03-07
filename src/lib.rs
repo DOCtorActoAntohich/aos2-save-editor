@@ -17,7 +17,6 @@ use std::time::Instant;
 use anyhow::Context;
 use aos2_env::AoS2Env;
 use online_profile::PlayerOnlineProfile;
-use player_progress::PlayerProgress;
 use ratatui::{
     buffer::Buffer,
     crossterm::{self, event::KeyCode},
@@ -39,8 +38,6 @@ pub struct EditorApp {
     should_run: bool,
     content: FullHelpToggle<ContentWidget>,
     aos2_env: AoS2Env,
-    progress_tx: watch::Sender<PlayerProgress>,
-    progress_rx: watch::Receiver<PlayerProgress>,
     profile_tx: watch::Sender<PlayerOnlineProfile>,
     profile_rx: watch::Receiver<PlayerOnlineProfile>,
     previous_event: Event,
@@ -48,25 +45,13 @@ pub struct EditorApp {
 }
 
 impl EditorApp {
-    pub fn new(
-        aos2_env: AoS2Env,
-        progress: PlayerProgress,
-        profile: PlayerOnlineProfile,
-        savefile: Savefile,
-    ) -> Self {
-        let (progress_tx, progress_rx) = watch::channel(progress);
+    pub fn new(aos2_env: AoS2Env, profile: PlayerOnlineProfile, savefile: Savefile) -> Self {
         let (profile_tx, profile_rx) = watch::channel(profile);
 
         Self {
             should_run: true,
-            content: FullHelpToggle::new(ContentWidget::new(
-                progress_tx.clone(),
-                profile_tx.clone(),
-                &savefile,
-            )),
+            content: FullHelpToggle::new(ContentWidget::new(profile_tx.clone(), &savefile)),
             aos2_env,
-            progress_tx,
-            progress_rx,
             profile_tx,
             profile_rx,
             previous_event: Event::empty(Instant::now()),
@@ -103,17 +88,6 @@ impl EditorApp {
     }
 
     fn handle_savefile_updates(&mut self) -> anyhow::Result<()> {
-        if self
-            .progress_rx
-            .has_changed()
-            .context("Invariant Broken: Save tracking channel closed")?
-        {
-            let progress = self.progress_rx.borrow_and_update();
-            progress
-                .save(&self.aos2_env)
-                .context("Failed to save player progress file")?;
-        }
-
         if self
             .profile_rx
             .has_changed()
