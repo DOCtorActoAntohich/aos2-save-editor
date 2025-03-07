@@ -1,6 +1,8 @@
 #![warn(clippy::pedantic)]
 #![allow(clippy::missing_errors_doc)]
 
+pub mod savefile;
+
 mod collection;
 mod info;
 mod profile;
@@ -30,7 +32,7 @@ use crate::{
     tui::{HandleEvent, VisualComponent},
 };
 
-use self::{info::content_window::ContentWidget, tui::Event};
+use self::{info::content_window::ContentWidget, savefile::Savefile, tui::Event};
 
 #[must_use]
 pub struct EditorApp {
@@ -40,10 +42,16 @@ pub struct EditorApp {
     progress_rx: watch::Receiver<PlayerProgress>,
     profile_rx: watch::Receiver<PlayerOnlineProfile>,
     previous_event: Event,
+    savefile: Savefile,
 }
 
 impl EditorApp {
-    pub fn new(aos2_env: AoS2Env, progress: PlayerProgress, profile: PlayerOnlineProfile) -> Self {
+    pub fn new(
+        aos2_env: AoS2Env,
+        progress: PlayerProgress,
+        profile: PlayerOnlineProfile,
+        savefile: Savefile,
+    ) -> Self {
         let (progress_tx, progress_rx) = watch::channel(progress);
         let (profile_tx, profile_rx) = watch::channel(profile);
 
@@ -54,6 +62,7 @@ impl EditorApp {
             progress_rx,
             profile_rx,
             previous_event: Event::empty(Instant::now()),
+            savefile,
         }
     }
 
@@ -107,6 +116,8 @@ impl EditorApp {
                 .save(&self.aos2_env)
                 .context("Failed to save online profile to a file")?;
         }
+
+        self.savefile.update_and_save()?;
 
         Ok(())
     }

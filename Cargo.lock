@@ -108,6 +108,7 @@ dependencies = [
  "ratatui",
  "rstest",
  "rstest_reuse",
+ "thiserror",
  "tokio",
  "winresource",
 ]
