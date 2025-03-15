@@ -60,7 +60,7 @@ impl<T: Item> HandleEvent for Generic<T> {
             Some(KeyCode::Enter) => {
                 let new_selected = index.select_hovered().selected().unwrap_or_default();
 
-                let new = items.get(new_selected).cloned().unwrap_or_default();
+                let new = items.get(new_selected).copied().unwrap_or_default();
                 self.data.send(new);
             }
             Some(KeyCode::Char(_)) => {

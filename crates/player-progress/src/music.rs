@@ -53,7 +53,7 @@ impl MusicTracks {
     pub const ALL: Self = Self([Status::Enabled; Self::AMOUNT]);
 
     pub fn toggle(&mut self, music: MusicTrack) {
-        self[music] = !self[music]
+        self[music] = !self[music];
     }
 }
 

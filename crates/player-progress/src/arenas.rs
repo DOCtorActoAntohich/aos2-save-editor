@@ -14,7 +14,7 @@ pub struct Arenas {
     #[deref]
     #[as_ref(forward)]
     arenas: [Status; Arenas::AMOUNT],
-    _0x2d: UnknownU8,
+    unused_0x2d: UnknownU8,
 }
 
 /// IMPORTANT: ORDER MATTERS. Do not reorder.
@@ -33,7 +33,7 @@ struct RawArenas {
     pub whirlpool_of_malice: Status,
 
     /// Seems to have no effect when modified, but is needed for proper parsing.
-    _0x2d: UnknownU8,
+    unused_0x2d: UnknownU8,
 
     pub nature_10k: Status,
     pub crashed_spaceship: Status,
@@ -95,7 +95,7 @@ impl Arenas {
 
     pub const ALL: Self = Self {
         arenas: [Status::Enabled; Self::AMOUNT],
-        _0x2d: UnknownU8(0),
+        unused_0x2d: UnknownU8(0),
     };
 
     pub fn toggle(&mut self, arena: Arena) {
@@ -111,7 +111,10 @@ impl StatusSequence for Arenas {
     }
 
     fn list(&self) -> Vec<(String, Status)> {
-        let Self { arenas, _0x2d: _ } = self;
+        let Self {
+            arenas,
+            unused_0x2d: _,
+        } = self;
         Arena::members()
             .into_iter()
             .zip(arenas.iter().copied())
@@ -124,14 +127,20 @@ impl Index<Arena> for Arenas {
     type Output = Status;
 
     fn index(&self, index: Arena) -> &Self::Output {
-        let Self { arenas, _0x2d: _ } = self;
+        let Self {
+            arenas,
+            unused_0x2d: _,
+        } = self;
         &arenas[index as usize]
     }
 }
 
 impl IndexMut<Arena> for Arenas {
     fn index_mut(&mut self, index: Arena) -> &mut Self::Output {
-        let Self { arenas, _0x2d: _ } = self;
+        let Self {
+            arenas,
+            unused_0x2d: _,
+        } = self;
         &mut arenas[index as usize]
     }
 }
@@ -175,7 +184,7 @@ impl From<RawArenas> for Arenas {
             big_bridge,
             capital_in_flames,
             whirlpool_of_malice,
-            _0x2d,
+            unused_0x2d,
             nature_10k,
             crashed_spaceship,
             guardians_chamber,
@@ -199,13 +208,19 @@ impl From<RawArenas> for Arenas {
             moonlight_dance_hall,
             sumika_hideout,
         ];
-        Self { arenas, _0x2d }
+        Self {
+            arenas,
+            unused_0x2d,
+        }
     }
 }
 
 impl From<&Arenas> for RawArenas {
     fn from(arenas: &Arenas) -> Self {
-        let Arenas { arenas, _0x2d } = arenas.clone();
+        let Arenas {
+            arenas,
+            unused_0x2d,
+        } = arenas.clone();
         let [before_the_war, war_10k_years_ago, canyon_of_wind, dust_storm, rain_and_sunset, equator_doldrums, big_bridge, capital_in_flames, whirlpool_of_malice, nature_10k, crashed_spaceship, guardians_chamber, moonlight_dance_hall, sumika_hideout] =
             arenas;
         Self {
@@ -218,7 +233,7 @@ impl From<&Arenas> for RawArenas {
             big_bridge,
             capital_in_flames,
             whirlpool_of_malice,
-            _0x2d,
+            unused_0x2d,
             nature_10k,
             crashed_spaceship,
             guardians_chamber,

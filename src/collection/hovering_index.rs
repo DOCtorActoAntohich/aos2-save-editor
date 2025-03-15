@@ -121,8 +121,5 @@ impl RadioButtonIndex {
 }
 
 fn clamped(index: usize, n_items: usize) -> Option<usize> {
-    match n_items.checked_sub(1) {
-        Some(max) => Some(index.clamp(0, max)),
-        None => None,
-    }
+    n_items.checked_sub(1).map(|max| index.clamp(0, max))
 }

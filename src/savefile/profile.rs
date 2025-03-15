@@ -10,10 +10,17 @@ pub struct Profile {
     profile: Channel<PlayerOnlineProfile>,
 }
 
+trait GetFn<T>: Send + Fn(&PlayerOnlineProfile) -> T {}
+trait ModifyFn<T>: Send + Fn(&mut PlayerOnlineProfile, T) {}
+
+impl<A, T> GetFn<T> for A where A: Send + Fn(&PlayerOnlineProfile) -> T {}
+
+impl<A, T> ModifyFn<T> for A where A: Send + Fn(&mut PlayerOnlineProfile, T) {}
+
 pub struct Modify<T> {
     profile: watch::Sender<PlayerOnlineProfile>,
-    modify: Box<dyn Fn(&mut PlayerOnlineProfile, T) + Send>,
-    get: Box<dyn Fn(&PlayerOnlineProfile) -> T + Send>,
+    modify: Box<dyn ModifyFn<T>>,
+    get: Box<dyn GetFn<T>>,
 }
 
 impl Profile {
@@ -36,6 +43,7 @@ impl Profile {
         }
     }
 
+    #[must_use]
     pub fn write_title_character(&self) -> Modify<title::Character> {
         Modify {
             profile: self.profile.sender(),
@@ -48,6 +56,7 @@ impl Profile {
         }
     }
 
+    #[must_use]
     pub fn write_title_color(&self) -> Modify<title::Color> {
         Modify {
             profile: self.profile.sender(),
@@ -58,6 +67,7 @@ impl Profile {
         }
     }
 
+    #[must_use]
     pub fn write_title_text(&self) -> Modify<title::Text> {
         Modify {
             profile: self.profile.sender(),
@@ -68,6 +78,7 @@ impl Profile {
         }
     }
 
+    #[must_use]
     pub fn write_avatar_character(&self) -> Modify<avatar::Character> {
         Modify {
             profile: self.profile.sender(),
@@ -80,6 +91,7 @@ impl Profile {
         }
     }
 
+    #[must_use]
     pub fn write_avatar_background(&self) -> Modify<avatar::Background> {
         Modify {
             profile: self.profile.sender(),
@@ -94,6 +106,7 @@ impl Profile {
 }
 
 impl<T> Modify<T> {
+    #[must_use]
     pub fn get(&self) -> T {
         let profile = self.profile.borrow();
         (self.get)(&profile)

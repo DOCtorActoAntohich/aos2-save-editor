@@ -33,20 +33,14 @@ impl Savefile {
         Ok(Self { progress, profile })
     }
 
+    #[must_use]
     pub fn progress(&self) -> &Progress {
         &self.progress
     }
 
-    pub fn mut_progress(&mut self) -> &mut Progress {
-        &mut self.progress
-    }
-
+    #[must_use]
     pub fn profile(&self) -> &Profile {
         &self.profile
-    }
-
-    pub fn mut_profile(&mut self) -> &mut Profile {
-        &mut self.profile
     }
 
     pub fn update_and_save(&mut self) -> Result<(), Error> {

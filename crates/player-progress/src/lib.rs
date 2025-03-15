@@ -283,10 +283,10 @@ impl TryFrom<PlayerProgress> for EncodedProgress {
         let header: [u8; Self::HEADER_SIZE] =
             TryInto::<&[u8; Self::HEADER_SIZE]>::try_into(&buffer[..Self::HEADER_SIZE])
                 .expect("Invariant: Arrays of fixed and known size must match")
-                .clone();
+                .to_owned();
 
         let body: [u8; Self::BODY_SIZE] = buffer[Self::HEADER_SIZE..]
-            .into_iter()
+            .iter()
             .enumerate()
             .map(|(index, &byte)| {
                 let key = Self::ENCODING_START_KEY.wrapping_add_usize(index);

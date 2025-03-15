@@ -22,6 +22,7 @@ macro_rules! declare_sized_section {
         impl $name {
             pub const SIZE: usize = $size as usize;
 
+            #[must_use]
             pub fn is_fully_unlocked(&self) -> bool {
                 let Self { items } = self;
                 items.iter().all(|&item| item == Status::Open)

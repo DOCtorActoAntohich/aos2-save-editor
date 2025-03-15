@@ -35,16 +35,16 @@ impl<T: Item> HandleEvent for Table<T> {
             HoveringIndex::from_collection(&sequence.as_ref()).with_current(self.current_index);
         match event.key_code() {
             Some(KeyCode::Up) => {
-                self.current_index = hover.previous().into_index().unwrap_or_default()
+                self.current_index = hover.previous().into_index().unwrap_or_default();
             }
             Some(KeyCode::Down) => {
-                self.current_index = hover.next().into_index().unwrap_or_default()
+                self.current_index = hover.next().into_index().unwrap_or_default();
             }
             Some(KeyCode::Home) => {
-                self.current_index = hover.first().into_index().unwrap_or_default()
+                self.current_index = hover.first().into_index().unwrap_or_default();
             }
             Some(KeyCode::End) => {
-                self.current_index = hover.last().into_index().unwrap_or_default()
+                self.current_index = hover.last().into_index().unwrap_or_default();
             }
             Some(KeyCode::Enter) => {
                 sequence.toggle_at(self.current_index);

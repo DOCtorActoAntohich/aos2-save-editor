@@ -7,6 +7,13 @@ use tokio::sync::watch;
 
 use super::{channel::Channel, Error};
 
+trait GetFn<T>: Send + Fn(&PlayerProgress) -> T {}
+trait ModifyFn<T>: Send + Fn(&mut PlayerProgress, T) {}
+
+impl<A, T> GetFn<T> for A where A: Send + Fn(&PlayerProgress) -> T {}
+
+impl<A, T> ModifyFn<T> for A where A: Send + Fn(&mut PlayerProgress, T) {}
+
 #[derive(Debug, Clone)]
 pub struct Progress {
     env: AoS2Env,
@@ -23,8 +30,8 @@ pub struct ComplationStats {
 
 pub struct Modify<T> {
     progress: watch::Sender<PlayerProgress>,
-    modify: Box<dyn Fn(&mut PlayerProgress, T) + Send>,
-    get: Box<dyn Fn(&PlayerProgress) -> T + Send>,
+    modify: Box<dyn ModifyFn<T>>,
+    get: Box<dyn GetFn<T>>,
 }
 
 pub struct Read<T> {
@@ -53,6 +60,7 @@ impl Progress {
         }
     }
 
+    #[must_use]
     pub fn read_completion_stats(&self) -> Read<ComplationStats> {
         Read {
             progress: self.progress.receiver(),
@@ -65,6 +73,7 @@ impl Progress {
         }
     }
 
+    #[must_use]
     pub fn read_wins(&self) -> Read<SingleplayerWins> {
         Read {
             progress: self.progress.receiver(),
@@ -72,6 +81,7 @@ impl Progress {
         }
     }
 
+    #[must_use]
     pub fn write_playable_characters(&self) -> Modify<PlayableCharacters> {
         Modify {
             progress: self.progress.sender(),
@@ -84,6 +94,7 @@ impl Progress {
         }
     }
 
+    #[must_use]
     pub fn write_arenas(&self) -> Modify<Arenas> {
         Modify {
             progress: self.progress.sender(),
@@ -94,6 +105,7 @@ impl Progress {
         }
     }
 
+    #[must_use]
     pub fn write_music_tracks(&self) -> Modify<MusicTracks> {
         Modify {
             progress: self.progress.sender(),
@@ -112,12 +124,14 @@ impl<T> Modify<T> {
         });
     }
 
+    #[must_use]
     pub fn get(&self) -> T {
         (self.get)(&self.progress.borrow())
     }
 }
 
 impl<T> Read<T> {
+    #[must_use]
     pub fn get(&self) -> T {
         let progress = self.progress.borrow();
         (self.get)(&progress)
