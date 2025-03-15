@@ -16,7 +16,6 @@ impl<A, T> ModifyFn<T> for A where A: Send + Fn(&mut PlayerProgress, T) {}
 
 #[derive(Debug, Clone)]
 pub struct Progress {
-    env: AoS2Env,
     progress: Channel<PlayerProgress>,
 }
 
@@ -40,20 +39,19 @@ pub struct Read<T> {
 }
 
 impl Progress {
-    pub fn load(env: AoS2Env) -> Result<Self, Error> {
-        let progress = PlayerProgress::load(&env)?.ok_or(Error::MissingProgress)?;
+    pub fn load(env: &AoS2Env) -> Result<Self, Error> {
+        let progress = PlayerProgress::load(env)?.ok_or(Error::MissingProgress)?;
 
         Ok(Self {
-            env,
             progress: Channel::new(progress),
         })
     }
 
-    pub fn save(&mut self) -> Result<(), Error> {
+    pub fn save(&mut self, env: &AoS2Env) -> Result<(), Error> {
         if self.progress.has_changed() {
             self.progress
                 .borrow_and_update()
-                .save(&self.env)
+                .save(env)
                 .map_err(Error::Progress)
         } else {
             Ok(())

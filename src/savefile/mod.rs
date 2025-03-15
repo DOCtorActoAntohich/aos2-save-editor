@@ -9,6 +9,7 @@ use self::{profile::Profile, progress::Progress};
 
 #[derive(Debug, Clone)]
 pub struct Savefile {
+    aos2_env: AoS2Env,
     progress: Progress,
     profile: Profile,
 }
@@ -26,11 +27,15 @@ pub enum Error {
 }
 
 impl Savefile {
-    pub fn load(env: AoS2Env) -> Result<Self, Error> {
-        let progress = Progress::load(env.clone())?;
-        let profile = Profile::load(env)?;
+    pub fn load(aos2_env: AoS2Env) -> Result<Self, Error> {
+        let progress = Progress::load(&aos2_env)?;
+        let profile = Profile::load(&aos2_env)?;
 
-        Ok(Self { progress, profile })
+        Ok(Self {
+            aos2_env,
+            progress,
+            profile,
+        })
     }
 
     #[must_use]
@@ -44,8 +49,8 @@ impl Savefile {
     }
 
     pub fn save_all(&mut self) -> Result<(), Error> {
-        self.progress.save()?;
-        self.profile.save()?;
+        self.progress.save(&self.aos2_env)?;
+        self.profile.save(&self.aos2_env)?;
 
         Ok(())
     }

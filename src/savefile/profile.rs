@@ -6,7 +6,6 @@ use super::{channel::Channel, Error};
 
 #[derive(Debug, Clone)]
 pub struct Profile {
-    env: AoS2Env,
     profile: Channel<PlayerOnlineProfile>,
 }
 
@@ -24,19 +23,18 @@ pub struct Modify<T> {
 }
 
 impl Profile {
-    pub fn load(env: AoS2Env) -> Result<Self, Error> {
-        let profile = PlayerOnlineProfile::load(&env)?.ok_or(Error::MissingProfile)?;
+    pub fn load(env: &AoS2Env) -> Result<Self, Error> {
+        let profile = PlayerOnlineProfile::load(env)?.ok_or(Error::MissingProfile)?;
         Ok(Self {
-            env,
             profile: Channel::new(profile),
         })
     }
 
-    pub fn save(&mut self) -> Result<(), Error> {
+    pub fn save(&mut self, env: &AoS2Env) -> Result<(), Error> {
         if self.profile.has_changed() {
             self.profile
                 .borrow_and_update()
-                .save(&self.env)
+                .save(env)
                 .map_err(Error::Profile)
         } else {
             Ok(())
