@@ -28,9 +28,9 @@ impl TablesCollection {
     pub const CONSTRAINT: Constraint = Constraint::Fill(1);
 
     pub fn new(savefile: &Savefile) -> Self {
-        let playable_characters = savefile.progress().write_playable_characters();
-        let arenas = savefile.progress().write_arenas();
-        let music_tracks = savefile.progress().write_music_tracks();
+        let playable_characters = savefile.progress().modify_playable_characters();
+        let arenas = savefile.progress().modify_arenas();
+        let music_tracks = savefile.progress().modify_music_tracks();
 
         let tables: [Box<dyn Table>; 3] = [
             Box::new(self::generic::Table::new("Characters", playable_characters)),

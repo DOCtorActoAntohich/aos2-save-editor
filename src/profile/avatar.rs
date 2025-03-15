@@ -29,8 +29,8 @@ impl InfoText {
 
 impl Tab {
     pub fn new(savefile: &Savefile) -> Self {
-        let character = savefile.profile().write_avatar_character();
-        let background = savefile.profile().write_avatar_background();
+        let character = savefile.profile().modify_avatar_character();
+        let background = savefile.profile().modify_avatar_background();
 
         let tables: [Box<dyn Table>; 2] = [
             Box::new(table::Generic::new("Character", character)),

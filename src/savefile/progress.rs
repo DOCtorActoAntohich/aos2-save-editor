@@ -82,7 +82,7 @@ impl Progress {
     }
 
     #[must_use]
-    pub fn write_playable_characters(&self) -> Modify<PlayableCharacters> {
+    pub fn modify_playable_characters(&self) -> Modify<PlayableCharacters> {
         Modify {
             progress: self.progress.sender(),
             modify: Box::new(
@@ -95,7 +95,7 @@ impl Progress {
     }
 
     #[must_use]
-    pub fn write_arenas(&self) -> Modify<Arenas> {
+    pub fn modify_arenas(&self) -> Modify<Arenas> {
         Modify {
             progress: self.progress.sender(),
             modify: Box::new(|progress: &mut PlayerProgress, arenas: Arenas| {
@@ -106,7 +106,7 @@ impl Progress {
     }
 
     #[must_use]
-    pub fn write_music_tracks(&self) -> Modify<MusicTracks> {
+    pub fn modify_music_tracks(&self) -> Modify<MusicTracks> {
         Modify {
             progress: self.progress.sender(),
             modify: Box::new(|progress: &mut PlayerProgress, music: MusicTracks| {

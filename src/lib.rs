@@ -76,7 +76,7 @@ impl EditorApp {
     }
 
     fn handle_savefile_updates(&mut self) -> anyhow::Result<()> {
-        self.savefile.update_and_save()?;
+        self.savefile.save_all()?;
 
         Ok(())
     }

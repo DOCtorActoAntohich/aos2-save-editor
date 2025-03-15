@@ -43,7 +43,7 @@ impl Savefile {
         &self.profile
     }
 
-    pub fn update_and_save(&mut self) -> Result<(), Error> {
+    pub fn save_all(&mut self) -> Result<(), Error> {
         self.progress.save()?;
         self.profile.save()?;
 

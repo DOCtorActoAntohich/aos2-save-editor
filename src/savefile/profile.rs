@@ -44,7 +44,7 @@ impl Profile {
     }
 
     #[must_use]
-    pub fn write_title_character(&self) -> Modify<title::Character> {
+    pub fn modify_title_character(&self) -> Modify<title::Character> {
         Modify {
             profile: self.profile.sender(),
             modify: Box::new(
@@ -57,7 +57,7 @@ impl Profile {
     }
 
     #[must_use]
-    pub fn write_title_color(&self) -> Modify<title::Color> {
+    pub fn modify_title_color(&self) -> Modify<title::Color> {
         Modify {
             profile: self.profile.sender(),
             modify: Box::new(|profile: &mut PlayerOnlineProfile, color: title::Color| {
@@ -68,7 +68,7 @@ impl Profile {
     }
 
     #[must_use]
-    pub fn write_title_text(&self) -> Modify<title::Text> {
+    pub fn modify_title_text(&self) -> Modify<title::Text> {
         Modify {
             profile: self.profile.sender(),
             modify: Box::new(|profile: &mut PlayerOnlineProfile, text: title::Text| {
@@ -79,7 +79,7 @@ impl Profile {
     }
 
     #[must_use]
-    pub fn write_avatar_character(&self) -> Modify<avatar::Character> {
+    pub fn modify_avatar_character(&self) -> Modify<avatar::Character> {
         Modify {
             profile: self.profile.sender(),
             modify: Box::new(
@@ -92,7 +92,7 @@ impl Profile {
     }
 
     #[must_use]
-    pub fn write_avatar_background(&self) -> Modify<avatar::Background> {
+    pub fn modify_avatar_background(&self) -> Modify<avatar::Background> {
         Modify {
             profile: self.profile.sender(),
             modify: Box::new(

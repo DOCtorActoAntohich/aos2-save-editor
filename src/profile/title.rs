@@ -29,9 +29,9 @@ impl InfoText {
 
 impl Tab {
     pub fn new(savefile: &Savefile) -> Self {
-        let title_color = savefile.profile().write_title_color();
-        let character = savefile.profile().write_title_character();
-        let title_text = savefile.profile().write_title_text();
+        let title_color = savefile.profile().modify_title_color();
+        let character = savefile.profile().modify_title_character();
+        let title_text = savefile.profile().modify_title_text();
 
         let tables: [Box<dyn Table>; 3] = [
             Box::new(table::Generic::new("Color", title_color)),
