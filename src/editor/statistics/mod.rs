@@ -25,6 +25,7 @@ pub struct Tab {
 struct InfoText;
 
 impl Tab {
+    #[must_use]
     pub fn new(savefile: &Savefile) -> Self {
         let completion_stats = savefile.progress().read_completion_stats();
         let wins = savefile.progress().read_wins();

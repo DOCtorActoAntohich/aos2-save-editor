@@ -25,6 +25,7 @@ pub struct ContentWidget {
 }
 
 impl ContentWidget {
+    #[must_use]
     pub fn new(savefile: &Savefile) -> Self {
         let tabs: [Box<dyn InteratibleTabComponent>; 4] = [
             Box::new(editor::statistics::Tab::new(savefile)),

@@ -31,6 +31,7 @@ impl InfoText {
 }
 
 impl Tab {
+    #[must_use]
     pub fn new(savefile: &Savefile) -> Self {
         Self {
             tables: TablesCollection::new(savefile),

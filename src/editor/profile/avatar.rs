@@ -28,6 +28,7 @@ impl InfoText {
 }
 
 impl Tab {
+    #[must_use]
     pub fn new(savefile: &Savefile) -> Self {
         let character = savefile.profile().modify_avatar_character();
         let background = savefile.profile().modify_avatar_background();

@@ -28,6 +28,7 @@ impl InfoText {
 }
 
 impl Tab {
+    #[must_use]
     pub fn new(savefile: &Savefile) -> Self {
         let title_color = savefile.profile().modify_title_color();
         let character = savefile.profile().modify_title_character();
