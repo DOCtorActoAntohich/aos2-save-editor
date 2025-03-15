@@ -1,4 +1,4 @@
-use player_progress::{Character, PlayerProgress, Run};
+use player_progress::{Character, Run};
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
@@ -6,15 +6,15 @@ use ratatui::{
     text::Text,
     widgets::{Cell, Row, Table, Widget},
 };
-use tokio::sync::watch;
 
 use crate::{
+    savefile::progress,
     style::{IndexedColor, WithColor},
     tui::VisualComponent,
 };
 
 pub struct CharacterStats {
-    progress: watch::Receiver<PlayerProgress>,
+    stats: progress::Read<progress::ComplationStats>,
 }
 
 struct ContentRow {
@@ -31,8 +31,8 @@ struct RawRow<'a>([Cell<'a>; const { ContentRow::COLUMN_HEADERS.len() }]);
 struct CompletionStatus(Option<Run>);
 
 impl CharacterStats {
-    pub fn new(progress: watch::Receiver<PlayerProgress>) -> Self {
-        Self { progress }
+    pub fn new(stats: progress::Read<progress::ComplationStats>) -> Self {
+        Self { stats }
     }
 }
 
@@ -106,12 +106,14 @@ impl<'a> From<RawRow<'a>> for Row<'a> {
 
 impl VisualComponent for CharacterStats {
     fn render(&self, area: Rect, buf: &mut Buffer) {
-        let progress = self.progress.borrow();
-        let arcade_easy = progress.arcade_easy_1ccs.to_array();
-        let arcade_medium = progress.arcade_medium_1ccs.to_array();
-        let arcade_hard = progress.arcade_hard_1ccs.to_array();
-        let story = progress
-            .story_1ccs
+        let progress::ComplationStats {
+            arcade_easy,
+            arcade_medium,
+            arcade_hard,
+            story_any,
+        } = self.stats.get();
+
+        let story = story_any
             .to_array()
             .into_iter()
             .map(Some)
@@ -119,9 +121,9 @@ impl VisualComponent for CharacterStats {
 
         let content = Character::members()
             .into_iter()
-            .zip(arcade_easy)
-            .zip(arcade_medium)
-            .zip(arcade_hard)
+            .zip(arcade_easy.to_array())
+            .zip(arcade_medium.to_array())
+            .zip(arcade_hard.to_array())
             .zip(story)
             .map(
                 |((((character, arcade_easy), arcade_medium), arcade_hard), story)| ContentRow {

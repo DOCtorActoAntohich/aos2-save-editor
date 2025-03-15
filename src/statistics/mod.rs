@@ -26,10 +26,10 @@ struct InfoText;
 
 impl Tab {
     pub fn new(savefile: &Savefile) -> Self {
-        let full_progress = savefile.progress().read_all();
+        let completion_stats = savefile.progress().read_completion_stats();
         let wins = savefile.progress().read_wins();
         Self {
-            character_stats: CharacterStats::new(full_progress),
+            character_stats: CharacterStats::new(completion_stats),
             match_stats: SingleplayerMatchStats::new(wins),
         }
     }

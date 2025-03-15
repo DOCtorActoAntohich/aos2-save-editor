@@ -5,23 +5,22 @@ use ratatui::{
     text::Text,
     widgets::{List, Widget},
 };
-use tokio::sync::watch;
 
-use crate::tui::VisualComponent;
+use crate::{savefile::progress, tui::VisualComponent};
 
 pub struct SingleplayerMatchStats {
-    wins: watch::Receiver<SingleplayerWins>,
+    wins: progress::Read<SingleplayerWins>,
 }
 
 impl SingleplayerMatchStats {
-    pub fn new(wins: watch::Receiver<SingleplayerWins>) -> Self {
+    pub fn new(wins: progress::Read<SingleplayerWins>) -> Self {
         Self { wins }
     }
 }
 
 impl VisualComponent for SingleplayerMatchStats {
     fn render(&self, area: Rect, buf: &mut Buffer) {
-        let wins = self.wins.borrow();
+        let wins = self.wins.get();
 
         let items = [
             Text::from("Easy arcade 1CCs:"),

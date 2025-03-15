@@ -4,7 +4,7 @@ use ratatui::crossterm::event::KeyCode;
 use crate::{
     collection::{RadioButtonIndex, TextSearch},
     profile::widget::{RadioButtonsContent, RadioButtonsTable},
-    savefile::ModifyProfile,
+    savefile::profile,
     tui::{Event, HandleEvent},
 };
 
@@ -15,13 +15,13 @@ pub trait Item: MembersList {}
 impl<T> Item for T where T: MembersList {}
 
 pub struct Generic<T> {
-    data: ModifyProfile<T>,
+    data: profile::Modify<T>,
     name: String,
     hovered: usize,
 }
 
 impl<T: Item> Generic<T> {
-    pub fn new(name: impl Into<String>, data: ModifyProfile<T>) -> Self {
+    pub fn new(name: impl Into<String>, data: profile::Modify<T>) -> Self {
         Self {
             data,
             name: name.into(),
