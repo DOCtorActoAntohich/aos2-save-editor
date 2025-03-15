@@ -49,3 +49,7 @@ A few problems to maybe solve in the future.
 - I haven't tested if it works on Linux.
 - I haven't been able to figure out all the fields in the savefile.
   [`easydiff`](./crates/easydiff/) crate in this workspace can help with that.
+
+## License
+
+Licensed under [MIT license](./LICENSE)
