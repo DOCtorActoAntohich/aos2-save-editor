@@ -10,7 +10,7 @@ use ratatui::{
 };
 
 use crate::{
-    info::content_window::InteratibleTabComponent,
+    editor::info::content_window::InteratibleTabComponent,
     savefile::Savefile,
     style::{IndexedColor, WithColor},
     tui::{Event, HandleEvent, VisualComponent},

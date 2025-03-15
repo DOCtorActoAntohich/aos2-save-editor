@@ -8,9 +8,8 @@ use ratatui::{
 
 use crate::{
     collection::SelectableArray,
-    profile, progress,
+    editor,
     savefile::Savefile,
-    statistics,
     tui::{Event, HandleEvent, InteractibleComponent, VisualComponent},
     widget::content_box::ContentBox,
 };
@@ -28,10 +27,10 @@ pub struct ContentWidget {
 impl ContentWidget {
     pub fn new(savefile: &Savefile) -> Self {
         let tabs: [Box<dyn InteratibleTabComponent>; 4] = [
-            Box::new(statistics::Tab::new(savefile)),
-            Box::new(progress::Tab::new(savefile)),
-            Box::new(profile::avatar::Tab::new(savefile)),
-            Box::new(profile::title::Tab::new(savefile)),
+            Box::new(editor::statistics::Tab::new(savefile)),
+            Box::new(editor::progress::Tab::new(savefile)),
+            Box::new(editor::profile::avatar::Tab::new(savefile)),
+            Box::new(editor::profile::title::Tab::new(savefile)),
         ];
         Self {
             tabs: SelectableArray::new(tabs),

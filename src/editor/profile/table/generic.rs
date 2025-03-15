@@ -3,7 +3,7 @@ use ratatui::crossterm::event::KeyCode;
 
 use crate::{
     collection::{RadioButtonIndex, TextSearch},
-    profile::widget::{RadioButtonsContent, RadioButtonsTable},
+    editor::profile::widget::{RadioButtonsContent, RadioButtonsTable},
     savefile::profile,
     tui::{Event, HandleEvent},
 };

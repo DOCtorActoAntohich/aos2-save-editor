@@ -1,5 +1,5 @@
 use aos2_env::AoS2Env;
-use aos2_save_editor::{savefile::Savefile, EditorApp};
+use aos2_save_editor::{editor::EditorApp, savefile::Savefile};
 
 fn main() -> anyhow::Result<()> {
     let aos2_env = AoS2Env::from_env()?;

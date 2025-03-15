@@ -3,7 +3,7 @@ use ratatui::crossterm::event::KeyCode;
 
 use crate::{
     collection::HoveringIndex,
-    progress::widget::{TogglesContent, TogglesTable},
+    editor::progress::widget::{TogglesContent, TogglesTable},
     savefile::progress,
     tui::{Event, HandleEvent},
 };

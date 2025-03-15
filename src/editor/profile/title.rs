@@ -7,7 +7,7 @@ use ratatui::{
 };
 
 use crate::{
-    info::content_window::InteratibleTabComponent,
+    editor::info::content_window::InteratibleTabComponent,
     savefile::Savefile,
     style::{IndexedColor, WithColor},
     tui::{Event, HandleEvent, VisualComponent},
@@ -17,24 +17,26 @@ use crate::{
 use super::table::{self, Table};
 
 pub struct Tab {
-    tables: table::Collection<2>,
+    tables: table::Collection<3>,
 }
 
 struct InfoText;
 
 impl InfoText {
-    const N_LINES: u16 = 3;
+    const N_LINES: u16 = 6;
     const CONSTRAINT: Constraint = Constraint::Length(Self::N_LINES);
 }
 
 impl Tab {
     pub fn new(savefile: &Savefile) -> Self {
-        let character = savefile.profile().modify_avatar_character();
-        let background = savefile.profile().modify_avatar_background();
+        let title_color = savefile.profile().modify_title_color();
+        let character = savefile.profile().modify_title_character();
+        let title_text = savefile.profile().modify_title_text();
 
-        let tables: [Box<dyn Table>; 2] = [
-            Box::new(table::Generic::new("Character", character)),
-            Box::new(table::Generic::new("Background", background)),
+        let tables: [Box<dyn Table>; 3] = [
+            Box::new(table::Generic::new("Color", title_color)),
+            Box::new(table::Generic::new("Background Character", character)),
+            Box::new(table::Generic::new("Title Text", title_text)),
         ];
 
         Self {
@@ -69,24 +71,28 @@ impl VisualComponent for Tab {
 
 impl InteratibleTabComponent for Tab {
     fn name(&self) -> &'static str {
-        "Online Avatar"
+        "Online Title"
     }
 }
 
 impl VisualComponent for InfoText {
     fn render(&self, area: Rect, buf: &mut Buffer) {
         let lines: [Line<'_>; Self::N_LINES as usize] = [
-            Line::from("Character and Background on your profile")
+            Line::from("Choose any multiplayer title - free of charge")
                 .style(Style::new().with_bg(Color::Black).with_fg(Color::White))
                 .centered(),
-            Line::from("Nothing very interesting here, if you ask me...").centered(),
-            Line::from("Check out Titles instead")
+            Line::from("").centered(),
+            Line::from("Start typing with your keyboard for easy search (lists are long)")
                 .style(
                     Style::new()
                         .with_bg(Color::Black)
                         .with_fg(IndexedColor::DarkYellow),
                 )
                 .centered(),
+            Line::from("").centered(),
+            Line::from("\"Background character\" changes character eyes in the title background")
+                .centered(),
+            Line::from("For some reason, this setting can turn Titles On/Off...").centered(),
         ];
         List::new(lines).render(area, buf);
     }
