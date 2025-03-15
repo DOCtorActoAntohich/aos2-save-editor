@@ -21,14 +21,14 @@ use crate::{
 use self::info::{content_window::ContentWidget, info_toggle::FullHelpToggle};
 
 #[must_use]
-pub struct EditorApp {
+pub struct App {
     should_run: bool,
     content: FullHelpToggle<ContentWidget>,
     previous_event: Event,
     savefile: Savefile,
 }
 
-impl EditorApp {
+impl App {
     pub fn new(savefile: Savefile) -> Self {
         Self {
             should_run: true,
@@ -77,7 +77,7 @@ impl EditorApp {
     }
 }
 
-impl HandleEvent for EditorApp {
+impl HandleEvent for App {
     fn handle_event(&mut self, event: &Event) {
         match event.key_code() {
             Some(KeyCode::Esc) => self.exit(),
@@ -86,7 +86,7 @@ impl HandleEvent for EditorApp {
     }
 }
 
-impl Widget for &EditorApp {
+impl Widget for &App {
     fn render(self, area: Rect, buf: &mut Buffer)
     where
         Self: Sized,
