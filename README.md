@@ -14,12 +14,15 @@ If any of that describes you:
 
 Then this tool is for you. ![:ohh_yeah:](https://steamcommunity-a.akamaihd.net/economy/emoticon/:ohh_yeah:)
 
-With it you can do the following:
+### Features
+
+With this app, you can do the following:
 
 - Unlock locked characters.
 - Lock characters unlocked by default - no more Sham or Iru.
 - Unlock all music and arena backgrounds.
-- (Planned for future) Unlock all customization options for a player's online profile.
+- Use all customization options for your online profile.
+  - Allows combinations that are not available from the game UI.
 
 However:
 
