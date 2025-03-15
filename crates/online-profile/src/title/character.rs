@@ -1,3 +1,5 @@
+use crate::MembersList;
+
 /// Little character eyes peeking from the title background.
 ///
 /// In the game, only AoS2 characters are available.
@@ -20,6 +22,7 @@
 )]
 #[brw(little, repr(u32))]
 #[repr(u32)]
+#[try_from(repr)]
 pub enum Character {
     #[default]
     #[display("<No character>")]
@@ -74,4 +77,16 @@ pub enum Character {
     OjMira = 0x1f,
     #[display("<Disable Title>")]
     DisableTitle = 0xff,
+}
+
+impl MembersList for Character {
+    fn members() -> Vec<Self> {
+        Self::members().to_vec()
+    }
+}
+
+impl From<Character> for u32 {
+    fn from(value: Character) -> Self {
+        value as u32
+    }
 }

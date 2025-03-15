@@ -1,4 +1,3 @@
-use online_profile::{title, PlayerOnlineProfile};
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
@@ -6,10 +5,10 @@ use ratatui::{
     text::Line,
     widgets::{List, Widget},
 };
-use tokio::sync::watch;
 
 use crate::{
     info::content_window::InteratibleTabComponent,
+    savefile::Savefile,
     style::{IndexedColor, WithColor},
     tui::{Event, HandleEvent, VisualComponent},
     widget::split,
@@ -29,39 +28,15 @@ impl InfoText {
 }
 
 impl Tab {
-    pub fn new(profile: watch::Sender<PlayerOnlineProfile>) -> Self {
-        let color_params = table::Params {
-            profile: profile.clone(),
-            items: title::Color::members(),
-            current: profile.borrow().title_color,
-            on_selected: |profile: &mut PlayerOnlineProfile, color: &title::Color| {
-                profile.title_color = *color;
-            },
-            name: "Color".to_owned(),
-        };
-        let character_params = table::Params {
-            profile: profile.clone(),
-            items: title::Character::members(),
-            current: profile.borrow().title_character_in_background,
-            on_selected: |profile: &mut PlayerOnlineProfile, character: &title::Character| {
-                profile.title_character_in_background = *character;
-            },
-            name: "Background Character".to_owned(),
-        };
-        let text_params = table::Params {
-            profile: profile.clone(),
-            items: title::Text::members(),
-            current: profile.borrow().title_text_id,
-            on_selected: |profile: &mut PlayerOnlineProfile, text: &title::Text| {
-                profile.title_text_id = *text;
-            },
-            name: "Title Text".to_owned(),
-        };
+    pub fn new(savefile: &Savefile) -> Self {
+        let title_color = savefile.profile().write_title_color();
+        let character = savefile.profile().write_title_character();
+        let title_text = savefile.profile().write_title_text();
 
         let tables: [Box<dyn Table>; 3] = [
-            Box::new(table::Generic::new(color_params)),
-            Box::new(table::Generic::new(character_params)),
-            Box::new(table::Generic::new(text_params)),
+            Box::new(table::Generic::new("Color", title_color)),
+            Box::new(table::Generic::new("Background Character", character)),
+            Box::new(table::Generic::new("Title Text", title_text)),
         ];
 
         Self {

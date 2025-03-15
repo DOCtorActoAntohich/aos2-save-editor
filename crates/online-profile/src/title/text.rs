@@ -1,3 +1,5 @@
+use crate::MembersList;
+
 /// Title top text to display for everyone to see.
 ///
 /// There are many. Way too many.
@@ -19,6 +21,7 @@
 )]
 #[brw(little, repr(u32))]
 #[repr(u32)]
+#[try_from(repr)]
 pub enum Text {
     #[default]
     None = 0x00,
@@ -297,6 +300,18 @@ pub enum Text {
     SumikaWaifu,
     #[display("<Blank>")]
     Blank = 273,
+}
+
+impl MembersList for Text {
+    fn members() -> Vec<Self> {
+        Self::members().into()
+    }
+}
+
+impl From<Text> for u32 {
+    fn from(value: Text) -> Self {
+        value as u32
+    }
 }
 
 #[cfg(test)]

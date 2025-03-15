@@ -1,3 +1,5 @@
+use crate::MembersList;
+
 #[binrw::binrw]
 #[derive(
     Debug,
@@ -10,9 +12,9 @@
     derive_more::Display,
     enum_array::EnumMembersArray,
 )]
-#[try_from(repr)]
-#[repr(u32)]
 #[brw(little, repr(u32))]
+#[repr(u32)]
+#[try_from(repr)]
 pub enum Character {
     Silhouette = 0x00,
     Sora = 0x01,
@@ -96,4 +98,16 @@ pub enum Character {
     SoraAnniversary = 0x2e,
     #[display("<Invisible avatar>")]
     Invisible = 0xff,
+}
+
+impl MembersList for Character {
+    fn members() -> Vec<Self> {
+        Self::members().to_vec()
+    }
+}
+
+impl From<Character> for u32 {
+    fn from(value: Character) -> Self {
+        value as u32
+    }
 }

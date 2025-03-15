@@ -1,12 +1,10 @@
 mod tabs;
 
-use online_profile::PlayerOnlineProfile;
 use ratatui::{
     crossterm::event::KeyCode,
     layout::{Constraint, Layout},
     widgets::Widget,
 };
-use tokio::sync::watch;
 
 use crate::{
     collection::SelectableArray,
@@ -28,12 +26,12 @@ pub struct ContentWidget {
 }
 
 impl ContentWidget {
-    pub fn new(profile: watch::Sender<PlayerOnlineProfile>, savefile: &Savefile) -> Self {
+    pub fn new(savefile: &Savefile) -> Self {
         let tabs: [Box<dyn InteratibleTabComponent>; 4] = [
             Box::new(statistics::Tab::new(savefile)),
             Box::new(progress::Tab::new(savefile)),
-            Box::new(profile::avatar::Tab::new(profile.clone())),
-            Box::new(profile::title::Tab::new(profile)),
+            Box::new(profile::avatar::Tab::new(savefile)),
+            Box::new(profile::title::Tab::new(savefile)),
         ];
         Self {
             tabs: SelectableArray::new(tabs),

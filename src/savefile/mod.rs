@@ -1,5 +1,5 @@
 use aos2_env::AoS2Env;
-use online_profile::PlayerOnlineProfile;
+use online_profile::{avatar, title, PlayerOnlineProfile};
 use player_progress::{Arenas, MusicTracks, PlayableCharacters, PlayerProgress, SingleplayerWins};
 use tokio::sync::watch;
 
@@ -22,7 +22,13 @@ pub struct Progress {
 #[derive(Debug, Clone)]
 pub struct Profile {
     env: AoS2Env,
-    profile: PlayerOnlineProfile,
+    profile: Channel<PlayerOnlineProfile>,
+}
+
+pub struct ModifyProfile<T> {
+    profile: watch::Sender<PlayerOnlineProfile>,
+    modify: Box<dyn Fn(&mut PlayerOnlineProfile, T) + Send>,
+    get: Box<dyn Fn(&PlayerOnlineProfile) -> T + Send>,
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -73,10 +79,7 @@ impl Savefile {
             self.progress.save()?;
         }
 
-        let has_changed = self.profile.update();
-        if has_changed {
-            self.profile.save()?;
-        }
+        self.profile.save()?;
 
         Ok(())
     }
@@ -181,15 +184,102 @@ impl Progress {
 impl Profile {
     pub fn load(env: AoS2Env) -> Result<Self, Error> {
         let profile = PlayerOnlineProfile::load(&env)?.ok_or(Error::MissingProfile)?;
-        Ok(Self { env, profile })
+        Ok(Self {
+            env,
+            profile: Channel::new(profile),
+        })
     }
 
     pub fn save(&mut self) -> Result<(), Error> {
-        self.profile.save(&self.env).map_err(Error::Profile)
+        if self.profile.has_changed() {
+            self.profile
+                .borrow_and_update()
+                .save(&self.env)
+                .map_err(Error::Profile)
+        } else {
+            Ok(())
+        }
     }
 
-    pub fn update(&mut self) -> bool {
-        let mut has_changed = false;
-        has_changed
+    pub fn write_title_character(&self) -> ModifyProfile<title::Character> {
+        ModifyProfile {
+            profile: self.profile.sender.clone(),
+            modify: Box::new(
+                |profile: &mut PlayerOnlineProfile, character: title::Character| {
+                    profile.title_character_in_background = character;
+                },
+            ),
+            get: Box::new(|profile: &PlayerOnlineProfile| profile.title_character_in_background),
+        }
+    }
+
+    pub fn write_title_color(&self) -> ModifyProfile<title::Color> {
+        ModifyProfile {
+            profile: self.profile.sender.clone(),
+            modify: Box::new(|profile: &mut PlayerOnlineProfile, color: title::Color| {
+                profile.title_color = color;
+            }),
+            get: Box::new(|profile: &PlayerOnlineProfile| profile.title_color),
+        }
+    }
+
+    pub fn write_title_text(&self) -> ModifyProfile<title::Text> {
+        ModifyProfile {
+            profile: self.profile.sender.clone(),
+            modify: Box::new(|profile: &mut PlayerOnlineProfile, text: title::Text| {
+                profile.title_text_id = text;
+            }),
+            get: Box::new(|profile: &PlayerOnlineProfile| profile.title_text_id),
+        }
+    }
+
+    pub fn write_avatar_character(&self) -> ModifyProfile<avatar::Character> {
+        ModifyProfile {
+            profile: self.profile.sender.clone(),
+            modify: Box::new(
+                |profile: &mut PlayerOnlineProfile, character: avatar::Character| {
+                    profile.avatar_character = character;
+                },
+            ),
+            get: Box::new(|profile: &PlayerOnlineProfile| profile.avatar_character),
+        }
+    }
+
+    pub fn write_avatar_background(&self) -> ModifyProfile<avatar::Background> {
+        ModifyProfile {
+            profile: self.profile.sender.clone(),
+            modify: Box::new(
+                |profile: &mut PlayerOnlineProfile, background: avatar::Background| {
+                    profile.avatar_background = background;
+                },
+            ),
+            get: Box::new(|profile: &PlayerOnlineProfile| profile.avatar_background),
+        }
+    }
+}
+
+impl<T> ModifyProfile<T> {
+    pub fn get(&self) -> T {
+        let profile = self.profile.borrow();
+        (self.get)(&profile)
+    }
+
+    pub fn send(&mut self, value: T) {
+        self.profile.send_modify(|profile| {
+            (self.modify)(profile, value);
+        });
+    }
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::ModifyProfile;
+
+    fn ensure_send<T: Send>() {}
+
+    #[rstest::rstest]
+    fn modify_profile_is_send() {
+        ensure_send::<ModifyProfile<()>>();
     }
 }

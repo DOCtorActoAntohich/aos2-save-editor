@@ -1,4 +1,3 @@
-use online_profile::{avatar, PlayerOnlineProfile};
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
@@ -6,10 +5,10 @@ use ratatui::{
     text::Line,
     widgets::{List, Widget},
 };
-use tokio::sync::watch;
 
 use crate::{
     info::content_window::InteratibleTabComponent,
+    savefile::Savefile,
     style::{IndexedColor, WithColor},
     tui::{Event, HandleEvent, VisualComponent},
     widget::split,
@@ -29,29 +28,13 @@ impl InfoText {
 }
 
 impl Tab {
-    pub fn new(profile: watch::Sender<PlayerOnlineProfile>) -> Self {
-        let color_params = table::Params {
-            profile: profile.clone(),
-            items: avatar::Character::members(),
-            current: profile.borrow().avatar_character,
-            on_selected: |profile: &mut PlayerOnlineProfile, character: &avatar::Character| {
-                profile.avatar_character = *character;
-            },
-            name: "Character".to_owned(),
-        };
-        let character_params = table::Params {
-            profile: profile.clone(),
-            items: avatar::Background::members(),
-            current: profile.borrow().avatar_background,
-            on_selected: |profile: &mut PlayerOnlineProfile, background: &avatar::Background| {
-                profile.avatar_background = *background;
-            },
-            name: "Background".to_owned(),
-        };
+    pub fn new(savefile: &Savefile) -> Self {
+        let character = savefile.profile().write_avatar_character();
+        let background = savefile.profile().write_avatar_background();
 
         let tables: [Box<dyn Table>; 2] = [
-            Box::new(table::Generic::new(color_params)),
-            Box::new(table::Generic::new(character_params)),
+            Box::new(table::Generic::new("Character", character)),
+            Box::new(table::Generic::new("Background", background)),
         ];
 
         Self {

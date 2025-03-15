@@ -14,9 +14,6 @@ mod widget;
 
 use std::time::Instant;
 
-use anyhow::Context;
-use aos2_env::AoS2Env;
-use online_profile::PlayerOnlineProfile;
 use ratatui::{
     buffer::Buffer,
     crossterm::{self, event::KeyCode},
@@ -24,7 +21,6 @@ use ratatui::{
     widgets::Widget,
     DefaultTerminal, Frame,
 };
-use tokio::sync::watch;
 
 use crate::{
     info::info_toggle::FullHelpToggle,
@@ -37,23 +33,15 @@ use self::{info::content_window::ContentWidget, savefile::Savefile, tui::Event};
 pub struct EditorApp {
     should_run: bool,
     content: FullHelpToggle<ContentWidget>,
-    aos2_env: AoS2Env,
-    profile_tx: watch::Sender<PlayerOnlineProfile>,
-    profile_rx: watch::Receiver<PlayerOnlineProfile>,
     previous_event: Event,
     savefile: Savefile,
 }
 
 impl EditorApp {
-    pub fn new(aos2_env: AoS2Env, profile: PlayerOnlineProfile, savefile: Savefile) -> Self {
-        let (profile_tx, profile_rx) = watch::channel(profile);
-
+    pub fn new(savefile: Savefile) -> Self {
         Self {
             should_run: true,
-            content: FullHelpToggle::new(ContentWidget::new(profile_tx.clone(), &savefile)),
-            aos2_env,
-            profile_tx,
-            profile_rx,
+            content: FullHelpToggle::new(ContentWidget::new(&savefile)),
             previous_event: Event::empty(Instant::now()),
             savefile,
         }
@@ -88,17 +76,6 @@ impl EditorApp {
     }
 
     fn handle_savefile_updates(&mut self) -> anyhow::Result<()> {
-        if self
-            .profile_rx
-            .has_changed()
-            .context("Invariant Broken: Online Profile channel closed")?
-        {
-            let profile = self.profile_rx.borrow_and_update();
-            profile
-                .save(&self.aos2_env)
-                .context("Failed to save online profile to a file")?;
-        }
-
         self.savefile.update_and_save()?;
 
         Ok(())

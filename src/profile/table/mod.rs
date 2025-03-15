@@ -2,7 +2,7 @@ mod collection;
 mod generic;
 
 pub use self::collection::Collection;
-pub use self::generic::{Generic, Params};
+pub use self::generic::Generic;
 
 use crate::tui::HandleEvent;
 
