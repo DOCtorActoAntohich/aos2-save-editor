@@ -12,7 +12,7 @@ pub struct AoS2Env {
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    #[error("Failed to open AoS2 saves directory")]
+    #[error("Failed to find AoS2 saves directory")]
     DirectoryPath,
 }
 
