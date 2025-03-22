@@ -32,13 +32,15 @@ enum Screen {
 }
 
 impl App {
-    pub fn new() -> Self {
+    #[must_use]
+    pub fn from_env() -> Self {
         match Savefile::from_env() {
             Ok(savefile) => Self::new_editor(savefile),
             Err(error) => Self::new_limbo(error),
         }
     }
 
+    #[must_use]
     pub fn new_editor(savefile: Savefile) -> Self {
         Self {
             should_run: true,
@@ -47,6 +49,7 @@ impl App {
         }
     }
 
+    #[must_use]
     pub fn new_limbo(error: savefile::Error) -> Self {
         Self {
             should_run: true,

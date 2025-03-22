@@ -66,11 +66,11 @@ impl Display for Error {
             Error::Env(error) => Display::fmt(error, f),
             Error::Progress(error) => {
                 writeln!(f, "Failed to open `{}`:", PlayerProgress::FILE_NAME)?;
-                writeln!(f, "- {}", error)
+                writeln!(f, "- {error}")
             }
             Error::Profile(error) => {
                 writeln!(f, "Failed to open `{}`:", PlayerOnlineProfile::FILE_NAME)?;
-                writeln!(f, "- {}", error)
+                writeln!(f, "- {error}")
             }
         }
     }
