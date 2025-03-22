@@ -11,7 +11,7 @@ use crate::{
     tui::{Event, HandleEvent, VisualComponent},
 };
 
-use self::{content_window::ContentWidget, info::info_toggle::FullHelpToggle};
+use self::{content_window::ContentWidget, info::FullHelpToggle};
 
 #[must_use]
 pub struct App {
