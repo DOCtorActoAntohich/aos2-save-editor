@@ -4,8 +4,11 @@
 pub mod editor;
 pub mod savefile;
 
+mod app;
 mod collection;
 mod limbo;
 mod style;
 mod tui;
 mod widget;
+
+pub use crate::app::App;
