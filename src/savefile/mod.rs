@@ -17,6 +17,8 @@ pub struct Savefile {
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     #[error(transparent)]
+    Env(#[from] aos2_env::Error),
+    #[error(transparent)]
     Progress(#[from] player_progress::Error),
     #[error("Missing player progress file")]
     MissingProgress,
@@ -27,6 +29,11 @@ pub enum Error {
 }
 
 impl Savefile {
+    pub fn from_env() -> Result<Self, Error> {
+        let env = AoS2Env::from_env()?;
+        Self::load(env)
+    }
+
     pub fn load(aos2_env: AoS2Env) -> Result<Self, Error> {
         let progress = Progress::load(&aos2_env)?;
         let profile = Profile::load(&aos2_env)?;
