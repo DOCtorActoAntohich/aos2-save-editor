@@ -65,9 +65,9 @@ pub enum Error {
     FileWrite,
     #[error("No permission to write to a file")]
     WritePermission,
-    #[error("Failed to write binary stream")]
+    #[error("Failed to write binary stream (couldn't write into a proper format)")]
     BinWrite(#[source] binrw::Error),
-    #[error("Failed to read binary stream")]
+    #[error("Failed to read binary stream (invalid file format)")]
     BinRead(#[source] binrw::Error),
 }
 

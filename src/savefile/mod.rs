@@ -3,6 +3,8 @@ pub mod progress;
 
 mod channel;
 
+use std::fmt::Display;
+
 use aos2_env::AoS2Env;
 use online_profile::PlayerOnlineProfile;
 use player_progress::PlayerProgress;
@@ -18,15 +20,10 @@ pub struct Savefile {
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    #[error(transparent)]
     Env(#[from] aos2_env::Error),
-    #[error("Failed to open `{}`", PlayerProgress::FILE_NAME)]
     Progress(#[from] player_progress::Error),
-    #[error("Missing player progress file: {}", PlayerProgress::FILE_NAME)]
     MissingProgress,
-    #[error("Failed to open `{}`", PlayerOnlineProfile::FILE_NAME)]
     Profile(#[from] online_profile::Error),
-    #[error("Missing player online profile: `{}`", PlayerOnlineProfile::FILE_NAME)]
     MissingProfile,
 }
 
@@ -62,5 +59,31 @@ impl Savefile {
         self.profile.save(&self.aos2_env)?;
 
         Ok(())
+    }
+}
+
+impl Display for Error {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Error::Env(error) => Display::fmt(error, f),
+            Error::Progress(error) => {
+                writeln!(f, "Failed to open `{}`:", PlayerProgress::FILE_NAME)?;
+                writeln!(f, "- {}", error)
+            }
+            Error::MissingProgress => {
+                writeln!(f, "The `{}` file was not found", PlayerProgress::FILE_NAME)
+            }
+            Error::Profile(error) => {
+                writeln!(f, "Failed to open `{}`:", PlayerOnlineProfile::FILE_NAME)?;
+                writeln!(f, "- {}", error)
+            }
+            Error::MissingProfile => {
+                writeln!(
+                    f,
+                    "The `{}` file was not found",
+                    PlayerOnlineProfile::FILE_NAME
+                )
+            }
+        }
     }
 }

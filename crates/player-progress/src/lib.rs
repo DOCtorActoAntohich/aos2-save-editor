@@ -138,11 +138,11 @@ pub enum Error {
     WritePermission,
     #[error("Failed to write a raw encoded stream")]
     EncodedWrite(#[source] binrw::Error),
-    #[error("Failed to read a raw encoded stream")]
+    #[error("Failed to read a raw encoded stream (invalid file format)")]
     EncodedRead(#[source] binrw::Error),
     #[error("Failed to write intermediate decoded stream")]
     DecodedWrite(#[source] binrw::Error),
-    #[error("Failed to read intermediate decoded stream")]
+    #[error("Failed to read intermediate decoded stream (invalid file format)")]
     DecodedRead(#[source] binrw::Error),
 }
 
