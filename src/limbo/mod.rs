@@ -32,7 +32,8 @@ impl VisualComponent for Screen {
             Constraint::Length(1),
             Constraint::Fill(1),
         ];
-        let [title, empty, content] = Layout::vertical(constraints).areas::<3>(area);
+        let [title_area, separator_area, all_content_area] =
+            Layout::vertical(constraints).areas::<3>(area);
 
         Line::raw("Error")
             .centered()
@@ -41,7 +42,7 @@ impl VisualComponent for Screen {
                     .with_bg(IndexedColor::DarkRed)
                     .with_fg(Color::White),
             )
-            .render(title, buf);
+            .render(title_area, buf);
 
         Block::new()
             .borders(Borders::TOP)
@@ -50,15 +51,25 @@ impl VisualComponent for Screen {
                     .with_bg(IndexedColor::DarkGray)
                     .with_fg(Color::White),
             )
-            .render(empty, buf);
+            .render(separator_area, buf);
 
+        let padding_bloock = Block::new().borders(Borders::LEFT | Borders::RIGHT);
+        let padded_content_area = padding_bloock.inner(all_content_area);
+
+        padding_bloock
+            .borders(Borders::empty())
+            .style(
+                Style::new()
+                    .with_bg(IndexedColor::DarkGray)
+                    .with_fg(Color::White),
+            )
+            .render(all_content_area, buf);
         Paragraph::new(self.error.to_string())
             .style(
                 Style::new()
                     .with_bg(IndexedColor::DarkGray)
                     .with_fg(Color::White),
             )
-            .centered()
-            .render(content, buf);
+            .render(padded_content_area, buf);
     }
 }
