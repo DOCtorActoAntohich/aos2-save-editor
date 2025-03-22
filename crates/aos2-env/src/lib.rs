@@ -12,8 +12,8 @@ pub struct AoS2Env {
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    #[error("Failed to find AoS2 saves directory")]
-    DirectoryPath,
+    #[error("Home directory is not defined")]
+    Home,
 }
 
 #[derive(Debug, Deserialize)]
@@ -22,12 +22,8 @@ struct EnvVars {
 }
 
 impl From<EnvVars> for AoS2Env {
-    fn from(value: EnvVars) -> Self {
-        let saves_folder = value
-            .home
-            .join("Documents")
-            .join("Fruitbat Factory")
-            .join("AoS2");
+    fn from(EnvVars { home }: EnvVars) -> Self {
+        let saves_folder = home.join("Documents").join("Fruitbat Factory").join("AoS2");
 
         Self { saves_folder }
     }
@@ -35,7 +31,7 @@ impl From<EnvVars> for AoS2Env {
 
 impl AoS2Env {
     pub fn from_env() -> Result<Self, Error> {
-        let env_vars: EnvVars = envy::from_env().map_err(|_| Error::DirectoryPath)?;
+        let env_vars: EnvVars = envy::from_env().map_err(|_| Error::Home)?;
         Ok(env_vars.into())
     }
 }
