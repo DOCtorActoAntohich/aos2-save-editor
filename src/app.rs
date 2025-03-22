@@ -8,7 +8,7 @@ use ratatui::{
 
 use crate::{
     editor, limbo,
-    savefile::Savefile,
+    savefile::{self, Savefile},
     tui::{Event, HandleEvent, VisualComponent},
 };
 
@@ -33,14 +33,24 @@ enum Screen {
 
 impl App {
     pub fn new() -> Self {
-        let screen = match Savefile::from_env() {
-            Ok(savefile) => Screen::Editor(editor::App::new(savefile)),
-            Err(error) => Screen::Limbo(limbo::Screen::new(error)),
-        };
+        match Savefile::from_env() {
+            Ok(savefile) => Self::new_editor(savefile),
+            Err(error) => Self::new_limbo(error),
+        }
+    }
 
+    pub fn new_editor(savefile: Savefile) -> Self {
         Self {
             should_run: true,
-            screen,
+            screen: Screen::Editor(editor::App::new(savefile)),
+            previous_event: Event::empty(Instant::now()),
+        }
+    }
+
+    pub fn new_limbo(error: savefile::Error) -> Self {
+        Self {
+            should_run: true,
+            screen: Screen::Limbo(limbo::Screen::new(error)),
             previous_event: Event::empty(Instant::now()),
         }
     }
