@@ -72,7 +72,7 @@ pub enum Error {
 }
 
 impl PlayerOnlineProfile {
-    const FILE_NAME: &'static str = "player.rkg";
+    pub const FILE_NAME: &'static str = "player.rkg";
 
     pub fn load(env: &AoS2Env) -> Result<Option<Self>, Error> {
         Self::from_file(env.saves_folder.join(Self::FILE_NAME))
