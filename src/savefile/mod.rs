@@ -4,6 +4,8 @@ pub mod progress;
 mod channel;
 
 use aos2_env::AoS2Env;
+use online_profile::PlayerOnlineProfile;
+use player_progress::PlayerProgress;
 
 use self::{profile::Profile, progress::Progress};
 
@@ -18,13 +20,13 @@ pub struct Savefile {
 pub enum Error {
     #[error(transparent)]
     Env(#[from] aos2_env::Error),
-    #[error(transparent)]
+    #[error("Failed to open `{}`", PlayerProgress::FILE_NAME)]
     Progress(#[from] player_progress::Error),
-    #[error("Missing player progress file")]
+    #[error("Missing player progress file: {}", PlayerProgress::FILE_NAME)]
     MissingProgress,
-    #[error(transparent)]
+    #[error("Failed to open `{}`", PlayerOnlineProfile::FILE_NAME)]
     Profile(#[from] online_profile::Error),
-    #[error("Missing player online profile")]
+    #[error("Missing player online profile: `{}`", PlayerOnlineProfile::FILE_NAME)]
     MissingProfile,
 }
 
