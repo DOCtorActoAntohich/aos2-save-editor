@@ -9,7 +9,7 @@ use ratatui::{
 };
 
 use crate::{
-    editor::info::content_window::InteratibleTabComponent,
+    editor::content_window::InteratibleTabComponent,
     savefile::Savefile,
     tui::{Event, HandleEvent, VisualComponent},
     widget::split,

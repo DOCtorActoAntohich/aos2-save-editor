@@ -1,3 +1,4 @@
+pub mod content_window;
 pub mod info;
 pub mod profile;
 pub mod progress;
@@ -10,7 +11,7 @@ use crate::{
     tui::{Event, HandleEvent, VisualComponent},
 };
 
-use self::info::{content_window::ContentWidget, info_toggle::FullHelpToggle};
+use self::{content_window::ContentWidget, info::info_toggle::FullHelpToggle};
 
 #[must_use]
 pub struct App {
