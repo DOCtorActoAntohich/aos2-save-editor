@@ -60,11 +60,13 @@ pub enum Visibility {
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     #[error("Failed to open file for reading")]
-    FileRead,
+    FileRead(#[source] std::io::Error),
     #[error("Failed to open file for writing")]
-    FileWrite,
+    FileWrite(#[source] std::io::Error),
     #[error("No permission to write to a file")]
     WritePermission,
+    #[error("File does not exist")]
+    NotFound,
     #[error("Failed to write binary stream (couldn't write into a proper format)")]
     BinWrite(#[source] binrw::Error),
     #[error("Failed to read binary stream (invalid file format)")]
@@ -90,7 +92,7 @@ impl PlayerOnlineProfile {
         let reader = match std::fs::File::open(path) {
             Ok(reader) => Ok(Some(reader)),
             Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
-            Err(_) => return Err(Error::FileRead),
+            Err(error) => return Err(Error::FileRead(error)),
         }?;
 
         reader
@@ -104,7 +106,7 @@ impl PlayerOnlineProfile {
         for<'a> <Self as binrw::BinWrite>::Args<'a>: Default,
     {
         let mut writer = match std::fs::File::options()
-            .create(true)
+            .create(false)
             .write(true)
             .truncate(true)
             .open(path)
@@ -113,7 +115,8 @@ impl PlayerOnlineProfile {
             Err(error) if error.kind() == std::io::ErrorKind::PermissionDenied => {
                 Err(Error::WritePermission)
             }
-            Err(_) => Err(Error::FileWrite),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Err(Error::NotFound),
+            Err(error) => Err(Error::FileWrite(error)),
         }?;
 
         <Self as binrw::BinWrite>::write(self, &mut writer).map_err(Error::BinWrite)
