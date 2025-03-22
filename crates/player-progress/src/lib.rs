@@ -202,10 +202,8 @@ struct EncodedProgress {
 impl PlayerProgress {
     pub const FILE_NAME: &'static str = "game.sys";
 
-    pub fn from_file(path: impl AsRef<Path>) -> Result<Option<Self>, Error> {
-        EncodedProgress::from_file(path)?
-            .map(TryInto::try_into)
-            .transpose()
+    pub fn from_file(path: impl AsRef<Path>) -> Result<Self, Error> {
+        EncodedProgress::from_file(path)?.try_into()
     }
 
     pub fn save_to_file(&self, path: impl AsRef<Path>) -> Result<(), Error> {
@@ -216,7 +214,7 @@ impl PlayerProgress {
         self.save_to_file(env.saves_folder.join(Self::FILE_NAME))
     }
 
-    pub fn load(env: &AoS2Env) -> Result<Option<Self>, Error> {
+    pub fn load(env: &AoS2Env) -> Result<Self, Error> {
         Self::from_file(env.saves_folder.join(Self::FILE_NAME))
     }
 }
@@ -227,16 +225,14 @@ impl EncodedProgress {
     pub const BODY_SIZE: usize = Self::TOTAL_SIZE - Self::HEADER_SIZE;
     pub const ENCODING_START_KEY: KeyU8 = KeyU8::new(0x4A);
 
-    pub fn from_file(path: impl AsRef<Path>) -> Result<Option<Self>, Error> {
-        let reader = match std::fs::File::open(path) {
-            Ok(reader) => Ok(Some(reader)),
-            Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+    pub fn from_file(path: impl AsRef<Path>) -> Result<Self, Error> {
+        let mut reader = match std::fs::File::open(path) {
+            Ok(reader) => Ok(reader),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Err(Error::NotFound),
             Err(error) => return Err(Error::FileRead(error)),
         }?;
 
-        reader
-            .map(|mut reader| <Self as BinRead>::read(&mut reader).map_err(Error::EncodedRead))
-            .transpose()
+        <Self as BinRead>::read(&mut reader).map_err(Error::EncodedRead)
     }
 
     pub fn save_to_file(&self, path: impl AsRef<Path>) -> Result<(), Error> {

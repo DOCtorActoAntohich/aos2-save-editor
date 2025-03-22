@@ -76,7 +76,7 @@ pub enum Error {
 impl PlayerOnlineProfile {
     pub const FILE_NAME: &'static str = "player.rkg";
 
-    pub fn load(env: &AoS2Env) -> Result<Option<Self>, Error> {
+    pub fn load(env: &AoS2Env) -> Result<Self, Error> {
         Self::from_file(env.saves_folder.join(Self::FILE_NAME))
     }
 
@@ -84,20 +84,18 @@ impl PlayerOnlineProfile {
         self.save_to_file(env.saves_folder.join(Self::FILE_NAME))
     }
 
-    pub fn from_file<P>(path: P) -> Result<Option<Self>, Error>
+    pub fn from_file<P>(path: P) -> Result<Self, Error>
     where
         P: AsRef<std::path::Path>,
         for<'a> <Self as binrw::BinRead>::Args<'a>: Default,
     {
-        let reader = match std::fs::File::open(path) {
-            Ok(reader) => Ok(Some(reader)),
-            Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
-            Err(error) => return Err(Error::FileRead(error)),
+        let mut reader = match std::fs::File::open(path) {
+            Ok(reader) => Ok(reader),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Err(Error::NotFound),
+            Err(error) => Err(Error::FileRead(error)),
         }?;
 
-        reader
-            .map(|mut reader| <Self as binrw::BinRead>::read(&mut reader).map_err(Error::BinRead))
-            .transpose()
+        <Self as binrw::BinRead>::read(&mut reader).map_err(Error::BinRead)
     }
 
     pub fn save_to_file<P>(&self, path: P) -> Result<(), Error>

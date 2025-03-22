@@ -22,9 +22,7 @@ pub struct Savefile {
 pub enum Error {
     Env(#[from] aos2_env::Error),
     Progress(#[from] player_progress::Error),
-    MissingProgress,
     Profile(#[from] online_profile::Error),
-    MissingProfile,
 }
 
 impl Savefile {
@@ -70,19 +68,9 @@ impl Display for Error {
                 writeln!(f, "Failed to open `{}`:", PlayerProgress::FILE_NAME)?;
                 writeln!(f, "- {}", error)
             }
-            Error::MissingProgress => {
-                writeln!(f, "The `{}` file was not found", PlayerProgress::FILE_NAME)
-            }
             Error::Profile(error) => {
                 writeln!(f, "Failed to open `{}`:", PlayerOnlineProfile::FILE_NAME)?;
                 writeln!(f, "- {}", error)
-            }
-            Error::MissingProfile => {
-                writeln!(
-                    f,
-                    "The `{}` file was not found",
-                    PlayerOnlineProfile::FILE_NAME
-                )
             }
         }
     }
