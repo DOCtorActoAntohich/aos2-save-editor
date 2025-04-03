@@ -1,7 +1,7 @@
 use super::ascii_text;
 
-type Text = ascii_text::AsciiText<1, 24>;
-type Error = ascii_text::Error<1, 24>;
+type Text = ascii_text::AsciiText<0, 24>;
+type Error = ascii_text::Error<0, 24>;
 
 #[binrw::binrw]
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, derive_more::From, derive_more::Display)]
@@ -26,6 +26,6 @@ impl TryFrom<&str> for LobbyName {
 
 impl Default for LobbyName {
     fn default() -> Self {
-        Self(Text::new("Lobby").expect("Invariant: Valid lobby name"))
+        Self(Text::new("Suguri").expect("Invariant: Valid lobby name"))
     }
 }

@@ -81,6 +81,10 @@ mod tests {
 
     #[rstest_reuse::template]
     #[rstest::rstest]
+    #[case::zero(
+        b"\x00\x00\x00\x00",
+        AsciiText::<0,16>::new("").expect("Precondition: Valid text")
+    )]
     #[case::shortest(
         b"\x01\x00\x00\x00W",
         AsciiText::<1,16>::new("W").expect("Precondition: Valid text")
