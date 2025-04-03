@@ -36,7 +36,7 @@ However:
 
 ![UI demo](./docs/readme/ui-demo.jpg)
 
-![Secret Background](./docs/readme/super_secret_background.png)
+![Secret Background](./docs/readme/super_secret_background.jpg)
 
 ![Only three of us left](./docs/readme/disabled_characters.jpg)
 
