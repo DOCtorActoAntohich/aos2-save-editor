@@ -34,7 +34,13 @@ However:
 - You CANNOT unlock DLC costumes.
   - Same reason.
 
+![UI demo](./docs/readme/ui-demo.jpg)
+
+![Secret Background](./docs/readme/super_secret_background.png)
+
 ![Only three of us left](./docs/readme/disabled_characters.jpg)
+
+![Free Specialist Title (With Nanako)](./docs/readme/sham_specialist.jpg)
 
 ## Why this project exists
 
