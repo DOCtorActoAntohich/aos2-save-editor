@@ -300,6 +300,8 @@ pub enum Text {
     SumikaWaifu,
     #[display("<Blank>")]
     Blank = 273,
+    #[display("<Disable Title>")]
+    Disabled = 0xffffffff,
 }
 
 impl MembersList for Text {
