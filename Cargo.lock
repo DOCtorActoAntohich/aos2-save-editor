@@ -648,6 +648,7 @@ dependencies = [
 name = "online-profile"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "aos2-env",
  "binrw",
  "derive_more",

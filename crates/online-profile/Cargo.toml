@@ -12,5 +12,6 @@ binrw.workspace = true
 derive_more.workspace = true
 
 [dev-dependencies]
+anyhow.workspace = true
 rstest.workspace = true
 rstest_reuse.workspace = true
