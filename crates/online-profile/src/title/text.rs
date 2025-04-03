@@ -24,6 +24,7 @@ use crate::MembersList;
 #[try_from(repr)]
 pub enum Text {
     #[default]
+    #[display("\"None\"")]
     None = 0x00,
     HelloWorld = 1,
     Aos2Player,
@@ -298,7 +299,7 @@ pub enum Text {
     SumikaSpecialist,
     SumikaPlayer,
     SumikaWaifu,
-    #[display("<Blank>")]
+    #[display("<Invisible text>")]
     Blank = 273,
     #[display("<Disable Title>")]
     Disabled = 0xffffffff,
