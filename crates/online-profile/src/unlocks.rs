@@ -10,18 +10,18 @@ pub enum Status {
 }
 
 macro_rules! declare_sized_section {
-    ($name:ident, SIZE = $size:expr) => {
+    ($name:ident, DEFAULT_SIZE = $size:expr) => {
         #[binrw::binrw]
         #[derive(Debug, Clone)]
         #[brw(little)]
         pub struct $name {
-            #[brw(magic = $size)]
-            items: [Status; Self::SIZE],
+            #[bw(try_calc = items.len().try_into())]
+            length: u32,
+            #[br(count = length as usize)]
+            items: Vec<Status>,
         }
 
         impl $name {
-            pub const SIZE: usize = $size as usize;
-
             #[must_use]
             pub fn is_fully_unlocked(&self) -> bool {
                 let Self { items } = self;
@@ -37,13 +37,13 @@ macro_rules! declare_sized_section {
         impl Default for $name {
             fn default() -> Self {
                 Self {
-                    items: [Status::Locked; Self::SIZE],
+                    items: vec![Status::Locked; $size],
                 }
             }
         }
     };
 }
 
-declare_sized_section!(TitlesSection, SIZE = 285u32);
-declare_sized_section!(AvatarsSection, SIZE = 33u32);
-declare_sized_section!(BackgroundsSection, SIZE = 19u32);
+declare_sized_section!(TitlesSection, DEFAULT_SIZE = 0x01_11);
+declare_sized_section!(AvatarsSection, DEFAULT_SIZE = 0x1f);
+declare_sized_section!(BackgroundsSection, DEFAULT_SIZE = 0x13);
