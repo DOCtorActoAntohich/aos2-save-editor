@@ -4,7 +4,7 @@ type Text = ascii_text::AsciiText<1, 16>;
 type Error = ascii_text::Error<1, 16>;
 
 #[binrw::binrw]
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, derive_more::From)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, derive_more::From, derive_more::Display)]
 #[brw(little)]
 pub struct Nickname(Text);
 
