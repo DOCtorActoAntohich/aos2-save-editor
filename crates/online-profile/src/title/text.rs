@@ -302,7 +302,7 @@ pub enum Text {
     #[display("<Invisible text>")]
     Blank = 273,
     #[display("<Disable Title>")]
-    Disabled = 0xffffffff,
+    Disabled = 0xffff_ffff,
 }
 
 impl MembersList for Text {
