@@ -1,6 +1,6 @@
 use std::ops::{Index, IndexMut};
 
-use crate::{lock::Status, StatusSequence};
+use crate::{StatusSequence, lock::Status};
 
 /// Only stock non-DLC music.
 ///

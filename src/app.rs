@@ -1,9 +1,9 @@
 use std::time::Instant;
 
 use ratatui::{
+    DefaultTerminal,
     crossterm::{self, event::KeyCode},
     widgets::Widget,
-    DefaultTerminal,
 };
 
 use crate::{

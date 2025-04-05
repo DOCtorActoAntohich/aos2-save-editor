@@ -1,8 +1,8 @@
 use aos2_env::AoS2Env;
-use online_profile::{avatar, title, PlayerOnlineProfile};
+use online_profile::{PlayerOnlineProfile, avatar, title};
 use tokio::sync::watch;
 
-use super::{channel::Channel, Error};
+use super::{Error, channel::Channel};
 
 #[derive(Debug, Clone)]
 pub struct Profile {

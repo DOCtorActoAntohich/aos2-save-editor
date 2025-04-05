@@ -5,7 +5,7 @@ use player_progress::{
 };
 use tokio::sync::watch;
 
-use super::{channel::Channel, Error};
+use super::{Error, channel::Channel};
 
 trait GetFn<T>: Send + Fn(&PlayerProgress) -> T {}
 trait ModifyFn<T>: Send + Fn(&mut PlayerProgress, T) {}

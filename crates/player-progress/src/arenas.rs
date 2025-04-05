@@ -1,6 +1,6 @@
 use std::ops::{Index, IndexMut};
 
-use crate::{lock::Status, StatusSequence, UnknownU8};
+use crate::{StatusSequence, UnknownU8, lock::Status};
 
 /// List of Background Images aka Arena Backgrounds.
 ///
@@ -221,8 +221,22 @@ impl From<&Arenas> for RawArenas {
             arenas,
             unused_0x2d,
         } = arenas.clone();
-        let [before_the_war, war_10k_years_ago, canyon_of_wind, dust_storm, rain_and_sunset, equator_doldrums, big_bridge, capital_in_flames, whirlpool_of_malice, nature_10k, crashed_spaceship, guardians_chamber, moonlight_dance_hall, sumika_hideout] =
-            arenas;
+        let [
+            before_the_war,
+            war_10k_years_ago,
+            canyon_of_wind,
+            dust_storm,
+            rain_and_sunset,
+            equator_doldrums,
+            big_bridge,
+            capital_in_flames,
+            whirlpool_of_malice,
+            nature_10k,
+            crashed_spaceship,
+            guardians_chamber,
+            moonlight_dance_hall,
+            sumika_hideout,
+        ] = arenas;
         Self {
             before_the_war,
             war_10k_years_ago,

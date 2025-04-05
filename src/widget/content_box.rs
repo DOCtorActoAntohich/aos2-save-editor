@@ -2,7 +2,7 @@ use ratatui::{
     buffer::Buffer,
     layout::{Alignment, Rect},
     style::{Color, Style},
-    widgets::{block::Title, Block, Widget},
+    widgets::{Block, Widget, block::Title},
 };
 
 use crate::style::IndexedColor;

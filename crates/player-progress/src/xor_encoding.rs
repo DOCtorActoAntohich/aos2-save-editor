@@ -79,7 +79,7 @@ const fn swap_nibbles(byte: u8) -> u8 {
 
 #[cfg(test)]
 mod tests {
-    use super::{swap_nibbles, EncodedU8, KeyU8};
+    use super::{EncodedU8, KeyU8, swap_nibbles};
 
     #[rstest::rstest]
     #[case(0x8A, 0xA8)]
