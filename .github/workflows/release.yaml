@@ -85,7 +85,6 @@ jobs:
 
   release-all:
     needs:
-      - bump-version
       - build-windows
       - build-linux
     runs-on: ubuntu-latest
@@ -102,7 +101,7 @@ jobs:
 
       - uses: softprops/action-gh-release@v2
         with:
-          name: Release ${{ needs.bump-version.outputs.tag }}
+          name: Release ${{ steps.bump-version.outputs.tag }}
           files: release/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
