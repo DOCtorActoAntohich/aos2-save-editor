@@ -1,15 +1,51 @@
-name: Build and Release
+name: Tag and Release
 
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_dispatch:
+    inputs:
+      level:
+        description: "Cargo-Release bump option"
+        required: true
+        default: "minor"
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
 
 env:
   BINARY_NAME: aos2-save-editor
 
 jobs:
+  bump-version:
+    name: Bump Version
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.85.0
+
+      - run: cargo install cargo-release
+      - id: release
+        run: |
+          cargo release ${{ inputs.level }} --no-publish --no-push --no-confirm --no-verify --execute
+          TAG=$(git describe --tags --abbrev=0)
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+
+      - run: |
+          git push
+          git push --tags
+
   build-windows:
+    needs:
+      - bump-version
     runs-on: windows-latest
 
     env:
@@ -28,6 +64,8 @@ jobs:
           path: target/${{ env.TARGET }}/release/${{ env.BINARY_NAME }}.exe
 
   build-linux:
+    needs:
+      - bump-version
     runs-on: ubuntu-latest
 
     env:
@@ -47,6 +85,7 @@ jobs:
 
   release-all:
     needs:
+      - bump-version
       - build-windows
       - build-linux
     runs-on: ubuntu-latest
@@ -63,7 +102,7 @@ jobs:
 
       - uses: softprops/action-gh-release@v2
         with:
-          name: Release ${{ github.ref_name }}
+          name: Release ${{ needs.bump-version.outputs.tag }}
           files: release/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
