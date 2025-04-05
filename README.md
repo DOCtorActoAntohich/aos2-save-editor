@@ -61,3 +61,9 @@ A few problems to maybe solve in the future.
 ## License
 
 Licensed under [MIT license](./LICENSE)
+
+## Credits
+
+Hono is genius.
+
+He drew cool girls and I screenshotted one for the app Icon.
