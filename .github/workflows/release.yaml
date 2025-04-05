@@ -1,0 +1,69 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+env:
+  BINARY_NAME: aos2-save-editor
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    env:
+      TARGET: x86_64-pc-windows-msvc
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.85.0
+          target: ${{ env.TARGET }}
+      - run: cargo build --release --target ${{ env.TARGET }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.BINARY_NAME }}-windows
+          path: target/${{ env.TARGET }}/release/${{ env.BINARY_NAME }}.exe
+
+  build-linux:
+    runs-on: ubuntu-latest
+
+    env:
+      TARGET: x86_64-unknown-linux-musl
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.85.0
+          target: ${{ env.TARGET }}
+      - run: cargo build --release --target ${{ env.TARGET }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.BINARY_NAME }}-linux
+          path: target/${{ env.TARGET }}/release/${{ env.BINARY_NAME }}
+
+  release-all:
+    needs:
+      - build-windows
+      - build-linux
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.BINARY_NAME }}-windows
+          path: ./release/${{ env.BINARY_NAME }}-windows.exe
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.BINARY_NAME }}-linux
+          path: ./release/${{ env.BINARY_NAME }}-linux
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: Release ${{ github.ref_name }}
+          files: release/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
