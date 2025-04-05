@@ -99,16 +99,18 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: ${{ env.BINARY_NAME }}-windows
-          path: ./release/${{ env.BINARY_NAME }}-windows.exe
+          path: ./release/windows
       - uses: actions/download-artifact@v4
         with:
           name: ${{ env.BINARY_NAME }}-linux
-          path: ./release/${{ env.BINARY_NAME }}-linux
+          path: ./release/linux
 
       - uses: softprops/action-gh-release@v2
         with:
           name: Release ${{ needs.bump-version.outputs.tag }}
           tag_name: ${{ needs.bump-version.outputs.tag }}
-          files: release/*
+          files: |
+            release/windows/${{ env.BINARY_NAME }}.exe
+            release/linux/${{ env.BINARY_NAME }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
