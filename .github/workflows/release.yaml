@@ -21,6 +21,9 @@ jobs:
     name: Bump Version
     runs-on: ubuntu-latest
 
+    outputs:
+      tag: ${{ steps.bump-version.outputs.tag }}
+
     steps:
       - uses: actions/checkout@v4
       - run: |
@@ -34,10 +37,11 @@ jobs:
 
       - run: cargo install cargo-release
       - id: bump-version
+        shell: bash
         run: |
           cargo release ${{ inputs.level }} --no-publish --no-push --no-confirm --no-verify --execute
           TAG=$(git describe --tags --abbrev=0)
-          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
           cat $GITHUB_OUTPUT
 
       - run: |
