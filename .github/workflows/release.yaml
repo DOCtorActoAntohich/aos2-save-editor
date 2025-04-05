@@ -38,6 +38,7 @@ jobs:
           cargo release ${{ inputs.level }} --no-publish --no-push --no-confirm --no-verify --execute
           TAG=$(git describe --tags --abbrev=0)
           echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
 
       - run: |
           git push
