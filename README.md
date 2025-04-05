@@ -24,7 +24,10 @@ With this app, you can do the following:
 - Lock characters unlocked by default - no more Sham or Iru.
 - Unlock all music and arena backgrounds.
 - Use all customization options for your online profile.
-  - Allows combinations that are not available from the game UI.
+  - Skip the training and become Sham Specialist.
+  - Use title and character combinations that are
+    not available from the game UI,
+    including hidden 100O% OJ goobers.
 
 However:
 
