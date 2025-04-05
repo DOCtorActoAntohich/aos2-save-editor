@@ -33,7 +33,7 @@ jobs:
           toolchain: 1.85.0
 
       - run: cargo install cargo-release
-      - id: release
+      - id: bump-version
         run: |
           cargo release ${{ inputs.level }} --no-publish --no-push --no-confirm --no-verify --execute
           TAG=$(git describe --tags --abbrev=0)
