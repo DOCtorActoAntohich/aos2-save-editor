@@ -33,7 +33,7 @@ jobs:
           toolchain: 1.85.0
 
       - run: cargo install cargo-release
-      - run: cargo release ${{ inputs.level }} --no-publish --no-push --execute
+      - run: cargo release ${{ inputs.level }} --no-publish --no-push --no-confirm --no-verify --execute
 
       - run: |
           git push
