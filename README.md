@@ -5,6 +5,10 @@ Gives no competitive advantage.
 
 Supported game version: `ver 1.9.0`
 
+## Download
+
+Look for [the latest release here](https://github.com/DOCtorActoAntohich/aos2-save-editor/releases)
+
 ## What is it for?
 
 If any of that describes you:
