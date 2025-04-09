@@ -2,3 +2,7 @@
 
 # die
 .vscode
+
+# not really needed here cos it's for windows mostly
+# and flake.nix is enough to install a workspace for myself
+flake.lock
