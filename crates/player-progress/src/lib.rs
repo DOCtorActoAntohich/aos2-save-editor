@@ -26,11 +26,6 @@ use binrw::{BinRead, BinWrite};
 
 use crate::xor_encoding::{EncodedU8, KeyU8};
 
-pub trait StatusSequence {
-    fn toggle_at(&mut self, index: usize);
-    fn list(&self) -> Vec<(String, Status)>;
-}
-
 /// Player progress file, aka `game.sys`.
 ///
 /// Order of fields MATTERS. Do NOT reorder.

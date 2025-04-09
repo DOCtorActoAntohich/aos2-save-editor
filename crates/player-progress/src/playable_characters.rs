@@ -1,6 +1,6 @@
 use std::ops::{Index, IndexMut};
 
-use crate::{Status, StatusSequence};
+use crate::Status;
 
 #[binrw::binrw]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, derive_more::Deref, derive_more::AsRef)]
@@ -51,23 +51,6 @@ impl PlayableCharacters {
 
     pub fn toggle(&mut self, character: Character) {
         self[character] = !self[character];
-    }
-}
-
-impl StatusSequence for PlayableCharacters {
-    fn toggle_at(&mut self, index: usize) {
-        if let Ok(character) = Character::try_from(index) {
-            self.toggle(character);
-        }
-    }
-
-    fn list(&self) -> Vec<(String, Status)> {
-        let Self(statuses) = self;
-        Character::members()
-            .into_iter()
-            .zip(statuses.iter().copied())
-            .map(|(name, status)| (name.to_string(), status))
-            .collect()
     }
 }
 

@@ -1,6 +1,6 @@
 use std::ops::{Index, IndexMut};
 
-use crate::{StatusSequence, lock::Status};
+use crate::lock::Status;
 
 /// Only stock non-DLC music.
 ///
@@ -67,23 +67,6 @@ impl Default for MusicTracks {
         music[MusicTrack::Mgom] = Status::Disabled;
 
         music
-    }
-}
-
-impl StatusSequence for MusicTracks {
-    fn toggle_at(&mut self, index: usize) {
-        if let Ok(music) = MusicTrack::try_from(index) {
-            self.toggle(music);
-        }
-    }
-
-    fn list(&self) -> Vec<(String, Status)> {
-        let Self(music) = self;
-        MusicTrack::members()
-            .into_iter()
-            .zip(music.iter().copied())
-            .map(|(name, status)| (name.to_string(), status))
-            .collect()
     }
 }
 

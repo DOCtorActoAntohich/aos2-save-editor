@@ -1,4 +1,4 @@
-use player_progress::{Status, StatusSequence};
+use player_progress::{Arena, Arenas, Character, MusicTrack, Status};
 use ratatui::crossterm::event::KeyCode;
 
 use crate::{
@@ -8,9 +8,10 @@ use crate::{
     tui::{Event, HandleEvent},
 };
 
-pub trait Item: Send + Sync + AsRef<[Status]> + StatusSequence {}
-
-impl<T> Item for T where T: Send + Sync + AsRef<[Status]> + StatusSequence {}
+pub trait Item: Send + AsRef<[Status]> {
+    fn toggle_at(&mut self, index: usize);
+    fn list(&self) -> Vec<(String, Status)>;
+}
 
 pub struct Table<T: Item> {
     items: progress::Modify<T>,
@@ -62,5 +63,56 @@ impl<T: Item> super::Table for Table<T> {
             content: TogglesContent::new(self.items.get().list()).with_current(self.current_index),
             is_active,
         }
+    }
+}
+
+impl Item for Arenas {
+    fn toggle_at(&mut self, index: usize) {
+        if let Ok(arena) = Arena::try_from(index) {
+            self.toggle(arena);
+        }
+    }
+
+    fn list(&self) -> Vec<(String, Status)> {
+        let arenas: &[Status] = self.as_ref();
+        Arena::members()
+            .into_iter()
+            .zip(arenas.iter().copied())
+            .map(|(name, status)| (name.to_string(), status))
+            .collect()
+    }
+}
+
+impl Item for player_progress::MusicTracks {
+    fn toggle_at(&mut self, index: usize) {
+        if let Ok(music) = MusicTrack::try_from(index) {
+            self.toggle(music);
+        }
+    }
+
+    fn list(&self) -> Vec<(String, Status)> {
+        let music: &[Status] = self.as_ref();
+        MusicTrack::members()
+            .into_iter()
+            .zip(music.iter().copied())
+            .map(|(name, status)| (name.to_string(), status))
+            .collect()
+    }
+}
+
+impl Item for player_progress::PlayableCharacters {
+    fn toggle_at(&mut self, index: usize) {
+        if let Ok(character) = Character::try_from(index) {
+            self.toggle(character);
+        }
+    }
+
+    fn list(&self) -> Vec<(String, Status)> {
+        let statuses: &[Status] = self.as_ref();
+        Character::members()
+            .into_iter()
+            .zip(statuses.iter().copied())
+            .map(|(name, status)| (name.to_string(), status))
+            .collect()
     }
 }

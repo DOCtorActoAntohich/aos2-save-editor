@@ -1,6 +1,6 @@
 use std::ops::{Index, IndexMut};
 
-use crate::{StatusSequence, UnknownU8, lock::Status};
+use crate::{UnknownU8, lock::Status};
 
 /// List of Background Images aka Arena Backgrounds.
 ///
@@ -100,26 +100,6 @@ impl Arenas {
 
     pub fn toggle(&mut self, arena: Arena) {
         self[arena] = !self[arena];
-    }
-}
-
-impl StatusSequence for Arenas {
-    fn toggle_at(&mut self, index: usize) {
-        if let Ok(arena) = Arena::try_from(index) {
-            self.toggle(arena);
-        }
-    }
-
-    fn list(&self) -> Vec<(String, Status)> {
-        let Self {
-            arenas,
-            unused_0x2d: _,
-        } = self;
-        Arena::members()
-            .into_iter()
-            .zip(arenas.iter().copied())
-            .map(|(name, status)| (name.to_string(), status))
-            .collect()
     }
 }
 
