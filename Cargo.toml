@@ -47,6 +47,7 @@ thiserror.workspace = true
 derive_more.workspace = true
 ratatui.workspace = true
 tokio = { workspace = true, features = ["sync"] }
+clap = { workspace = true, features = ["derive"] }
 
 [dev-dependencies]
 rstest.workspace = true

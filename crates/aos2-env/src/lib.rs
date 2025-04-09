@@ -33,6 +33,8 @@ impl From<EnvVars> for AoS2Env {
 #[cfg(target_os = "linux")]
 impl From<EnvVars> for AoS2Env {
     fn from(EnvVars { home }: EnvVars) -> Self {
+        // This is the cringe location where I had it.
+        // Not sure if it's universal enough but "it works on my machine". xd.
         let saves_folder = home
             .join(".local")
             .join("share")
@@ -56,5 +58,11 @@ impl AoS2Env {
     pub fn from_env() -> Result<Self, Error> {
         let env_vars: EnvVars = envy::from_env().map_err(|_| Error::Home)?;
         Ok(env_vars.into())
+    }
+
+    pub fn from_path(path: impl Into<PathBuf>) -> Self {
+        Self {
+            saves_folder: path.into(),
+        }
     }
 }

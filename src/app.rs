@@ -1,4 +1,4 @@
-use std::time::Instant;
+use std::{path::PathBuf, time::Instant};
 
 use ratatui::{
     DefaultTerminal,
@@ -35,6 +35,14 @@ impl App {
     #[must_use]
     pub fn from_env() -> Self {
         match Savefile::from_env() {
+            Ok(savefile) => Self::new_editor(savefile),
+            Err(error) => Self::new_limbo(error),
+        }
+    }
+
+    #[must_use]
+    pub fn from_path(path: impl Into<PathBuf>) -> Self {
+        match Savefile::from_path(path) {
             Ok(savefile) => Self::new_editor(savefile),
             Err(error) => Self::new_limbo(error),
         }

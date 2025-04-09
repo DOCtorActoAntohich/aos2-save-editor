@@ -3,7 +3,7 @@ pub mod progress;
 
 mod channel;
 
-use std::fmt::Display;
+use std::{fmt::Display, path::PathBuf};
 
 use aos2_env::AoS2Env;
 use online_profile::PlayerOnlineProfile;
@@ -28,6 +28,11 @@ pub enum Error {
 impl Savefile {
     pub fn from_env() -> Result<Self, Error> {
         let env = AoS2Env::from_env()?;
+        Self::load(env)
+    }
+
+    pub fn from_path(path: impl Into<PathBuf>) -> Result<Self, Error> {
+        let env = AoS2Env::from_path(path);
         Self::load(env)
     }
 
