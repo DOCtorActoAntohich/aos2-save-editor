@@ -134,12 +134,13 @@ impl Widget for RadioButtonsContent<'_> {
                 let is_selected = Some(row_index) == selected;
                 let is_hovered = row_index == hovered;
 
-                let selection_text = if is_selected { "[X]" } else { "[ ]" };
+                let selection_line = if is_selected {
+                    Line::from("[X]").style(Style::new().fg(Color::Green))
+                } else {
+                    Line::from("[ ]").style(Style::new().with_fg(IndexedColor::DarkRed))
+                };
 
-                let cells = [
-                    Cell::new(Line::from(selection_text).centered()),
-                    Cell::new(row_line),
-                ];
+                let cells = [Cell::new(selection_line.centered()), Cell::new(row_line)];
                 let style = if should_highlight_hovered && is_hovered {
                     style::Selection::from_is_selected(is_hovered).into()
                 } else {
