@@ -21,9 +21,32 @@ struct EnvVars {
     home: PathBuf,
 }
 
+#[cfg(target_os = "windows")]
 impl From<EnvVars> for AoS2Env {
     fn from(EnvVars { home }: EnvVars) -> Self {
         let saves_folder = home.join("Documents").join("Fruitbat Factory").join("AoS2");
+
+        Self { saves_folder }
+    }
+}
+
+#[cfg(target_os = "linux")]
+impl From<EnvVars> for AoS2Env {
+    fn from(EnvVars { home }: EnvVars) -> Self {
+        let saves_folder = home
+            .join(".local")
+            .join("share")
+            .join("Steam")
+            .join("steamapps")
+            .join("compatdata")
+            .join("390710")
+            .join("pfx")
+            .join("drive_c")
+            .join("users")
+            .join("steamuser")
+            .join("Documents")
+            .join("Fruitbat Factory")
+            .join("AoS2");
 
         Self { saves_folder }
     }
