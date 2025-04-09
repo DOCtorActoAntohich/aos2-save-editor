@@ -1,5 +1,3 @@
-use crate::MembersList;
-
 #[binrw::binrw]
 #[derive(
     Debug,
@@ -58,12 +56,6 @@ pub enum Background {
     /// It's slightly different.
     #[display("<Default Silhouette>")]
     LightGrayBackgroundWithSilhouette = 0xff,
-}
-
-impl MembersList for Background {
-    fn members() -> Vec<Self> {
-        Self::members().to_vec()
-    }
 }
 
 impl From<Background> for u32 {

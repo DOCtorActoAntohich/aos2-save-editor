@@ -1,4 +1,5 @@
-use online_profile::MembersList;
+use std::fmt::Display;
+
 use ratatui::crossterm::event::KeyCode;
 
 use crate::{
@@ -10,9 +11,9 @@ use crate::{
 
 use super::Table;
 
-pub trait Item: MembersList {}
-
-impl<T> Item for T where T: MembersList {}
+pub trait Item: Sized + Clone + Copy + PartialEq + Eq + Display + Default + Send {
+    fn members() -> Vec<Self>;
+}
 
 pub struct Generic<T> {
     data: profile::Modify<T>,
@@ -89,5 +90,35 @@ impl<T: Item> Table for Generic<T> {
             .with_selected(self.selected_index().unwrap_or(usize::MAX)),
             is_active,
         }
+    }
+}
+
+impl Item for online_profile::title::Character {
+    fn members() -> Vec<Self> {
+        Self::members().to_vec()
+    }
+}
+
+impl Item for online_profile::title::Color {
+    fn members() -> Vec<Self> {
+        Self::members().into()
+    }
+}
+
+impl Item for online_profile::title::Text {
+    fn members() -> Vec<Self> {
+        Self::members().into()
+    }
+}
+
+impl Item for online_profile::avatar::Character {
+    fn members() -> Vec<Self> {
+        Self::members().to_vec()
+    }
+}
+
+impl Item for online_profile::avatar::Background {
+    fn members() -> Vec<Self> {
+        Self::members().to_vec()
     }
 }

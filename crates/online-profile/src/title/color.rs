@@ -1,5 +1,3 @@
-use crate::MembersList;
-
 /// Local-only background color for all titles in the lobby.
 #[binrw::binrw]
 #[derive(
@@ -22,12 +20,6 @@ pub enum Color {
     Blue = 0x01,
     Green = 0x02,
     Red = 0x03,
-}
-
-impl MembersList for Color {
-    fn members() -> Vec<Self> {
-        Self::members().into()
-    }
 }
 
 impl From<Color> for u32 {

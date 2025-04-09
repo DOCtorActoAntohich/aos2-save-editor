@@ -10,8 +10,6 @@ mod version;
 // Re-export;
 mod text;
 
-use std::fmt::Display;
-
 pub use crate::text::lobby_name::LobbyName;
 pub use crate::text::lobby_password::LobbyPassword;
 pub use crate::text::nickname::Nickname;
@@ -19,10 +17,6 @@ pub use crate::text::nickname::Nickname;
 use aos2_env::AoS2Env;
 
 use crate::version::Version;
-
-pub trait MembersList: Sized + Clone + Copy + PartialEq + Eq + Display + Default + Send {
-    fn members() -> Vec<Self>;
-}
 
 #[binrw::binrw]
 #[derive(Debug, Clone, Default)]

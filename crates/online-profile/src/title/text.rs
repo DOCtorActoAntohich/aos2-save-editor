@@ -1,5 +1,3 @@
-use crate::MembersList;
-
 /// Title top text to display for everyone to see.
 ///
 /// There are many. Way too many.
@@ -303,12 +301,6 @@ pub enum Text {
     Blank = 273,
     #[display("<Disable Title>")]
     Disabled = 0xffff_ffff,
-}
-
-impl MembersList for Text {
-    fn members() -> Vec<Self> {
-        Self::members().into()
-    }
 }
 
 impl From<Text> for u32 {

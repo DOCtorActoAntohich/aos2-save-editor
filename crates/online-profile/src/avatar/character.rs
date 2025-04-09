@@ -1,5 +1,3 @@
-use crate::MembersList;
-
 #[binrw::binrw]
 #[derive(
     Debug,
@@ -98,12 +96,6 @@ pub enum Character {
     SoraAnniversary = 0x2e,
     #[display("<Invisible avatar>")]
     Invisible = 0xff,
-}
-
-impl MembersList for Character {
-    fn members() -> Vec<Self> {
-        Self::members().to_vec()
-    }
 }
 
 impl From<Character> for u32 {
