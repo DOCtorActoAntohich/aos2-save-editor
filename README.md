@@ -20,6 +20,9 @@ Then this tool is for you. ![:ohh_yeah:](https://steamcommunity-a.akamaihd.net/e
 
 Look for [the latest release here](https://github.com/DOCtorActoAntohich/aos2-save-editor/releases)
 
+- Windows release has the `.exe` extension.
+- Linux release is without the extension.
+
 Since the app is very small and not widely used,
 Windows defender **will scream at it**
 because it doesn't have many user approvals.
@@ -65,17 +68,52 @@ Here are all the reasons:
 - I wanted to cook a non-useless Rust project.
 - Always wanted to make some TUI app cos `nvim` is cute and inspiring.
 
+## How to run
+
+First of all, make sure you ran the game at least once.
+Might need to go to your online profile settings too.
+It is to ensure it generates all the files.
+
+By default, the app will pick one of the known (cursed) locations.
+Usually works first try on Windows, and may or may not work on Linux.
+
+On Windows, simply double-click the app.
+On Linux (or on Windows if you're epic)
+you can run it from the command line as follows.
+
+```bash
+aos2-save-editor
+```
+
+When the app spits `file not found` error,
+you may need to specify the path to your saves folder.
+
+- On Windows, it's usually: `C:/users/<user>/Documents/Fruitbat Factory/AoS2`.
+  Unless you have an exotic setup...
+- On Linux, only god can help you.
+
+You can find one of the player files through your home directory with this command.
+
+```bash
+find ~ -name "player.rkg"
+```
+
+Then just copy the absolute path to the directory where this `player.rkg` rests.
+It may look something like this (notice the quotes because of spaces in the path).
+
+```bash
+aos2-save-editor "$HOME/path/to/Documents/Fruitbat Factory/AoS2"
+```
+
 ## Issues
 
-A few problems to maybe solve in the future.
+A few problems to for the future.
 
-- I haven't tested if it works on Linux.
 - I haven't been able to figure out all the fields in the savefile.
   [`easydiff`](./crates/easydiff/) crate in this workspace can help with that.
-
-## Rust version
-
-Use `1.86` or newer.
+- I didn't use all the data from the save files.
+  Thought like it wasn't really necessary.
+  May do something with it in the future though.
 
 ## License
 
