@@ -9,6 +9,14 @@ Supported game version: `ver 1.9.0`
 
 Look for [the latest release here](https://github.com/DOCtorActoAntohich/aos2-save-editor/releases)
 
+Since the app is very small and not widely used,
+Windows defender **will scream at it**
+because it doesn't have many user approvals.
+I can't do much about it, sadly. ![:ohh_yeah:](https://steamcommunity-a.akamaihd.net/economy/emoticon/:ohh_yeah:)
+
+It's up to you to proceed.
+You can always just view the code and build it yourself too.
+
 ## What is it for?
 
 If any of that describes you:
