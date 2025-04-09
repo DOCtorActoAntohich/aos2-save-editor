@@ -5,6 +5,17 @@ Gives no competitive advantage.
 
 Supported game version: `ver 1.9.0`
 
+## What is it for?
+
+If any of that describes you:
+
+- Lost the save file, but don't wanna grind to unlock characters.
+- Tired of rolling Sham if you main Random Character.
+- Want to remove Iru from the game.
+- Simply want all the things here and now.
+
+Then this tool is for you. ![:ohh_yeah:](https://steamcommunity-a.akamaihd.net/economy/emoticon/:ohh_yeah:)
+
 ## Download
 
 Look for [the latest release here](https://github.com/DOCtorActoAntohich/aos2-save-editor/releases)
@@ -16,17 +27,6 @@ I can't do much about it, sadly. ![:ohh_yeah:](https://steamcommunity-a.akamaihd
 
 It's up to you to proceed.
 You can always just view the code and build it yourself too.
-
-## What is it for?
-
-If any of that describes you:
-
-- Lost the save file, but don't wanna grind to unlock characters.
-- Tired of rolling Sham if you main Random Character.
-- Want to remove Iru from the game.
-- Simply want all the things here and now.
-
-Then this tool is for you. ![:ohh_yeah:](https://steamcommunity-a.akamaihd.net/economy/emoticon/:ohh_yeah:)
 
 ### Features
 
