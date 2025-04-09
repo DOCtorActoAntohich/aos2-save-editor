@@ -31,7 +31,7 @@ I can't do much about it, sadly. ![:ohh_yeah:](https://steamcommunity-a.akamaihd
 It's up to you to proceed.
 You can always just view the code and build it yourself too.
 
-### Features
+## Features
 
 With this app, you can do the following:
 
