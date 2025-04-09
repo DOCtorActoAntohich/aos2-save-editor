@@ -115,6 +115,7 @@ jobs:
         with:
           name: Release ${{ needs.bump-version.outputs.tag }}
           tag_name: ${{ needs.bump-version.outputs.tag }}
+          body: ${{ inputs.description }}
           files: |
             release/windows/${{ env.BINARY_NAME }}.exe
             release/linux/${{ env.BINARY_NAME }}
