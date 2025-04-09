@@ -22,10 +22,15 @@ pub struct Generic<T> {
 
 impl<T: Item> Generic<T> {
     pub fn new(name: impl Into<String>, data: profile::Modify<T>) -> Self {
+        let hovered = T::members()
+            .into_iter()
+            .enumerate()
+            .find_map(|(index, value)| (value == data.get()).then_some(index))
+            .unwrap_or_default();
         Self {
             data,
             name: name.into(),
-            hovered: 0,
+            hovered,
         }
     }
 
