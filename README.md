@@ -67,7 +67,7 @@ A few problems to maybe solve in the future.
 
 ## Rust version
 
-Use `1.85` or newer.
+Use `1.86` or newer.
 
 ## License
 

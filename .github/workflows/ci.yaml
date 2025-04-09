@@ -5,6 +5,9 @@ on:
     branches: [master]
   pull_request:
 
+env:
+  TOOLCHAIN_VERSION: 1.86.0
+
 jobs:
   clippy-and-test:
     name: Clippy and Tests
@@ -14,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: 1.85.0
+          toolchain: ${{ env.TOOLCHAIN_VERSION }}
           components: clippy
 
       - run: cargo clippy --workspace

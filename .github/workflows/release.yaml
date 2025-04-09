@@ -15,6 +15,7 @@ on:
 
 env:
   BINARY_NAME: aos2-save-editor
+  TOOLCHAIN_VERSION: 1.86.0
 
 jobs:
   bump-version:
@@ -33,7 +34,7 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: 1.85.0
+          toolchain: ${{ env.TOOLCHAIN_VERSION }}
 
       - run: cargo install cargo-release
       - id: bump-version
@@ -60,7 +61,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: 1.85.0
+          toolchain: ${{ env.TOOLCHAIN_VERSION }}
           target: ${{ env.TARGET }}
       - run: cargo build --release --target ${{ env.TARGET }}
       - uses: actions/upload-artifact@v4
@@ -80,7 +81,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: 1.85.0
+          toolchain: ${{ env.TOOLCHAIN_VERSION }}
           target: ${{ env.TARGET }}
       - run: cargo build --release --target ${{ env.TARGET }}
       - uses: actions/upload-artifact@v4
