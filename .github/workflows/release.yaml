@@ -5,13 +5,18 @@ on:
     inputs:
       level:
         description: "Cargo-Release bump option"
+        type: choice
         required: true
         default: "minor"
-        type: choice
         options:
           - patch
           - minor
           - major
+      description:
+        description: "Release description text"
+        type: string
+        required: true
+        default: ""
 
 env:
   BINARY_NAME: aos2-save-editor
