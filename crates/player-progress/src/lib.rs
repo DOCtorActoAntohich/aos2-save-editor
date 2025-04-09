@@ -12,9 +12,9 @@ mod playable_characters;
 mod runs;
 mod wins;
 
-pub use self::arenas::Arenas;
+pub use self::arenas::{Arena, Arenas};
 pub use self::lock::Status;
-pub use self::music::MusicTracks;
+pub use self::music::{MusicTrack, MusicTracks};
 pub use self::playable_characters::{Character, PlayableCharacters};
 pub use self::runs::{PerfectArcadeMode, PerfectStoryMode, Run};
 pub use self::wins::SingleplayerWins;
