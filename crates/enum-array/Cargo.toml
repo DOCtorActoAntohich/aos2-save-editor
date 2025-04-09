@@ -1,8 +1,12 @@
 [package]
 name = "enum-array"
+description = "Silly utility to list all enum variants (for unit-variants only)"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
+repository.workspace = true
+license.workspace = true
+rust-version.workspace = true
 
 [lib]
 proc-macro = true

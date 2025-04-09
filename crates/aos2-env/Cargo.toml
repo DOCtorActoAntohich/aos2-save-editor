@@ -1,8 +1,12 @@
 [package]
 name = "aos2-env"
+description = "Universal AoS2 savefile location"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
+repository.workspace = true
+license.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 thiserror.workspace = true

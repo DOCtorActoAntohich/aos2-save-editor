@@ -7,6 +7,9 @@ version = "0.1.0"
 edition = "2024"
 # hall of shame lol.
 authors = ["DOCtorActoAntohich"]
+repository = "https://github.com/DOCtorActoAntohich/aos2-save-editor"
+license = "MIT"
+rust-version = "1.85"
 
 [workspace.dependencies]
 thiserror = "1"
@@ -27,9 +30,13 @@ proc-macro2 = "1"
 
 [package]
 name = "aos2-save-editor"
+description = "The editor app for AoS2 game saves"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
+repository.workspace = true
+license.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 aos2-env = { path = "./crates/aos2-env" }

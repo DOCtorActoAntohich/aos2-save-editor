@@ -1,8 +1,12 @@
 [package]
 name = "online-profile"
+description = "Player Online Profile parsing - avatars, titles, and personal settings"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
+repository.workspace = true
+license.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 aos2-env.path = "../aos2-env"
