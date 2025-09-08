@@ -29,16 +29,31 @@
     flake-utils.lib.eachDefaultSystem (
       system:
       let
+        rust-version = "1.86.0";
+
         pkgs = import nixpkgs { inherit system overlays; };
-        rust-toolchain = pkgs.rust-bin.stable."1.86.0".default;
-        package = pkgs.callPackage ./nix/aos2-save-editor.nix { inherit rust-toolchain; };
+        pkgs-windows = pkgs.pkgsCross.mingwW64;
+
+        rust-toolchain = pkgs.rust-bin.stable.${rust-version}.default;
+        rust-toolchain-windows =
+          let
+            rust-bin = rust-overlay.lib.mkRustBin { } pkgs-windows.buildPackages;
+          in
+          rust-bin.stable.${rust-version}.minimal;
+
+        aos2-save-editor = pkgs.callPackage ./nix/aos2-save-editor.nix { inherit rust-toolchain; };
       in
       {
         packages = {
-          default = package.aos2-save-editor;
+          default = aos2-save-editor;
+          windows = pkgs-windows.callPackage ./nix/aos2-save-editor.nix {
+            rust-toolchain = rust-toolchain-windows;
+          };
         };
         devShells = {
-          default = package.dev-shell;
+          default = pkgs.mkShell {
+            inputsFrom = [ aos2-save-editor ];
+          };
         };
       }
     );
