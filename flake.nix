@@ -36,6 +36,12 @@
               "rust-src"
             ];
           };
+          ci = pkgs.rust-bin.stable.${rust-version}.minimal.override {
+            extensions = [
+              "rustfmt"
+              "clippy"
+            ];
+          };
           build = pkgs.rust-bin.stable.${rust-version}.minimal;
           windows =
             let
@@ -65,6 +71,9 @@
         devShells = {
           default = pkgs.mkShell {
             packages = [ rust.dev ];
+          };
+          ci = pkgs.mkShell {
+            packages = [ rust.ci ];
           };
         };
       }
