@@ -1,9 +1,8 @@
 #![warn(clippy::pedantic)]
 #![allow(clippy::missing_errors_doc)]
 
+use std::path::Path;
 use std::path::PathBuf;
-
-use serde::Deserialize;
 
 #[derive(Debug, Clone)]
 pub struct AoS2Env {
@@ -16,48 +15,12 @@ pub enum Error {
     Home,
 }
 
-#[derive(Debug, Deserialize)]
-struct EnvVars {
-    home: PathBuf,
-}
-
-#[cfg(target_os = "windows")]
-impl From<EnvVars> for AoS2Env {
-    fn from(EnvVars { home }: EnvVars) -> Self {
-        let saves_folder = home.join("Documents").join("Fruitbat Factory").join("AoS2");
-
-        Self { saves_folder }
-    }
-}
-
-#[cfg(target_os = "linux")]
-impl From<EnvVars> for AoS2Env {
-    fn from(EnvVars { home }: EnvVars) -> Self {
-        // This is the cringe location where I had it.
-        // Not sure if it's universal enough but "it works on my machine". xd.
-        let saves_folder = home
-            .join(".local")
-            .join("share")
-            .join("Steam")
-            .join("steamapps")
-            .join("compatdata")
-            .join("390710")
-            .join("pfx")
-            .join("drive_c")
-            .join("users")
-            .join("steamuser")
-            .join("Documents")
-            .join("Fruitbat Factory")
-            .join("AoS2");
-
-        Self { saves_folder }
-    }
-}
-
 impl AoS2Env {
-    pub fn from_env() -> Result<Self, Error> {
-        let env_vars: EnvVars = envy::from_env().map_err(|_| Error::Home)?;
-        Ok(env_vars.into())
+    pub fn try_new() -> Result<Self, Error> {
+        std::env::home_dir()
+            .map(saves_location)
+            .map(|saves_folder| Self { saves_folder })
+            .ok_or(Error::Home)
     }
 
     pub fn from_path(path: impl Into<PathBuf>) -> Self {
@@ -65,4 +28,45 @@ impl AoS2Env {
             saves_folder: path.into(),
         }
     }
+}
+
+#[cfg(target_os = "windows")]
+fn saves_location(home: impl AsRef<Path>) -> PathBuf {
+    home.as_ref()
+        .join("Documents")
+        .join("Fruitbat Factory")
+        .join("AoS2")
+}
+
+#[cfg(target_os = "linux")]
+fn saves_location(home: impl AsRef<Path>) -> PathBuf {
+    // This is the cringe location where I had it.
+    // Not sure if it's universal enough but "it works on my machine". xd.
+    home.as_ref()
+        .join(".local")
+        .join("share")
+        .join("Steam")
+        .join("steamapps")
+        .join("compatdata")
+        .join("390710")
+        .join("pfx")
+        .join("drive_c")
+        .join("users")
+        .join("steamuser")
+        .join("Documents")
+        .join("Fruitbat Factory")
+        .join("AoS2")
+}
+
+/// Note: This is a crutch to just make it compile for MacOS.
+/// Akshually, AoS2 doesn't run on MacOS,
+/// but this location is where 100% OJ stores its savedata, so
+/// this is where theoretical AoS2 for Mac would store its data too.
+#[cfg(target_os = "macos")]
+fn saves_location(home: impl AsRef<Path>) -> PathBuf {
+    home.as_ref()
+        .join("Library")
+        .join("Application Support")
+        .join("FBF")
+        .join("AoS2")
 }

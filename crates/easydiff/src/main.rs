@@ -24,7 +24,7 @@ struct Args {
 }
 
 fn main() -> anyhow::Result<()> {
-    let aos2_env = AoS2Env::from_env()?;
+    let aos2_env = AoS2Env::try_new()?;
     let args = Args::parse();
 
     run(aos2_env, args)

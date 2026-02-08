@@ -4,7 +4,7 @@ use player_progress::{
 };
 
 fn main() -> anyhow::Result<()> {
-    let aos2_env = AoS2Env::from_env()?;
+    let aos2_env = AoS2Env::try_new()?;
 
     println!(
         "Opening `game.sys` at: {}\n",
