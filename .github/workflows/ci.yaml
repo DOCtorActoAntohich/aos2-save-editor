@@ -1,6 +1,16 @@
-name: CI
+name: Rust CI
 
 on: [push]
+on:
+  push:
+    paths:
+      - "crates/**/*.rs"
+      - "crates/**/Cargo.toml"
+      - "examples/**/*.rs"
+      - "src/**/*.rs"
+      - "Cargo.lock"
+      - "Cargo.toml"
+      - "build.rs"
 
 jobs:
   cargo-fmt:
