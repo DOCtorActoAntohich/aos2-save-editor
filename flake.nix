@@ -48,7 +48,8 @@
           inherit nix-filter;
           rust-toolchain = rust.build;
         };
-        aos2-save-editor-windows = aos2-save-editor.override {
+        aos2-save-editor-windows = pkgs-windows.callPackage ./nix/aos2-save-editor.nix {
+          inherit nix-filter;
           rust-toolchain = rust.windows;
         };
       in
