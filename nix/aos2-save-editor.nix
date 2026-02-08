@@ -1,15 +1,16 @@
 {
   stdenv,
   mkShell,
-  nix-filter,
   makeRustPlatform,
 
   rust-toolchain,
+  nix-filter,
 }:
 let
   rust-platform = makeRustPlatform {
     cargo = rust-toolchain;
     rustc = rust-toolchain;
+    inherit stdenv;
   };
 
   workspace-version =

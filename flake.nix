@@ -17,42 +17,53 @@
       flake-utils,
       nix-filter,
     }:
-    let
-      nix-filter-overlay = final: prev: {
-        nix-filter = nix-filter.lib;
-      };
-      overlays = [
-        nix-filter-overlay
-        (import rust-overlay)
-      ];
-    in
     flake-utils.lib.eachDefaultSystem (
       system:
       let
-        rust-version = "1.93.0";
-
+        overlays = [
+          (import rust-overlay)
+        ];
         pkgs = import nixpkgs { inherit system overlays; };
         pkgs-windows = pkgs.pkgsCross.mingwW64;
 
-        rust-toolchain = pkgs.rust-bin.stable.${rust-version}.default;
-        rust-toolchain-windows =
-          let
-            rust-bin = rust-overlay.lib.mkRustBin { } pkgs-windows.buildPackages;
-          in
-          rust-bin.stable.${rust-version}.minimal;
+        rust-version = "1.93.0";
+        rust = {
+          dev = pkgs.rust-bin.stable.${rust-version}.minimal.override {
+            extensions = [
+              "rustfmt"
+              "clippy"
+              "rust-analyzer"
+              "rust-src"
+            ];
+          };
+          build = pkgs.rust-bin.stable.${rust-version}.minimal;
+          windows =
+            let
+              rust-bin = rust-overlay.lib.mkRustBin { } pkgs-windows.buildPackages;
+            in
+            rust-bin.stable.${rust-version}.minimal;
+        };
 
-        aos2-save-editor = pkgs.callPackage ./nix/aos2-save-editor.nix { inherit rust-toolchain; };
+        aos2-save-editor = pkgs.callPackage ./nix/aos2-save-editor.nix {
+          inherit nix-filter;
+          rust-toolchain = rust.build;
+        };
+        aos2-save-editor-windows = aos2-save-editor.override {
+          rust-toolchain = rust.windows;
+        };
       in
       {
+        formatter = pkgs.nixfmt-tree;
+
         packages = {
+          inherit aos2-save-editor;
           default = aos2-save-editor;
-          windows = pkgs-windows.callPackage ./nix/aos2-save-editor.nix {
-            rust-toolchain = rust-toolchain-windows;
-          };
+          windows = aos2-save-editor-windows;
         };
+
         devShells = {
           default = pkgs.mkShell {
-            inputsFrom = [ aos2-save-editor ];
+            packages = [ rust.dev ];
           };
         };
       }
