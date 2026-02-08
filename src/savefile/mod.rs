@@ -27,7 +27,7 @@ pub enum Error {
 
 impl Savefile {
     pub fn from_env() -> Result<Self, Error> {
-        let env = AoS2Env::try_new()?;
+        let env = AoS2Env::from_home_dir()?;
         Self::load(env)
     }
 

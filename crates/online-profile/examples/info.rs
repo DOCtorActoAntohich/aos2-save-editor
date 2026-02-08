@@ -2,7 +2,7 @@ use aos2_env::AoS2Env;
 use online_profile::PlayerOnlineProfile;
 
 fn main() -> anyhow::Result<()> {
-    let env = AoS2Env::try_new()?;
+    let env = AoS2Env::from_home_dir()?;
     let profile = PlayerOnlineProfile::load(&env)?;
 
     println!("Player: {}", profile.nickname);

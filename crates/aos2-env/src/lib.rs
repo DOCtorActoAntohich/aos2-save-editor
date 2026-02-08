@@ -16,7 +16,7 @@ pub enum Error {
 }
 
 impl AoS2Env {
-    pub fn try_new() -> Result<Self, Error> {
+    pub fn from_home_dir() -> Result<Self, Error> {
         std::env::home_dir()
             .map(saves_location)
             .map(|saves_folder| Self { saves_folder })
