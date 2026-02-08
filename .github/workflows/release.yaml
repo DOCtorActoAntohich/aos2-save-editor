@@ -18,10 +18,6 @@ on:
         required: true
         default: ""
 
-env:
-  BINARY_NAME: aos2-save-editor
-  TOOLCHAIN_VERSION: 1.86.0
-
 jobs:
   bump-version:
     name: Bump Version
@@ -32,67 +28,57 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - run: |
+      - uses: cachix/install-nix-action@v31
+
+      - id: configure-credentials
+        run: |
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
 
-      - uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: ${{ env.TOOLCHAIN_VERSION }}
-
-      - run: cargo install cargo-release
       - id: bump-version
-        shell: bash
         run: |
-          cargo release ${{ inputs.level }} --no-publish --no-push --no-confirm --no-verify --execute
+          nix develop .#ci --command \
+            nix shell --inputs-from . nixpkgs#cargo-release --command \
+              cargo release ${{ inputs.level }} --no-publish --no-push --no-confirm --no-verify --execute
           TAG=$(git describe --tags --abbrev=0)
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
           cat $GITHUB_OUTPUT
 
-      - run: |
+      - id: push-release
+        run: |
           git push
           git push --tags
 
   build-windows:
     needs:
       - bump-version
-    runs-on: windows-latest
-
-    env:
-      TARGET: x86_64-pc-windows-msvc
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: ${{ env.TOOLCHAIN_VERSION }}
-          target: ${{ env.TARGET }}
-      - run: cargo build --release --target ${{ env.TARGET }}
+      - uses: cachix/install-nix-action@v31
+      - id: build
+        run: nix build .#windows
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.BINARY_NAME }}-windows
-          path: target/${{ env.TARGET }}/release/${{ env.BINARY_NAME }}.exe
+          name: aos2-save-editor-windows
+          path: result/bin/aos2-save-editor.exe
 
   build-linux:
     needs:
       - bump-version
     runs-on: ubuntu-latest
 
-    env:
-      TARGET: x86_64-unknown-linux-musl
-
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: ${{ env.TOOLCHAIN_VERSION }}
-          target: ${{ env.TARGET }}
-      - run: cargo build --release --target ${{ env.TARGET }}
+      - uses: cachix/install-nix-action@v31
+      - id: build
+        run: nix build .
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.BINARY_NAME }}-linux
-          path: target/${{ env.TARGET }}/release/${{ env.BINARY_NAME }}
+          name: aos2-save-editor-linux
+          path: result/bin/aos2-save-editor
 
   release-all:
     needs:
@@ -104,11 +90,11 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: ${{ env.BINARY_NAME }}-windows
+          name: aos2-save-editor-windows
           path: ./release/windows
       - uses: actions/download-artifact@v4
         with:
-          name: ${{ env.BINARY_NAME }}-linux
+          name: aos2-save-editor-linux
           path: ./release/linux
 
       - uses: softprops/action-gh-release@v2
@@ -117,7 +103,7 @@ jobs:
           tag_name: ${{ needs.bump-version.outputs.tag }}
           body: ${{ inputs.description }}
           files: |
-            release/windows/${{ env.BINARY_NAME }}.exe
-            release/linux/${{ env.BINARY_NAME }}
+            release/windows/aos2-save-editor.exe
+            release/linux/aos2-save-editor
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
