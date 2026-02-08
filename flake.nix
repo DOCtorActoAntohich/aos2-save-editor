@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
@@ -29,7 +29,7 @@
     flake-utils.lib.eachDefaultSystem (
       system:
       let
-        rust-version = "1.86.0";
+        rust-version = "1.93.0";
 
         pkgs = import nixpkgs { inherit system overlays; };
         pkgs-windows = pkgs.pkgsCross.mingwW64;
