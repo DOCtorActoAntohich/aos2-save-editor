@@ -1,4 +1,4 @@
-/// *AoS2* uses a fun data encoding algorithm for relatively important data.
+/// `AoS2` uses a fun data encoding algorithm for relatively important data.
 ///
 /// A sequence of bytes is encoded with a sequence of keys.
 /// Keys are pre-determined.
