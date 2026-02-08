@@ -105,6 +105,14 @@ It may look something like this (notice the quotes because of spaces in the path
 aos2-save-editor "$HOME/path/to/Documents/Fruitbat Factory/AoS2"
 ```
 
+### For Nix and NixOS users
+
+You can just run this command
+
+```bash
+nix run github:DOCtorActoAntohich/aos2-save-editor
+```
+
 ## Issues
 
 A few problems to for the future.
