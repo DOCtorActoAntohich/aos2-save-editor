@@ -1,4 +1,8 @@
-use std::{fs::File, io::Read, path::Path};
+use std::{
+    fs::File,
+    io::{BufReader, Read},
+    path::Path,
+};
 
 use anyhow::Context;
 
@@ -12,6 +16,7 @@ impl BinaryFile {
     {
         let file = File::open(path.as_ref())
             .with_context(|| format!("Failed to open file: {}", path.as_ref().display()))?;
+        let file = BufReader::new(file);
 
         let contents = file
             .bytes()

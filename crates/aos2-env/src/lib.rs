@@ -58,10 +58,10 @@ fn saves_location(home: impl AsRef<Path>) -> PathBuf {
         .join("AoS2")
 }
 
-/// Note: This is a crutch to just make it compile for MacOS.
-/// Akshually, AoS2 doesn't run on MacOS,
+/// Note: This is a crutch to just make it compile for `MacOS`.
+/// Akshually, *AoS2* doesn't run on `MacOS`,
 /// but this location is where 100% OJ stores its savedata, so
-/// this is where theoretical AoS2 for Mac would store its data too.
+/// this is where theoretical *AoS2* for Mac would store its data too.
 #[cfg(target_os = "macos")]
 fn saves_location(home: impl AsRef<Path>) -> PathBuf {
     home.as_ref()

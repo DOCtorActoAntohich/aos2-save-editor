@@ -18,7 +18,7 @@ impl<A, T> ModifyFn<T> for A where A: Send + Fn(&mut PlayerOnlineProfile, T) {}
 
 pub struct Modify<T> {
     profile: watch::Sender<PlayerOnlineProfile>,
-    modify: Box<dyn ModifyFn<T>>,
+    write: Box<dyn ModifyFn<T>>,
     get: Box<dyn GetFn<T>>,
 }
 
@@ -45,7 +45,7 @@ impl Profile {
     pub fn modify_title_character(&self) -> Modify<title::Character> {
         Modify {
             profile: self.profile.sender(),
-            modify: Box::new(
+            write: Box::new(
                 |profile: &mut PlayerOnlineProfile, character: title::Character| {
                     profile.title_character_in_background = character;
                 },
@@ -58,7 +58,7 @@ impl Profile {
     pub fn modify_title_color(&self) -> Modify<title::Color> {
         Modify {
             profile: self.profile.sender(),
-            modify: Box::new(|profile: &mut PlayerOnlineProfile, color: title::Color| {
+            write: Box::new(|profile: &mut PlayerOnlineProfile, color: title::Color| {
                 profile.title_color = color;
             }),
             get: Box::new(|profile: &PlayerOnlineProfile| profile.title_color),
@@ -69,7 +69,7 @@ impl Profile {
     pub fn modify_title_text(&self) -> Modify<title::Text> {
         Modify {
             profile: self.profile.sender(),
-            modify: Box::new(|profile: &mut PlayerOnlineProfile, text: title::Text| {
+            write: Box::new(|profile: &mut PlayerOnlineProfile, text: title::Text| {
                 profile.title_text_id = text;
             }),
             get: Box::new(|profile: &PlayerOnlineProfile| profile.title_text_id),
@@ -80,7 +80,7 @@ impl Profile {
     pub fn modify_avatar_character(&self) -> Modify<avatar::Character> {
         Modify {
             profile: self.profile.sender(),
-            modify: Box::new(
+            write: Box::new(
                 |profile: &mut PlayerOnlineProfile, character: avatar::Character| {
                     profile.avatar_character = character;
                 },
@@ -93,7 +93,7 @@ impl Profile {
     pub fn modify_avatar_background(&self) -> Modify<avatar::Background> {
         Modify {
             profile: self.profile.sender(),
-            modify: Box::new(
+            write: Box::new(
                 |profile: &mut PlayerOnlineProfile, background: avatar::Background| {
                     profile.avatar_background = background;
                 },
@@ -112,7 +112,7 @@ impl<T> Modify<T> {
 
     pub fn send(&mut self, value: T) {
         self.profile.send_modify(|profile| {
-            (self.modify)(profile, value);
+            (self.write)(profile, value);
         });
     }
 }

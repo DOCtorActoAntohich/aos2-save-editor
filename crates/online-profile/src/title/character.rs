@@ -1,9 +1,9 @@
 /// Little character eyes peeking from the title background.
 ///
-/// In the game, only AoS2 characters are available.
+/// In the game, only *AoS2* characters are available.
 /// They are also coupled to the characters whose title you select.
 ///
-/// Sadly, AoS2 doesn't expose any interface to change those freely,
+/// Sadly, *AoS2* doesn't expose any interface to change those freely,
 /// but it internally supports OJ variants too,
 /// and even allows setting one character's title and another character's eyes.
 #[binrw::binrw]

@@ -29,7 +29,7 @@ pub struct ComplationStats {
 
 pub struct Modify<T> {
     progress: watch::Sender<PlayerProgress>,
-    modify: Box<dyn ModifyFn<T>>,
+    write: Box<dyn ModifyFn<T>>,
     get: Box<dyn GetFn<T>>,
 }
 
@@ -83,7 +83,7 @@ impl Progress {
     pub fn modify_playable_characters(&self) -> Modify<PlayableCharacters> {
         Modify {
             progress: self.progress.sender(),
-            modify: Box::new(
+            write: Box::new(
                 |progress: &mut PlayerProgress, characters: PlayableCharacters| {
                     progress.playable_characters = characters;
                 },
@@ -96,7 +96,7 @@ impl Progress {
     pub fn modify_arenas(&self) -> Modify<Arenas> {
         Modify {
             progress: self.progress.sender(),
-            modify: Box::new(|progress: &mut PlayerProgress, arenas: Arenas| {
+            write: Box::new(|progress: &mut PlayerProgress, arenas: Arenas| {
                 progress.arenas = arenas;
             }),
             get: Box::new(|progress: &PlayerProgress| progress.arenas.clone()),
@@ -107,7 +107,7 @@ impl Progress {
     pub fn modify_music_tracks(&self) -> Modify<MusicTracks> {
         Modify {
             progress: self.progress.sender(),
-            modify: Box::new(|progress: &mut PlayerProgress, music: MusicTracks| {
+            write: Box::new(|progress: &mut PlayerProgress, music: MusicTracks| {
                 progress.music_tracks = music;
             }),
             get: Box::new(|progress: &PlayerProgress| progress.music_tracks.clone()),
@@ -118,7 +118,7 @@ impl Progress {
 impl<T> Modify<T> {
     pub fn send(&mut self, value: T) {
         self.progress.send_modify(|progress| {
-            (self.modify)(progress, value);
+            (self.write)(progress, value);
         });
     }
 

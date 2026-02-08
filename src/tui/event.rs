@@ -121,9 +121,11 @@ mod tests {
         assert!(step <= Event::MAX_TEXT_AGE, "Test Precondition");
 
         let start_time = Instant::now();
-        let instants = (0..input.len())
-            .into_iter()
-            .map(|i| start_time + i as u32 * step);
+        let n_items: u32 = input
+            .len()
+            .try_into()
+            .expect("Invariant: small enough numbers");
+        let instants = (0..n_items).map(|i| start_time + i * step);
 
         let mut current = Event::empty(start_time);
         for (instant, character) in instants.zip(input.chars()) {
@@ -144,7 +146,7 @@ mod tests {
         #[case] expected: &str,
     ) {
         let now = Instant::now();
-        let received_at = now - age;
+        let received_at = now.checked_sub(age).expect("Invariant");
 
         let event = Event {
             key_code: None,
@@ -155,6 +157,6 @@ mod tests {
 
         let event = event.follow_with(&event_from_key(code), now);
 
-        assert_eq!(expected, event.accumulated_input())
+        assert_eq!(expected, event.accumulated_input());
     }
 }

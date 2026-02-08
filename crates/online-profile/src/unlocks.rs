@@ -30,7 +30,9 @@ macro_rules! declare_sized_section {
 
             pub fn unlock_all(&mut self) {
                 let Self { items } = self;
-                items.iter_mut().for_each(|item| *item = Status::Open);
+                for item in items.iter_mut() {
+                    *item = Status::Open;
+                }
             }
         }
 

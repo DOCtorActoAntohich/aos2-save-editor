@@ -86,10 +86,10 @@ impl App {
 
         self.previous_event = event;
 
-        if let Screen::Editor(editor) = &mut self.screen {
-            if let Err(error) = editor.handle_savefile_updates() {
-                self.screen = Screen::Limbo(limbo::Screen::new(error));
-            }
+        if let Screen::Editor(editor) = &mut self.screen
+            && let Err(error) = editor.handle_savefile_updates()
+        {
+            self.screen = Screen::Limbo(limbo::Screen::new(error));
         }
 
         Ok(())

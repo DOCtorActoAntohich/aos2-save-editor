@@ -1,4 +1,4 @@
-/// AoS2 uses a fun data encoding algorithm for relatively important data.
+/// *AoS2* uses a fun data encoding algorithm for relatively important data.
 ///
 /// A sequence of bytes is encoded with a sequence of keys.
 /// Keys are pre-determined.
@@ -87,9 +87,11 @@ mod tests {
     #[case(0x12, 0x21)]
     fn nibbles_swap_properly(#[case] input: u8, #[case] expected: u8) {
         let actual = swap_nibbles(input);
-        assert_eq!(expected, actual)
+        assert_eq!(expected, actual);
     }
 
+    #[allow(clippy::cast_possible_truncation)]
+    #[allow(clippy::zero_prefixed_literal)]
     #[rstest_reuse::apply(mapping)]
     fn decodes(#[case] expected_raw: u8, #[case] encoded: EncodedU8, #[case] key: KeyU8) {
         let actual_raw = encoded.decode(key);
@@ -97,6 +99,8 @@ mod tests {
         assert_eq!(expected_raw, actual_raw);
     }
 
+    #[allow(clippy::cast_possible_truncation)]
+    #[allow(clippy::zero_prefixed_literal)]
     #[rstest_reuse::apply(mapping)]
     fn encodes(#[case] raw: u8, #[case] expected_encoded: EncodedU8, #[case] key: KeyU8) {
         let actual_encoded = EncodedU8::from_raw(raw, key);
@@ -113,6 +117,8 @@ mod tests {
         assert_eq!(expected, actual);
     }
 
+    #[allow(clippy::cast_possible_truncation)]
+    #[allow(clippy::zero_prefixed_literal)]
     #[rstest_reuse::template]
     #[rstest::rstest]
     #[case(0xe8, EncodedU8::pre_encoded(0x0), KeyU8::new(0x8e))]
