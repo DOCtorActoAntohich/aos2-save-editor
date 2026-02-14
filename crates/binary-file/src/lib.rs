@@ -3,9 +3,9 @@ use std::path::PathBuf;
 #[derive(Debug, thiserror::Error)]
 #[error("{action} failed:\n- {detail}\n\nFile at: {path}")]
 pub struct Error {
-    path: PathBuf,
-    action: ErroneousAction,
-    detail: ErrorDetail,
+    pub path: PathBuf,
+    pub action: ErroneousAction,
+    pub detail: ErrorDetail,
 }
 
 #[derive(Debug, derive_more::Display)]
