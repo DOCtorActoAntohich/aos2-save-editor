@@ -13,18 +13,30 @@ pub struct Error {
 
 #[derive(Debug, derive_more::Display)]
 pub enum ErrorDetail {
+    #[display("Not found")]
+    NotFound,
+    #[display("No permission")]
+    NoPermission,
+    UnsupportedVersion(UnsupportedVersion),
     #[display("Filesystem error: {_0}")]
     FileSystem(std::io::Error),
     #[display("Binary format error: {_0}")]
     BinaryFormat(binrw::Error),
-    NotFound,
-    NoPermission,
+    #[display("Weird unchecked error (blame the developers!!): {_0}")]
+    Weird(Box<dyn binrw::error::CustomError>),
 }
 
 #[derive(Debug, derive_more::Display)]
 pub enum ErroneousAction {
     Reading,
     Writing,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
+#[error("Wrong file version\nExpected: {expected:08x}\nActual:   `{actual:08x}`)")]
+pub struct UnsupportedVersion {
+    pub expected: u32,
+    pub actual: u32,
 }
 
 impl Error {
@@ -73,6 +85,21 @@ impl From<std::io::Error> for ErrorDetail {
 
 impl From<binrw::Error> for ErrorDetail {
     fn from(error: binrw::Error) -> Self {
-        ErrorDetail::BinaryFormat(error)
+        let err: Box<dyn binrw::error::CustomError> = match error {
+            binrw::Error::Custom { pos: _, err } => err,
+            // Rage consumes me :rage:. Who made it this way...
+            binrw::Error::Backtrace(backtrace) => {
+                let error = *backtrace.error;
+                return error.into();
+            }
+            other => return ErrorDetail::BinaryFormat(other),
+        };
+
+        let err = match err.downcast::<UnsupportedVersion>() {
+            Ok(unsupported) => return ErrorDetail::UnsupportedVersion(*unsupported),
+            Err(err) => err,
+        };
+
+        ErrorDetail::Weird(err)
     }
 }
