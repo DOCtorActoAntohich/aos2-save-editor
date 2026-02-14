@@ -123,26 +123,6 @@ pub struct PlayerProgress {
     _0xab: UnknownU8,
 }
 
-#[derive(Debug, thiserror::Error)]
-pub enum Error {
-    #[error("Failed to open file for reading")]
-    FileRead(#[source] std::io::Error),
-    #[error("Failed to open file for writing")]
-    FileWrite(#[source] std::io::Error),
-    #[error("No permission to write to a file")]
-    WritePermission,
-    #[error("File does not exist")]
-    NotFound,
-    #[error("Failed to write a raw encoded stream")]
-    EncodedWrite(#[source] binrw::Error),
-    #[error("Failed to read a raw encoded stream (invalid file format)")]
-    EncodedRead(#[source] binrw::Error),
-    #[error("Failed to write intermediate decoded stream")]
-    DecodedWrite(#[source] binrw::Error),
-    #[error("Failed to read intermediate decoded stream (invalid file format)")]
-    DecodedRead(#[source] binrw::Error),
-}
-
 /// Means the purpose of the field is unknown.
 ///
 /// "Explicit is better than implicit".
@@ -194,22 +174,30 @@ struct EncodedProgress {
     body: [u8; Self::BODY_SIZE],
 }
 
+#[derive(Debug, thiserror::Error)]
+#[error(transparent)]
+struct EncodingError(#[from] binrw::Error);
+
 impl PlayerProgress {
     pub const FILE_NAME: &'static str = "game.sys";
 
-    pub fn from_file(path: impl AsRef<Path>) -> Result<Self, Error> {
-        EncodedProgress::from_file(path)?.try_into()
+    pub fn from_file(path: impl AsRef<Path>) -> Result<Self, binary_file::Error> {
+        EncodedProgress::from_file(path.as_ref())?
+            .try_into()
+            .map_err(|EncodingError(err)| binary_file::Error::reading_binary(path.as_ref(), err))
     }
 
-    pub fn save_to_file(&self, path: impl AsRef<Path>) -> Result<(), Error> {
-        EncodedProgress::try_from(self.clone())?.save_to_file(path)
+    pub fn save_to_file(&self, path: impl AsRef<Path>) -> Result<(), binary_file::Error> {
+        EncodedProgress::try_from(self.clone())
+            .map_err(|EncodingError(err)| binary_file::Error::writing_binary(path.as_ref(), err))?
+            .save_to_file(path.as_ref())
     }
 
-    pub fn save(&self, env: &AoS2Env) -> Result<(), Error> {
+    pub fn save(&self, env: &AoS2Env) -> Result<(), binary_file::Error> {
         self.save_to_file(env.saves_folder.join(Self::FILE_NAME))
     }
 
-    pub fn load(env: &AoS2Env) -> Result<Self, Error> {
+    pub fn load(env: &AoS2Env) -> Result<Self, binary_file::Error> {
         Self::from_file(env.saves_folder.join(Self::FILE_NAME))
     }
 }
@@ -220,37 +208,29 @@ impl EncodedProgress {
     pub const BODY_SIZE: usize = Self::TOTAL_SIZE - Self::HEADER_SIZE;
     pub const ENCODING_START_KEY: KeyU8 = KeyU8::new(0x4A);
 
-    pub fn from_file(path: impl AsRef<Path>) -> Result<Self, Error> {
-        let mut reader = match std::fs::File::open(path) {
-            Ok(reader) => Ok(reader),
-            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Err(Error::NotFound),
-            Err(error) => return Err(Error::FileRead(error)),
-        }?;
+    pub fn from_file(path: &Path) -> Result<Self, binary_file::Error> {
+        let mut reader =
+            std::fs::File::open(path).map_err(|err| binary_file::Error::reading_file(path, err))?;
 
-        <Self as BinRead>::read(&mut reader).map_err(Error::EncodedRead)
+        <Self as BinRead>::read(&mut reader)
+            .map_err(|err| binary_file::Error::reading_binary(path, err))
     }
 
-    pub fn save_to_file(&self, path: impl AsRef<Path>) -> Result<(), Error> {
-        let mut writer = match std::fs::File::options()
+    pub fn save_to_file(&self, path: &Path) -> Result<(), binary_file::Error> {
+        let mut writer = std::fs::File::options()
             .create(false)
             .write(true)
             .truncate(true)
             .open(path)
-        {
-            Ok(writer) => Ok(writer),
-            Err(error) if error.kind() == std::io::ErrorKind::PermissionDenied => {
-                Err(Error::WritePermission)
-            }
-            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Err(Error::NotFound),
-            Err(error) => Err(Error::FileWrite(error)),
-        }?;
+            .map_err(|err| binary_file::Error::writing_file(path, err))?;
 
-        BinWrite::write(self, &mut writer).map_err(Error::EncodedWrite)
+        BinWrite::write(self, &mut writer)
+            .map_err(|err| binary_file::Error::writing_binary(path, err))
     }
 }
 
 impl TryFrom<EncodedProgress> for PlayerProgress {
-    type Error = Error;
+    type Error = EncodingError;
 
     fn try_from(EncodedProgress { header, body }: EncodedProgress) -> Result<Self, Self::Error> {
         let decoded_body = body.into_iter().enumerate().map(|(index, byte)| {
@@ -260,17 +240,17 @@ impl TryFrom<EncodedProgress> for PlayerProgress {
         let raw_decoded: Vec<u8> = header.into_iter().chain(decoded_body).collect();
 
         let mut reader = Cursor::new(raw_decoded);
-        BinRead::read(&mut reader).map_err(Error::DecodedRead)
+        BinRead::read(&mut reader).map_err(EncodingError)
     }
 }
 
 impl TryFrom<PlayerProgress> for EncodedProgress {
-    type Error = Error;
+    type Error = EncodingError;
 
     fn try_from(value: PlayerProgress) -> Result<Self, Self::Error> {
         let buffer: [u8; Self::TOTAL_SIZE] = {
             let mut writer = Cursor::new([0u8; Self::TOTAL_SIZE]);
-            BinWrite::write(&value, &mut writer).map_err(Error::DecodedWrite)?;
+            BinWrite::write(&value, &mut writer).map_err(EncodingError)?;
             writer.into_inner()
         };
 

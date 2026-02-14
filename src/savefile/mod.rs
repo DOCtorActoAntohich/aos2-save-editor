@@ -21,8 +21,8 @@ pub struct Savefile {
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     Env(#[from] aos2_env::Error),
-    Progress(#[from] player_progress::Error),
-    Profile(#[from] online_profile::Error),
+    Progress(binary_file::Error),
+    Profile(binary_file::Error),
 }
 
 impl Savefile {

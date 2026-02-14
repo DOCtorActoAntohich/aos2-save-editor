@@ -10,6 +10,7 @@ rust-version.workspace = true
 
 [dependencies]
 aos2-env.path = "../aos2-env"
+binary-file.path = "../binary-file"
 enum-array.path = "../enum-array"
 thiserror.workspace = true
 binrw.workspace = true

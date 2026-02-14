@@ -39,6 +39,7 @@ rust-version.workspace = true
 
 [dependencies]
 aos2-env = { path = "./crates/aos2-env" }
+binary-file.path = "./crates/binary-file"
 online-profile = { path = "./crates/online-profile" }
 player-progress = { path = "./crates/player-progress" }
 anyhow.workspace = true

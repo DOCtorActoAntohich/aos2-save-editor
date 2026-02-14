@@ -51,67 +51,43 @@ pub enum Visibility {
     Hide,
 }
 
-#[derive(Debug, thiserror::Error)]
-pub enum Error {
-    #[error("Failed to open file for reading")]
-    FileRead(#[source] std::io::Error),
-    #[error("Failed to open file for writing")]
-    FileWrite(#[source] std::io::Error),
-    #[error("No permission to write to a file")]
-    WritePermission,
-    #[error("File does not exist")]
-    NotFound,
-    #[error("Failed to write binary stream (couldn't write into a proper format)")]
-    BinWrite(#[source] binrw::Error),
-    #[error("Failed to read binary stream (invalid file format)")]
-    BinRead(#[source] binrw::Error),
-}
-
 impl PlayerOnlineProfile {
     pub const FILE_NAME: &'static str = "player.rkg";
 
-    pub fn load(env: &AoS2Env) -> Result<Self, Error> {
+    pub fn load(env: &AoS2Env) -> Result<Self, binary_file::Error> {
         Self::from_file(env.saves_folder.join(Self::FILE_NAME))
     }
 
-    pub fn save(&self, env: &AoS2Env) -> Result<(), Error> {
+    pub fn save(&self, env: &AoS2Env) -> Result<(), binary_file::Error> {
         self.save_to_file(env.saves_folder.join(Self::FILE_NAME))
     }
 
-    pub fn from_file<P>(path: P) -> Result<Self, Error>
+    pub fn from_file<P>(path: P) -> Result<Self, binary_file::Error>
     where
         P: AsRef<std::path::Path>,
         for<'a> <Self as binrw::BinRead>::Args<'a>: Default,
     {
-        let mut reader = match std::fs::File::open(path) {
-            Ok(reader) => Ok(reader),
-            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Err(Error::NotFound),
-            Err(error) => Err(Error::FileRead(error)),
-        }?;
+        let mut reader = std::fs::File::open(path.as_ref())
+            .map_err(|err| binary_file::Error::reading_file(path.as_ref(), err))?;
 
-        <Self as binrw::BinRead>::read(&mut reader).map_err(Error::BinRead)
+        <Self as binrw::BinRead>::read(&mut reader)
+            .map_err(|err| binary_file::Error::reading_binary(path.as_ref(), err))
     }
 
-    pub fn save_to_file<P>(&self, path: P) -> Result<(), Error>
+    pub fn save_to_file<P>(&self, path: P) -> Result<(), binary_file::Error>
     where
         P: AsRef<std::path::Path>,
         for<'a> <Self as binrw::BinWrite>::Args<'a>: Default,
     {
-        let mut writer = match std::fs::File::options()
+        let mut writer = std::fs::File::options()
             .create(false)
             .write(true)
             .truncate(true)
-            .open(path)
-        {
-            Ok(writer) => Ok(writer),
-            Err(error) if error.kind() == std::io::ErrorKind::PermissionDenied => {
-                Err(Error::WritePermission)
-            }
-            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Err(Error::NotFound),
-            Err(error) => Err(Error::FileWrite(error)),
-        }?;
+            .open(path.as_ref())
+            .map_err(|err| binary_file::Error::writing_file(path.as_ref(), err))?;
 
-        <Self as binrw::BinWrite>::write(self, &mut writer).map_err(Error::BinWrite)
+        <Self as binrw::BinWrite>::write(self, &mut writer)
+            .map_err(|err| binary_file::Error::writing_binary(path.as_ref(), err))
     }
 }
 

@@ -40,7 +40,7 @@ pub struct Read<T> {
 
 impl Progress {
     pub fn load(env: &AoS2Env) -> Result<Self, Error> {
-        let progress = PlayerProgress::load(env)?;
+        let progress = PlayerProgress::load(env).map_err(Error::Progress)?;
 
         Ok(Self {
             progress: Channel::new(progress),

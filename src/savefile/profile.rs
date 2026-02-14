@@ -24,7 +24,7 @@ pub struct Modify<T> {
 
 impl Profile {
     pub fn load(env: &AoS2Env) -> Result<Self, Error> {
-        let profile = PlayerOnlineProfile::load(env)?;
+        let profile = PlayerOnlineProfile::load(env).map_err(Error::Profile)?;
         Ok(Self {
             profile: Channel::new(profile),
         })
