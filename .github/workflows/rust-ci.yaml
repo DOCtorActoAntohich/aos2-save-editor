@@ -1,6 +1,5 @@
 name: Rust CI
 
-on: [push]
 on:
   push:
     paths:
