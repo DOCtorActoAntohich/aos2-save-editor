@@ -131,7 +131,7 @@ mod tests {
             3u32.to_le_bytes().to_vec(),       // 0x05-0x08: Nickname length
             b"DOC".to_vec(),                   // 0x09-0x0b: Nickname
             21u32.to_le_bytes().to_vec(),      // 0x0c-0x0f: Lobby name length
-            b"DOC is dead 3/28/2012".to_vec(), // 0x10-0x24: Lobby name
+            b"DOC is dead 3/28/2021".to_vec(), // 0x10-0x24: Lobby name
             4u32.to_le_bytes().to_vec(),       // 0x25-0x28: Password length
             b"hehe".to_vec(),                  // 0x29-0x2c: Password
             vec![0x0e, 0x00, 0x00, 0x00],      // 0x2d-0x30: Avatar Character
