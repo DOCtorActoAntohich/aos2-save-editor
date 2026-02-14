@@ -147,14 +147,14 @@ impl BodyLength {
 /// Here's the table with the decoded values of
 /// the least signigicant byte for each game version.
 ///
-/// | Game version | Byte value |
-/// |:------------:|:----------:|
-/// |  1.6 (demo)  |     135    |
-/// |     1.6.2    |     137    |
-/// |    1.6.3b    |     138    |
-/// |     1.7.6    |     152    |
-/// |     1.8.4    |     160    |
-/// |      1.9     |     161    |
+/// | Game version | Byte value | Hex value |
+/// |:------------:|:----------:|:---------:|
+/// |  1.6 (demo)  |     135    |   0x87    |
+/// |     1.6.2    |     137    |   0x89    |
+/// |    1.6.3b    |     138    |   0x8A    |
+/// |     1.7.6    |     152    |   0x98    |
+/// |     1.8.4    |     160    |   0xA0    |
+/// |      1.9     |     161    |   0xA1    |
 ///
 /// Therefore, version is the most probable explanation,
 /// because in a fresh savefile all other values are the same,
