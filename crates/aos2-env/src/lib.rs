@@ -4,6 +4,13 @@
 use std::path::Path;
 use std::path::PathBuf;
 
+#[cfg(target_os = "windows")]
+pub const EXAMPLE_HOME: &str = "C:/Users/<user>";
+#[cfg(target_os = "linux")]
+pub const EXAMPLE_HOME: &str = "/home/<user>";
+#[cfg(target_os = "macos")]
+pub const EXAMPLE_HOME: &str = "/Users/<user>";
+
 #[derive(Debug, Clone)]
 pub struct AoS2Env {
     pub saves_folder: PathBuf,
@@ -31,7 +38,7 @@ impl AoS2Env {
 }
 
 #[cfg(target_os = "windows")]
-fn saves_location(home: impl AsRef<Path>) -> PathBuf {
+pub fn saves_location(home: impl AsRef<Path>) -> PathBuf {
     home.as_ref()
         .join("Documents")
         .join("Fruitbat Factory")
@@ -39,7 +46,7 @@ fn saves_location(home: impl AsRef<Path>) -> PathBuf {
 }
 
 #[cfg(target_os = "linux")]
-fn saves_location(home: impl AsRef<Path>) -> PathBuf {
+pub fn saves_location(home: impl AsRef<Path>) -> PathBuf {
     // This is the cringe location where I had it.
     // Not sure if it's universal enough but "it works on my machine". xd.
     home.as_ref()
@@ -63,7 +70,7 @@ fn saves_location(home: impl AsRef<Path>) -> PathBuf {
 /// but this location is where 100% OJ stores its savedata, so
 /// this is where theoretical `AoS2` for Mac would store its data too.
 #[cfg(target_os = "macos")]
-fn saves_location(home: impl AsRef<Path>) -> PathBuf {
+pub fn saves_location(home: impl AsRef<Path>) -> PathBuf {
     home.as_ref()
         .join("Library")
         .join("Application Support")
