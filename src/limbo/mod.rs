@@ -1,5 +1,3 @@
-use std::path::PathBuf;
-
 use ratatui::buffer::Buffer;
 use ratatui::layout::{Constraint, Layout, Rect};
 use ratatui::style::{Color, Style};
@@ -65,9 +63,9 @@ impl VisualComponent for Screen {
             .render(all_content_area, buf);
 
         match &self.error {
-            savefile::Error::Env(error) => draw_env(&error, padded_content_area, buf),
+            savefile::Error::Env(error) => draw_env(error, padded_content_area, buf),
             savefile::Error::Progress(error) => {
-                draw_progress_error(error, padded_content_area, buf)
+                draw_progress_error(error, padded_content_area, buf);
             }
             savefile::Error::Profile(error) => draw_profile_error(error, padded_content_area, buf),
         }
@@ -116,5 +114,5 @@ fn draw_error_paragraph(text: String, area: Rect, buf: &mut Buffer) {
                 .with_fg(Color::White),
         )
         .wrap(Wrap { trim: false })
-        .render(area, buf)
+        .render(area, buf);
 }
