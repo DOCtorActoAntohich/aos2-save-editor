@@ -76,6 +76,30 @@
             packages = [ rust.ci ];
           };
         };
+
+        ci = {
+          cargo-fmt = pkgs.writeShellApplication {
+            name = "cargo-fmt";
+            text = "cargo fmt --all --check";
+            runtimeInputs = [
+              rust.ci
+            ];
+          };
+          cargo-clippy = pkgs.writeShellApplication {
+            name = "cargo-clippy";
+            text = "cargo clippy --workspace --tests --all-features -- -Dwarnings";
+            runtimeInputs = [
+              rust.ci
+            ];
+          };
+          cargo-test = pkgs.writeShellApplication {
+            name = "cargo-test";
+            text = "cargo test --workspace --all-features";
+            runtimeInputs = [
+              rust.ci
+            ];
+          };
+        };
       }
     );
 }
