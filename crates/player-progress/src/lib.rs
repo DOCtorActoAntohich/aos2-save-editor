@@ -2,7 +2,7 @@
 #![allow(clippy::missing_errors_doc)]
 
 // No export
-mod xor_encoding;
+mod xor_encryption;
 
 // Re-export.
 mod arenas;
@@ -24,7 +24,7 @@ use std::{io::Cursor, path::Path};
 use aos2_env::AoS2Env;
 use binrw::{BinRead, BinWrite};
 
-use crate::xor_encoding::{EncodedU8, KeyU8};
+use crate::xor_encryption::{EncryptedU8, KeyU8};
 
 /// Player progress file, aka `game.sys`.
 ///
@@ -144,7 +144,7 @@ impl BodyLength {
 
 /// Reprents savefile version, parsed by a specific game version.
 ///
-/// Here's the table with the decoded values of
+/// Here's the table with the values of
 /// the least signigicant byte for each game version.
 ///
 /// | Game version | Byte value | Hex value |
@@ -167,29 +167,29 @@ struct Version(u32);
 #[binrw::binrw]
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[brw(little)]
-struct EncodedProgress {
-    /// Header to which the encoding is not applied.
+struct EncryptedProgress {
+    /// Header to which the encryption is not applied.
     header: [u8; Self::HEADER_SIZE],
-    /// Encoded body section.
+    /// Encrypted body section.
     body: [u8; Self::BODY_SIZE],
 }
 
 #[derive(Debug, thiserror::Error)]
 #[error(transparent)]
-struct EncodingError(#[from] binrw::Error);
+struct EncryptionError(#[from] binrw::Error);
 
 impl PlayerProgress {
     pub const FILE_NAME: &'static str = "game.sys";
 
     pub fn from_file(path: impl AsRef<Path>) -> Result<Self, binary_file::Error> {
-        EncodedProgress::from_file(path.as_ref())?
+        EncryptedProgress::from_file(path.as_ref())?
             .try_into()
-            .map_err(|EncodingError(err)| binary_file::Error::reading_binary(path.as_ref(), err))
+            .map_err(|EncryptionError(err)| binary_file::Error::reading_binary(path.as_ref(), err))
     }
 
     pub fn save_to_file(&self, path: impl AsRef<Path>) -> Result<(), binary_file::Error> {
-        EncodedProgress::try_from(self.clone())
-            .map_err(|EncodingError(err)| binary_file::Error::writing_binary(path.as_ref(), err))?
+        EncryptedProgress::try_from(self.clone())
+            .map_err(|EncryptionError(err)| binary_file::Error::writing_binary(path.as_ref(), err))?
             .save_to_file(path.as_ref())
     }
 
@@ -202,11 +202,11 @@ impl PlayerProgress {
     }
 }
 
-impl EncodedProgress {
+impl EncryptedProgress {
     pub const TOTAL_SIZE: usize = 172;
     pub const HEADER_SIZE: usize = 8;
     pub const BODY_SIZE: usize = Self::TOTAL_SIZE - Self::HEADER_SIZE;
-    pub const ENCODING_START_KEY: KeyU8 = KeyU8::new(0x4A);
+    pub const ENCRYPTION_START_KEY: KeyU8 = KeyU8::new(0x4A);
 
     pub fn from_file(path: &Path) -> Result<Self, binary_file::Error> {
         let mut reader =
@@ -229,28 +229,30 @@ impl EncodedProgress {
     }
 }
 
-impl TryFrom<EncodedProgress> for PlayerProgress {
-    type Error = EncodingError;
+impl TryFrom<EncryptedProgress> for PlayerProgress {
+    type Error = EncryptionError;
 
-    fn try_from(EncodedProgress { header, body }: EncodedProgress) -> Result<Self, Self::Error> {
-        let decoded_body = body.into_iter().enumerate().map(|(index, byte)| {
-            let key = EncodedProgress::ENCODING_START_KEY.wrapping_add_usize(index);
-            EncodedU8::pre_encoded(byte).decode(key)
+    fn try_from(
+        EncryptedProgress { header, body }: EncryptedProgress,
+    ) -> Result<Self, Self::Error> {
+        let decrypted_body = body.into_iter().enumerate().map(|(index, byte)| {
+            let key = EncryptedProgress::ENCRYPTION_START_KEY.wrapping_add_usize(index);
+            EncryptedU8::encrypted(byte).decrypt(key)
         });
-        let raw_decoded: Vec<u8> = header.into_iter().chain(decoded_body).collect();
+        let raw_decrypted: Vec<u8> = header.into_iter().chain(decrypted_body).collect();
 
-        let mut reader = Cursor::new(raw_decoded);
-        BinRead::read(&mut reader).map_err(EncodingError)
+        let mut reader = Cursor::new(raw_decrypted);
+        BinRead::read(&mut reader).map_err(EncryptionError)
     }
 }
 
-impl TryFrom<PlayerProgress> for EncodedProgress {
-    type Error = EncodingError;
+impl TryFrom<PlayerProgress> for EncryptedProgress {
+    type Error = EncryptionError;
 
     fn try_from(value: PlayerProgress) -> Result<Self, Self::Error> {
         let buffer: [u8; Self::TOTAL_SIZE] = {
             let mut writer = Cursor::new([0u8; Self::TOTAL_SIZE]);
-            BinWrite::write(&value, &mut writer).map_err(EncodingError)?;
+            BinWrite::write(&value, &mut writer).map_err(EncryptionError)?;
             writer.into_inner()
         };
 
@@ -263,8 +265,8 @@ impl TryFrom<PlayerProgress> for EncodedProgress {
             .iter()
             .enumerate()
             .map(|(index, &byte)| {
-                let key = Self::ENCODING_START_KEY.wrapping_add_usize(index);
-                EncodedU8::from_raw(byte, key).get()
+                let key = Self::ENCRYPTION_START_KEY.wrapping_add_usize(index);
+                EncryptedU8::encrypt(byte, key).get()
             })
             .collect::<Vec<u8>>()
             .try_into()
@@ -280,7 +282,7 @@ mod tests {
 
     use binrw::{BinRead, BinWrite};
 
-    use super::{EncodedProgress, PlayerProgress};
+    use super::{EncryptedProgress, PlayerProgress};
 
     const CARGO_TOML: &str = env!("CARGO_MANIFEST_DIR");
 
@@ -299,20 +301,20 @@ mod tests {
     #[rstest::rstest]
     #[case::fresh(fresh_savefile())]
     #[case::lots_of_stuff_unlocked(completionist_savefile())]
-    fn progress_file_decode_encode_roundtrip(#[case] expected_savefile: Vec<u8>) {
+    fn progress_file_decrypt_encrypt_roundtrip(#[case] expected_savefile: Vec<u8>) {
         let player_progress = {
             let mut reader = Cursor::new(expected_savefile.clone());
-            let encoded: EncodedProgress =
+            let encrypted: EncryptedProgress =
                 BinRead::read(&mut reader).expect("Must parse the binary file");
 
-            PlayerProgress::try_from(encoded).expect("Must decode the encoded file")
+            PlayerProgress::try_from(encrypted).expect("Must decrypt the encrypted file")
         };
 
-        let encoded_progress: EncodedProgress = player_progress
+        let encrypted_progress: EncryptedProgress = player_progress
             .try_into()
-            .expect("Must encode successfully");
+            .expect("Must encrypt successfully");
         let mut writer = Cursor::new(Vec::new());
-        BinWrite::write(&encoded_progress, &mut writer).expect("Must write to a buffer");
+        BinWrite::write(&encrypted_progress, &mut writer).expect("Must write to a buffer");
 
         assert_eq!(expected_savefile, writer.into_inner());
     }
