@@ -25,6 +25,7 @@
         ];
         pkgs = import nixpkgs { inherit system overlays; };
         pkgs-windows = pkgs.pkgsCross.mingwW64;
+        pkgs-musl = if pkgs.stdenv.isLinux then pkgs.pkgsMusl else pkgs;
 
         rust-version = "1.93.0";
         rust = {
@@ -42,7 +43,11 @@
               "clippy"
             ];
           };
-          build = pkgs.rust-bin.stable.${rust-version}.minimal;
+          build = pkgs.rust-bin.stable.${rust-version}.minimal.override {
+            targets = nixpkgs.lib.optionals pkgs.stdenv.isLinux [
+              pkgs.pkgsMusl.stdenv.hostPlatform.rust.rustcTarget
+            ];
+          };
           windows =
             let
               rust-bin = rust-overlay.lib.mkRustBin { } pkgs-windows.buildPackages;
@@ -52,6 +57,7 @@
 
         aos2-save-editor = pkgs.callPackage ./nix/aos2-save-editor.nix {
           inherit nix-filter;
+          inherit (pkgs-musl) stdenv;
           rust-toolchain = rust.build;
         };
         aos2-save-editor-windows = pkgs-windows.callPackage ./nix/aos2-save-editor.nix {
