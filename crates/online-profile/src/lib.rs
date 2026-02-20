@@ -94,13 +94,16 @@ impl PlayerOnlineProfile {
 #[cfg(test)]
 mod tests {
     use std::io::Cursor;
+    use std::path::PathBuf;
 
     use binrw::BinRead;
 
     use super::PlayerOnlineProfile;
 
-    #[rstest::fixture]
-    fn manually_constructed_player_file() -> Vec<u8> {
+    const CRATE_ROOT: &str = env!("CARGO_MANIFEST_DIR");
+
+    #[rstest::rstest]
+    fn manually_constructed_player_file() {
         let sections: Vec<Vec<u8>> = vec![
             vec![0xa2u8, 0x05, 0x00, 0x00],    // 0x00-0x03: Version
             vec![0x01],                        // 0x04: Show country
@@ -126,12 +129,21 @@ mod tests {
             vec![0x01, 0x00, 0x00, 0x00],  // 0x19d-0x1a0: Title color.
         ];
 
-        sections.into_iter().flatten().collect()
+        let bytes: Vec<u8> = sections.into_iter().flatten().collect();
+        let mut cursor = Cursor::new(bytes);
+
+        PlayerOnlineProfile::read(&mut cursor).expect("Must parse");
     }
 
     #[rstest::rstest]
-    fn player_file_parses(#[from(manually_constructed_player_file)] player_file: Vec<u8>) {
-        let mut cursor = Cursor::new(player_file);
-        PlayerOnlineProfile::read(&mut cursor).expect("Must parse");
+    #[case("player-generic-0.rkg")]
+    #[case("player-generic-1.rkg")]
+    #[case("player-generic-2.rkg")]
+    fn generic_file_from_fs(#[case] file_name: &str) {
+        let input_file = PathBuf::from(CRATE_ROOT)
+            .join("test_inputs")
+            .join(file_name);
+        let f = PlayerOnlineProfile::from_file(input_file).expect("Must parse");
+        assert_eq!(f.version, crate::version::Version::current());
     }
 }
