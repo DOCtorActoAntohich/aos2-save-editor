@@ -3,6 +3,12 @@ use std::fmt::Display;
 use binary_file::UnsupportedVersion;
 use binrw::{BinRead, BinResult};
 
+/// Online profile version parsed by the game.
+///
+/// | Game Version | File Version |
+/// |:------------:|:------------:|
+/// |     1.9.2    |     A2_05    |
+/// |     1.9.1    |     A1_05    |
 #[binrw::binrw]
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Hash)]
 #[brw(little)]
