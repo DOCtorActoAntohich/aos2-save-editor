@@ -95,7 +95,7 @@ impl Arenas {
 
     pub const ALL: Self = Self {
         arenas: [Status::Enabled; Self::AMOUNT],
-        unused_0x2d: UnknownU8(0),
+        unused_0x2d: UnknownU8::new(0),
     };
 
     pub fn toggle(&mut self, arena: Arena) {

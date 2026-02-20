@@ -3,6 +3,20 @@
 
 use std::path::PathBuf;
 
+/// Means the purpose of the field is unknown.
+///
+/// "Explicit is better than implicit".
+#[binrw::binrw]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Default, derive_more::From)]
+#[brw(little)]
+pub struct UnknownU8(u8);
+
+impl UnknownU8 {
+    pub const fn new(value: u8) -> Self {
+        Self(value)
+    }
+}
+
 #[derive(Debug, thiserror::Error)]
 #[error("{action} failed:\n- {detail}\n\nFile at: {path}")]
 pub struct Error {
@@ -33,10 +47,10 @@ pub enum ErroneousAction {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, thiserror::Error)]
-#[error("Wrong file version\nExpected: {expected:08x}\nActual:   `{actual:08x}`)")]
+#[error("Wrong file version (expected: `{expected:04x}`, actual: `{actual:04x}`")]
 pub struct UnsupportedVersion {
-    pub expected: u32,
-    pub actual: u32,
+    pub expected: u16,
+    pub actual: u16,
 }
 
 impl Error {

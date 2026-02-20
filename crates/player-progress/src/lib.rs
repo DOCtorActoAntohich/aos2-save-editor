@@ -22,6 +22,7 @@ pub use self::wins::SingleplayerWins;
 use std::{io::Cursor, path::Path};
 
 use aos2_env::AoS2Env;
+use binary_file::UnknownU8;
 use binrw::{BinRead, BinWrite};
 
 use crate::xor_encryption::{EncryptedU8, KeyU8};
@@ -122,14 +123,6 @@ pub struct PlayerProgress {
     _0xaa: UnknownU8,
     _0xab: UnknownU8,
 }
-
-/// Means the purpose of the field is unknown.
-///
-/// "Explicit is better than implicit".
-#[binrw::binrw]
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Default)]
-#[brw(little)]
-struct UnknownU8(u8);
 
 /// Somehow it just matches.
 #[binrw::binrw]
