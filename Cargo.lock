@@ -89,14 +89,14 @@ checksum = "b3d1d046238990b9cf5bcde22a3fb3584ee5cf65fb2765f454ed428c7a0063da"
 
 [[package]]
 name = "aos2-env"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "thiserror",
 ]
 
 [[package]]
 name = "aos2-save-editor"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "anyhow",
  "aos2-env",
@@ -142,7 +142,7 @@ dependencies = [
 
 [[package]]
 name = "binary-file"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "binrw",
  "derive_more",
@@ -330,7 +330,7 @@ dependencies = [
 
 [[package]]
 name = "easydiff"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "anyhow",
  "aos2-env",
@@ -347,7 +347,7 @@ checksum = "60b1af1c220855b6ceac025d3f6ecdd2b7c4894bfe9cd9bda4fbb4bc7c0d4cf0"
 
 [[package]]
 name = "enum-array"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -646,7 +646,7 @@ dependencies = [
 
 [[package]]
 name = "online-profile"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "anyhow",
  "aos2-env",
@@ -708,7 +708,7 @@ checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
 
 [[package]]
 name = "player-progress"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "anyhow",
  "aos2-env",
