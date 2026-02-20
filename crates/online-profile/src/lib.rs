@@ -15,6 +15,7 @@ pub use crate::text::lobby_password::LobbyPassword;
 pub use crate::text::nickname::Nickname;
 
 use aos2_env::AoS2Env;
+use binary_file::UnknownU8;
 
 use crate::version::Version;
 
@@ -23,6 +24,12 @@ use crate::version::Version;
 #[brw(little)]
 pub struct PlayerOnlineProfile {
     pub version: Version,
+    /// Idk what it does.
+    /// I had 0x00 here, and other players had 0x20 here.
+    _0x02: UnknownU8,
+    /// Idk what it does.
+    /// I had 0x00 here, and other players had 0x20 here.
+    _0x03: UnknownU8,
     pub country: Visibility,
     pub nickname: Nickname,
     pub lobby_name: LobbyName,
@@ -105,7 +112,7 @@ mod tests {
     #[rstest::rstest]
     fn manually_constructed_player_file() {
         let sections: Vec<Vec<u8>> = vec![
-            vec![0xa2u8, 0x05, 0x00, 0x00],    // 0x00-0x03: Version
+            vec![0xa2u8, 0x05, 0x12, 0x34],    // 0x00-0x03: Version
             vec![0x01],                        // 0x04: Show country
             3u32.to_le_bytes().to_vec(),       // 0x05-0x08: Nickname length
             b"DOC".to_vec(),                   // 0x09-0x0b: Nickname
