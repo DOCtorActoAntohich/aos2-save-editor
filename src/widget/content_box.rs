@@ -1,9 +1,8 @@
-use ratatui::{
-    buffer::Buffer,
-    layout::{Alignment, Rect},
-    style::{Color, Style},
-    widgets::{Block, Widget, block::Title},
-};
+use ratatui::buffer::Buffer;
+use ratatui::layout::{Alignment, Rect};
+use ratatui::style::{Color, Style};
+use ratatui::text::Line;
+use ratatui::widgets::{Block, Widget};
 
 use crate::style::IndexedColor;
 
@@ -12,12 +11,12 @@ type DoNothingFn = fn(Rect, &mut Buffer);
 pub struct ContentBox<'a, F> {
     bg: Color,
     fg: Color,
-    title: Option<Title<'a>>,
+    title: Option<Line<'a>>,
     render_inner_fn: F,
 }
 
 impl<'a, F> ContentBox<'a, F> {
-    pub fn with_title(mut self, title: impl Into<Title<'a>>) -> Self {
+    pub fn with_title(mut self, title: impl Into<Line<'a>>) -> Self {
         self.title = Some(title.into());
         self
     }

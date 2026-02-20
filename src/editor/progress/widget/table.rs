@@ -1,18 +1,14 @@
 use std::borrow::Cow;
 
-use ratatui::{
-    buffer::Buffer,
-    layout::{Constraint, Rect},
-    style::{Color, Style, Stylize},
-    text::Line,
-    widgets::{self, Widget},
-};
+use ratatui::buffer::Buffer;
+use ratatui::layout::{Constraint, Rect};
+use ratatui::style::{Color, Style};
+use ratatui::text::Line;
+use ratatui::widgets::{self, Widget};
 
-use crate::{
-    collection::ListSlice,
-    style::{self, IndexedColor, Selection, WithColor},
-    widget::split,
-};
+use crate::collection::ListSlice;
+use crate::style::{self, IndexedColor, Selection, WithColor};
+use crate::widget::split;
 
 use super::status::Status;
 

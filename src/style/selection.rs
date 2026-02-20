@@ -1,4 +1,4 @@
-use ratatui::style::{Color, Style, Stylize};
+use ratatui::style::{Color, Style};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Selection {
