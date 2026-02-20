@@ -26,13 +26,13 @@ pub enum ErrorDetail {
     Weird(Box<dyn binrw::error::CustomError>),
 }
 
-#[derive(Debug, derive_more::Display)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, derive_more::Display, derive_more::FromStr)]
 pub enum ErroneousAction {
     Reading,
     Writing,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, thiserror::Error)]
 #[error("Wrong file version\nExpected: {expected:08x}\nActual:   `{actual:08x}`)")]
 pub struct UnsupportedVersion {
     pub expected: u32,
