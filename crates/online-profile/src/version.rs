@@ -45,8 +45,8 @@ impl Version {
 impl Display for Version {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let Self(version) = self;
-        let [_0x00, _0x01] = version.to_le_bytes();
-        write!(f, "{_0x00:02X}{_0x01:02X}")
+        let [xx00, xx01] = version.to_le_bytes();
+        write!(f, "{xx00:02X}{xx01:02X}")
     }
 }
 

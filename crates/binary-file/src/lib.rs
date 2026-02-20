@@ -12,6 +12,7 @@ use std::path::PathBuf;
 pub struct UnknownU8(u8);
 
 impl UnknownU8 {
+    #[must_use]
     pub const fn new(value: u8) -> Self {
         Self(value)
     }
