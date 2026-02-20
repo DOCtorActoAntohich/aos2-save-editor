@@ -3,7 +3,7 @@
 Save editor for [Acceleration of SUGURI 2](https://store.steampowered.com/app/390710/Acceleration_of_SUGURI_2/).
 Gives no competitive advantage.
 
-Supported game version: `ver 1.9.1`
+Supported game version: `ver 1.9.2`
 
 ## What is it for?
 

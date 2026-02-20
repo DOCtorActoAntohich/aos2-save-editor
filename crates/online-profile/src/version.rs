@@ -7,7 +7,7 @@ use binrw::{BinRead, BinResult};
 pub struct Version(#[br(parse_with = Version::bin_parse)] u32);
 
 impl Version {
-    const EXPECTED: u32 = u32::from_le_bytes([0xA1, 0x05, 0x00, 0x00]);
+    const EXPECTED: u32 = u32::from_le_bytes([0xA2, 0x05, 0x00, 0x00]);
 
     pub const fn current() -> Self {
         Self(Self::EXPECTED)
@@ -44,7 +44,7 @@ mod tests {
 
     #[rstest::rstest]
     fn version_encodes_properly() {
-        let expected_version = b"\xA1\x05\x00\x00";
+        let expected_version = b"\xA2\x05\x00\x00";
 
         let mut writer = Cursor::new(Vec::new());
         Version::current()
@@ -59,7 +59,7 @@ mod tests {
     fn version_decodes_properly() {
         let expected_version = Version::current();
 
-        let mut reader = Cursor::new(b"\xA1\x05\x00\x00".to_vec());
+        let mut reader = Cursor::new(b"\xA2\x05\x00\x00".to_vec());
         let actual_version = Version::read(&mut reader).expect("Must read here");
 
         assert_eq!(expected_version, actual_version);

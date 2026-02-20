@@ -102,7 +102,7 @@ mod tests {
     #[rstest::fixture]
     fn manually_constructed_player_file() -> Vec<u8> {
         let sections: Vec<Vec<u8>> = vec![
-            vec![0xa1u8, 0x05, 0x00, 0x00],    // 0x00-0x03: Version
+            vec![0xa2u8, 0x05, 0x00, 0x00],    // 0x00-0x03: Version
             vec![0x01],                        // 0x04: Show country
             3u32.to_le_bytes().to_vec(),       // 0x05-0x08: Nickname length
             b"DOC".to_vec(),                   // 0x09-0x0b: Nickname
